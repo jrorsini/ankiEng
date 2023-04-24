@@ -1,12 +1,8 @@
-const axios = require('axios');
-const cheerio = require('cheerio');
-const inquirer = require('inquirer');
+import axios from 'axios';
+import cheerio from 'cheerio';
+import inquirer from 'inquirer';
 
-// import axios from 'axios';
-// import cheerio from 'cheerio';
-// import inquirer from 'inquirer';
-
-async function scrapeDefinition(word) {
+async function scrapeWord(word) {
 	// website's urls
 	const dictionary_url = `https://www.dictionary.com/browse/${word}`;
 	const thesaurus_url = `https://www.thesaurus.com/browse/${word}`;
@@ -121,6 +117,4 @@ async function scrapeDefinition(word) {
 	return { ipa, spelling, type, definition };
 }
 
-module.exports = {
-	scrapeDefinition,
-};
+export default scrapeWord;

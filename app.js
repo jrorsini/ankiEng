@@ -1,5 +1,6 @@
-const inquirer = require('inquirer');
-const { scrapeDefinition } = require('./scrape');
+import inquirer from 'inquirer';
+import scrapeWord from './scrape.js';
+import chalk from 'chalk';
 
 async function main() {
 	while (true) {
@@ -16,16 +17,18 @@ async function main() {
 			break;
 		}
 
-		console.log(`Searching for "${word}"...`);
+		console.log(chalk.magenta.bold(`Searching for "${word}"...`));
 
 		try {
-			const { ipa, spelling, type, definition } = await scrapeDefinition(word);
+			const { ipa, spelling, type, definition } = await scrapeWord(word);
 			console.log(``);
-			console.log(chalk.yellow.underline('Word!') + `: ${word}`);
-			console.log(`IPA: ${ipa}`);
-			console.log(`Spelling: ${spelling}`);
-			console.log(`Type: ${type}`);
-			console.log(`Definition: ${definition}`);
+			console.log(chalk.yellow.underline.bold('Word:') + ` ${word}`);
+			console.log(chalk.yellow.underline.bold('IPA:') + ` ${ipa}`);
+			console.log(chalk.yellow.underline.bold('Spelling:') + ` ${spelling}`);
+			console.log(chalk.yellow.underline.bold('Type:') + ` ${type}`);
+			console.log(
+				chalk.yellow.underline.bold('Definition:') + ` ${definition}`
+			);
 			console.log(``);
 			console.log(`${word};${ipa};${spelling};${type};${definition}`);
 			console.log('---');
