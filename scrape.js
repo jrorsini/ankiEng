@@ -3,10 +3,14 @@ const cheerio = require('cheerio');
 const inquirer = require('inquirer');
 
 async function scrapeDefinition(word) {
+	// website's urls
 	const dictionary_url = `https://www.dictionary.com/browse/${word}`;
 	const thesaurus_url = `https://www.thesaurus.com/browse/${word}`;
+	// body response
 	const dictionary_response = await axios.get(dictionary_url);
 	const thesaurus_response = await axios.get(thesaurus_url);
+
+	// Dictionary.com
 	let $ = cheerio.load(dictionary_response.data);
 	const ipaContainer = $('.pron-spell-ipa-container .pron-ipa-container');
 	const spellingContainer = $(
@@ -60,8 +64,9 @@ async function scrapeDefinition(word) {
 			spelling = answers.spellingChoice.trim();
 		}
 	}
-	spelling = spelling.replace(/\s+/g, ' ');
+	spelling = spelling.replace(/\s+/g, ' ').trim();
 
+	// Thesaurus.com
 	$ = cheerio.load(thesaurus_response.data);
 
 	const definitionChoices = [];
@@ -78,16 +83,34 @@ async function scrapeDefinition(word) {
 			definitionChoices[i] += ' | ' + $(el).text().trim();
 		});
 
-	const tabs = await inquirer.prompt([
-		{
-			type: 'list',
-			name: 'spellingChoice',
-			message: `Multiple definitions found. Choose one to use for "${word}":`,
-			choices: definitionChoices,
-		},
-	]);
+	let tab = '';
+	let type = '';
+	let definition = '';
 
-	return { ipa, spelling, tabs };
+	if (definitionChoices.length > 1) {
+		const answers = await inquirer.prompt([
+			{
+				type: 'list',
+				name: 'spellingChoice',
+				message: `Multiple definitions found. Choose one to use for "${word}":`,
+				choices: definitionChoices,
+			},
+		]);
+		tab = answers.spellingChoice.trim();
+
+		type = answers.spellingChoice;
+		definition = answers.spellingChoice;
+	} else {
+		type = definitionChoices[0];
+		definition = definitionChoices[0];
+	}
+	type = type.trim().split(' | ')[0].replace('.', '');
+	definition = definition
+		.trim()
+		.split(' | ')[1]
+		.replaceAll(';', ' -')
+		.replaceAll(',', ' -');
+	return { ipa, spelling, type, definition };
 }
 
 module.exports = {
