@@ -74,7 +74,11 @@ async function scrapeDefinition(word) {
 	$('.postab-container ul li a em')
 		.toArray()
 		.map((el, i) => {
-			definitionChoices[i] = $(el).text().trim();
+			definitionChoices[i] = $(el)
+				.text()
+				.trim()
+				.replace('as in', 'noun')
+				.replace('.', '');
 		});
 
 	$('.postab-container ul li a strong')
@@ -104,7 +108,7 @@ async function scrapeDefinition(word) {
 		type = definitionChoices[0];
 		definition = definitionChoices[0];
 	}
-	type = type.trim().split(' | ')[0].replace('.', '');
+	type = type.trim().split(' | ')[0].replace('as in', 'noun').replace('.', '');
 	definition = definition
 		.trim()
 		.split(' | ')[1]

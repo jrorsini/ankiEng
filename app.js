@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 const { scrapeDefinition } = require('./scrape');
+import chalk from 'chalk';
 
 async function main() {
 	while (true) {
@@ -17,15 +18,22 @@ async function main() {
 		}
 
 		console.log(`Searching for "${word}"...`);
-		const { ipa, spelling, type, definition } = await scrapeDefinition(word);
-		console.log(`Word: ${word}`);
-		console.log(`IPA: ${ipa}`);
-		console.log(`Spelling: ${spelling}`);
-		console.log(`Type: ${type}`);
-		console.log(`Definition: ${definition}`);
 
-		console.log(`${word};${ipa};${spelling};${type};${definition}`);
-		console.log('---');
+		try {
+			const { ipa, spelling, type, definition } = await scrapeDefinition(word);
+			console.log(``);
+			console.log(chalk.yellow.underline('Word!') + `: ${word}`);
+			console.log(`IPA: ${ipa}`);
+			console.log(`Spelling: ${spelling}`);
+			console.log(`Type: ${type}`);
+			console.log(`Definition: ${definition}`);
+			console.log(``);
+			console.log(`${word};${ipa};${spelling};${type};${definition}`);
+			console.log('---');
+		} catch (err) {
+			console.log(`could not find ${word}`);
+			console.log('---');
+		}
 	}
 }
 
