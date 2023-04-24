@@ -2,6 +2,10 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const inquirer = require('inquirer');
 
+// import axios from 'axios';
+// import cheerio from 'cheerio';
+// import inquirer from 'inquirer';
+
 async function scrapeDefinition(word) {
 	// website's urls
 	const dictionary_url = `https://www.dictionary.com/browse/${word}`;

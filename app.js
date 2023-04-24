@@ -1,6 +1,5 @@
 const inquirer = require('inquirer');
 const { scrapeDefinition } = require('./scrape');
-import chalk from 'chalk';
 
 async function main() {
 	while (true) {
