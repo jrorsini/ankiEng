@@ -4,15 +4,20 @@ import chalk from 'chalk';
 
 async function main() {
 	while (true) {
-		const answers = await inquirer.prompt([
-			{
-				type: 'input',
-				name: 'word',
-				message: 'Enter a word to search (or press Enter to quit):',
-			},
-		]);
+		let word;
+		if (process.argv[2] !== undefined) {
+			word = process.argv[2].toLowerCase();
+		} else {
+			const answers = await inquirer.prompt([
+				{
+					type: 'input',
+					name: 'word',
+					message: 'Enter a word to search (or press Enter to quit):',
+				},
+			]);
+			word = answers.word.trim();
+		}
 
-		const word = answers.word.trim();
 		if (!word) {
 			break;
 		}
@@ -33,7 +38,8 @@ async function main() {
 			console.log(`${word};${ipa};${spelling};${type};${definition}`);
 			console.log('---');
 		} catch (err) {
-			console.log(`could not find ${word}`);
+			console.log(``);
+			console.log(chalk.red.bold(`could not find ${word}`));
 			console.log('---');
 		}
 	}
