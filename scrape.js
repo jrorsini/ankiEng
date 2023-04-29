@@ -16,6 +16,8 @@ async function scrapeWord(word) {
 	const spellingContainer = $(
 		'.pron-spell-ipa-container .pron-spell-container'
 	);
+
+	// dictionary.com ipa 
 	let ipa = '';
 	if (ipaContainer.length > 0) {
 		const ipaContents = ipaContainer.find('.pron-ipa-content');
@@ -29,21 +31,29 @@ async function scrapeWord(word) {
 				.map((i, el) =>
 					$(el)
 						.text()
-						.trim()
 						.replace(/[/()[\]]/g, '')
+						.trim()
 				)
 				.toArray();
-			const answers = await inquirer.prompt([
-				{
-					type: 'list',
-					name: 'ipaChoice',
-					message: `Multiple pronunciations found. Choose one to use for "${word}":`,
-					choices: ipaChoices,
-				},
-			]);
-			ipa = answers.ipaChoice.trim();
+			let uniqueIpaChoices = [...new Set(ipaChoices)];
+
+			if(uniqueIpaChoices.length > 1) {
+				const answers = await inquirer.prompt([
+					{
+						type: 'list',
+						name: 'ipaChoice',
+						message: `Multiple pronunciations found. Choose one to use for "${word}":`,
+						choices: uniqueIpaChoices,
+					},
+				]);
+				ipa = answers.ipaChoice.trim();
+			} else {
+				ipa = uniqueIpaChoices[0];
+			}
 		}
 	}
+
+	// dictionary.com spelling 
 	let spelling = '';
 	if (spellingContainer.length > 0) {
 		const spellingContents = spellingContainer.find('.pron-spell-content');
@@ -51,17 +61,23 @@ async function scrapeWord(word) {
 			spelling = spellingContents.text().trim().replace(/\[|\]/g, '');
 		} else {
 			const spellingChoices = spellingContents
-				.map((i, el) => $(el).text().trim().replace(/\[|\]/g, ''))
+				.map((i, el) => $(el).text().replace(/\[|\]/g, '').trim())
 				.toArray();
-			const answers = await inquirer.prompt([
-				{
-					type: 'list',
-					name: 'spellingChoice',
-					message: `Multiple spellings found. Choose one to use for "${word}":`,
-					choices: spellingChoices,
-				},
-			]);
-			spelling = answers.spellingChoice.trim();
+			let uniqueSpellingChoices = [...new Set(spellingChoices)];
+
+			if(uniqueSpellingChoices.length > 1) {
+				const answers = await inquirer.prompt([
+					{
+						type: 'list',
+						name: 'spellingChoice',
+						message: `Multiple spellings found. Choose one to use for "${word}":`,
+						choices: uniqueSpellingChoices,
+					},
+				]);
+				spelling = answers.spellingChoice.trim();
+			} else {
+				spelling = uniqueSpellingChoices[0];
+			}
 		}
 	}
 	spelling = spelling.replace(/\s+/g, ' ').trim();
