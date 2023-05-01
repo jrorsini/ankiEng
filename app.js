@@ -2,10 +2,12 @@ import inquirer from "inquirer";
 import scrapeWord from "./scrape.js";
 import chalk from "chalk";
 
+let UserInputSearched = false;
+
 async function main() {
-    while (true) {
+    while (true && UserInputSearched === false) {
         let userInput;
-        let userInputtype;
+        // let userInputType;
 
         // user input
 
@@ -14,6 +16,7 @@ async function main() {
         } else {
             const userInput = process.argv.slice(2).join(" ");
             console.log(`User input: ${userInput}`);
+            UserInputSearched = true;
         }
 
         if (process.argv[2] !== undefined) {
@@ -29,17 +32,19 @@ async function main() {
             userInput = answers.word.trim();
         }
 
-        if (!word) {
+        if (!userInput) {
             break;
         }
 
-        console.log(chalk.magenta.bold(`Searching for "${word}"...`));
+        console.log(chalk.magenta.bold(`Searching for "${userInput}"...`));
 
         // scrape
         try {
-            const { ipa, spelling, type, definition } = await scrapeWord(word);
+            const { ipa, spelling, type, definition } = await scrapeWord(
+                userInput
+            );
             console.log(``);
-            console.log(chalk.yellow.underline.bold("Word:") + ` ${word}`);
+            console.log(chalk.yellow.underline.bold("Word:") + ` ${userInput}`);
             console.log(chalk.yellow.underline.bold("IPA:") + ` ${ipa}`);
             console.log(
                 chalk.yellow.underline.bold("Spelling:") + ` ${spelling}`
@@ -49,11 +54,13 @@ async function main() {
                 chalk.yellow.underline.bold("Definition:") + ` ${definition}`
             );
             console.log(``);
-            console.log(`${word};${ipa};${spelling};${type};${definition}`);
+            console.log(
+                `${userInput};${ipa};${spelling};${type};${definition}`
+            );
             console.log("---");
         } catch (err) {
             console.log(``);
-            console.log(chalk.red.bold(`could not find ${word}`));
+            console.log(chalk.red.bold(`could not find ${userInput}`));
             console.log("---");
         }
     }
