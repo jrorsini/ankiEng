@@ -1,6 +1,8 @@
 import inquirer from "inquirer";
 import scrapeWord from "./scrape.js";
+import saveWordCardToFile from "./saveWordCardToFile.js";
 import chalk from "chalk";
+import fs from "fs";
 
 let UserInputSearched = false;
 
@@ -57,6 +59,10 @@ async function main() {
             console.log(
                 `${userInput};${ipa};${spelling};${type};${definition}`
             );
+            saveWordCardToFile(
+                `${userInput};${ipa};${spelling};${type};${definition}`
+            );
+
             console.log("---");
         } catch (err) {
             console.log(``);
