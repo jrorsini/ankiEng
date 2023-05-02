@@ -21,7 +21,6 @@ function isPhrasalVerb(inputStr) {
     ];
 
     // Split the input string into words
-    console.log(`hello ${inputStr}`);
     const words = inputStr.trim().split(/\s+/);
 
     // Check if the last word is a particle

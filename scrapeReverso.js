@@ -1,9 +1,8 @@
 import Reverso from "reverso-api";
 import axios from "axios";
 import cheerio from "cheerio";
+import isPhrasalVerb from "./isPhrasalVerb.js";
 const reverso = new Reverso();
-
-export async function fetchAPIs(word) {}
 
 export async function fetchTranslations(word) {
     let res = await reverso.getTranslation(
@@ -33,17 +32,15 @@ export async function fetchExamples(word) {
     return res.examples;
 }
 
-async function scrapeDictionary(userInput) {
-    let dictionary_response;
+export async function fetchIPAs(word) {
+    let body;
     try {
-        dictionary_response = await axios.get(
-            `https://www.dictionary.com/browse/${userInput}`
-        );
-    } catch (error) {
-        console.log(error, error.stack);
+        body = await axios.get(`https://www.dictionary.com/browse/${word}`);
+    } catch (err) {
+        console.log(err, err.stack);
     }
 
-    let $ = cheerio.load(dictionary_response.data);
+    let $ = cheerio.load(body.data);
     const ipaContainer = $(".pron-spell-ipa-container").find(
         ".pron-ipa-content"
     );
@@ -52,22 +49,68 @@ async function scrapeDictionary(userInput) {
         ? [
               ipaContainer
                   .text()
-                  .trim()
-                  .replace(/[/()[\]]/g, ""),
+                  .replace(/[/()[\]]/g, "")
+                  .trim(),
           ]
         : [
               ...new Set(
-                  $(".pron-spell-ipa-container")
-                      .find(".pron-ipa-content")
-                      .map(function (i, el) {
-                          return $(el)
+                  ipaContainer
+                      .map((i, el) =>
+                          $(el)
                               .text()
                               .replace(/[/()[\]]/g, "")
-                              .trim();
-                      })
+                              .trim()
+                      )
                       .toArray()
               ),
           ];
 }
 
-scrapeDictionary("clear");
+export async function fetchSpellings(word) {
+    let body;
+    try {
+        body = await axios.get(`https://www.dictionary.com/browse/${word}`);
+    } catch (err) {
+        console.log(err, err.stack);
+    }
+
+    let $ = cheerio.load(body.data);
+    const spellingContainer = $(
+        ".pron-spell-ipa-container .pron-spell-container"
+    ).find(".pron-spell-content");
+
+    return spellingContainer.length === 1
+        ? [spellingContainer.text().replace(/\[|\]/g, "").trim()]
+        : [
+              ...new Set(
+                  spellingContainer
+                      .map((i, el) => $(el).text().replace(/\[|\]/g, "").trim())
+                      .toArray()
+              ),
+          ];
+}
+export async function fetchTypes(word) {
+    // body response
+    let body;
+    try {
+        body = await axios.get(`https://www.dictionary.com/browse/${word}`);
+    } catch (err) {
+        console.log(err, err.stack);
+    }
+    let $ = cheerio.load(body.data);
+
+    return isPhrasalVerb(word)
+        ? ["phrasal verb"]
+        : $("section.serp-nav-button")
+              .next()
+              .find("span.luna-pos")
+              .toArray()
+              .map((el) =>
+                  $(el)
+                      .text()
+                      // avoid a case like "reedy" in which we have this "adjective, reed·i·er, reed·i·est."
+                      .replace(",", "")
+                      .trim()
+                      .replace("adjective", "adj")
+              );
+}

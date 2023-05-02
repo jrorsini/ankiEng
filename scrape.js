@@ -6,22 +6,12 @@ import isPhrasalVerb from "./isPhrasalVerb.js";
 async function scrapeWord(userInput) {
     // website's urls
     const dictionary_url = `https://www.dictionary.com/browse/${userInput}`;
-    const thesaurus_url = `https://www.thesaurus.com/browse/${userInput}`;
     // body response
     let dictionary_response;
     try {
         dictionary_response = await axios.get(dictionary_url);
     } catch (error) {
         console.log("dictionary err");
-        console.log(error);
-    }
-
-    let thesaurus_response;
-
-    try {
-        thesaurus_response = await axios.get(thesaurus_url);
-    } catch (error) {
-        console.log("thesaurus err");
         console.log(error);
     }
 
@@ -120,6 +110,18 @@ async function scrapeWord(userInput) {
     }
 
     // Thesaurus.com
+
+    const thesaurus_url = `https://www.thesaurus.com/browse/${userInput}`;
+
+    let thesaurus_response;
+
+    try {
+        thesaurus_response = await axios.get(thesaurus_url);
+    } catch (error) {
+        console.log("thesaurus err");
+        console.log(error);
+    }
+
     $ = cheerio.load(thesaurus_response.data);
 
     const definitionChoices = [];
