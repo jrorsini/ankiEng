@@ -9,13 +9,14 @@ async function scrapeWord(userInput) {
     const thesaurus_url = `https://www.thesaurus.com/browse/${userInput}`;
     // body response
     let dictionary_response;
-    let thesaurus_response;
     try {
         dictionary_response = await axios.get(dictionary_url);
     } catch (error) {
         console.log("dictionary err");
         console.log(error);
     }
+
+    let thesaurus_response;
 
     try {
         thesaurus_response = await axios.get(thesaurus_url);

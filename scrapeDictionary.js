@@ -21,7 +21,7 @@ async function scrapeDictionary(userInput) {
         ".pron-spell-ipa-container .pron-spell-container"
     );
 
-    // Dictionary.com ipa
+    // IPA
     let ipa = "";
     if (ipaContainer.length > 0) {
         const ipaContents = ipaContainer.find(".pron-ipa-content");
@@ -57,7 +57,7 @@ async function scrapeDictionary(userInput) {
         }
     }
 
-    // Dictionary.com spelling
+    // SPELLING
     let spelling = "";
     if (spellingContainer.length > 0) {
         const spellingContents = spellingContainer.find(".pron-spell-content");
