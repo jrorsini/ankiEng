@@ -1,4 +1,6 @@
 import Reverso from "reverso-api";
+import axios from "axios";
+import cheerio from "cheerio";
 const reverso = new Reverso();
 
 export async function fetchAPIs(word) {}
@@ -42,31 +44,30 @@ async function scrapeDictionary(userInput) {
     }
 
     let $ = cheerio.load(dictionary_response.data);
-    const ipaContainer = $(".pron-spell-ipa-container .pron-ipa-container");
+    const ipaContainer = $(".pron-spell-ipa-container").find(
+        ".pron-ipa-content"
+    );
 
-    // IPA
-    let ipa;
-    if (ipaContainer.length > 0) {
-        ipa = ipaContainer.find(".pron-ipa-content");
-        if (ipa.length === 1) {
-            ipa = ipa
-                .text()
-                .trim()
-                .replace(/[/()[\]]/g, "");
-        } else {
-            ipa = ipa
-                .map((i, el) =>
-                    $(el)
-                        .text()
-                        .replace(/[/()[\]]/g, "")
-                        .trim()
-                )
-                .toArray();
-            ipa = [...new Set(ipa)];
-        }
-    }
-
-    return ipa;
+    return ipaContainer.length === 1
+        ? [
+              ipaContainer
+                  .text()
+                  .trim()
+                  .replace(/[/()[\]]/g, ""),
+          ]
+        : [
+              ...new Set(
+                  $(".pron-spell-ipa-container")
+                      .find(".pron-ipa-content")
+                      .map(function (i, el) {
+                          return $(el)
+                              .text()
+                              .replace(/[/()[\]]/g, "")
+                              .trim();
+                      })
+                      .toArray()
+              ),
+          ];
 }
 
 scrapeDictionary("clear");
