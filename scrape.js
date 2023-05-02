@@ -1,14 +1,28 @@
 import axios from "axios";
 import cheerio from "cheerio";
 import inquirer from "inquirer";
+import isPhrasalVerb from "./isPhrasalVerb.js";
 
-async function scrapeWord(word) {
+async function scrapeWord(userInput) {
     // website's urls
-    const dictionary_url = `https://www.dictionary.com/browse/${word}`;
-    const thesaurus_url = `https://www.thesaurus.com/browse/${word}`;
+    const dictionary_url = `https://www.dictionary.com/browse/${userInput}`;
+    const thesaurus_url = `https://www.thesaurus.com/browse/${userInput}`;
     // body response
-    const dictionary_response = await axios.get(dictionary_url);
-    const thesaurus_response = await axios.get(thesaurus_url);
+    let dictionary_response;
+    let thesaurus_response;
+    try {
+        dictionary_response = await axios.get(dictionary_url);
+    } catch (error) {
+        console.log("dictionary err");
+        console.log(error);
+    }
+
+    try {
+        thesaurus_response = await axios.get(thesaurus_url);
+    } catch (error) {
+        console.log("thesaurus err");
+        console.log(error);
+    }
 
     // Dictionary.com
     let $ = cheerio.load(dictionary_response.data);
@@ -42,7 +56,7 @@ async function scrapeWord(word) {
                     {
                         type: "list",
                         name: "ipaChoice",
-                        message: `Multiple pronunciations found. Choose one to use for "${word}":`,
+                        message: `Multiple pronunciations found. Choose one to use for "${userInput}":`,
                         choices: uniqueIpaChoices,
                     },
                 ]);
@@ -70,7 +84,7 @@ async function scrapeWord(word) {
                     {
                         type: "list",
                         name: "spellingChoice",
-                        message: `Multiple spellings found. Choose one to use for "${word}":`,
+                        message: `Multiple spellings found. Choose one to use for "${userInput}":`,
                         choices: uniqueSpellingChoices,
                     },
                 ]);
@@ -82,23 +96,27 @@ async function scrapeWord(word) {
     }
     spelling = spelling.replace(/\s+/g, " ").trim();
 
-    // Dictionary.com word types
-    const wordTypes = $("section.serp-nav-button")
-        .next()
-        .find("span.luna-pos")
-        .toArray()
-        .map((elem) =>
-            $(elem)
-                .text()
-                // avoid a case like "reedy" in which we have this "adjective, reed·i·er, reed·i·est."
-                .replace(",", "")
-                .trim()
-        );
+    // Dictionary.com input type
+    let userInputTypes;
+    if (isPhrasalVerb(userInput)) {
+        userInputTypes = ["phrasal verb"];
+    } else {
+        userInputTypes = $("section.serp-nav-button")
+            .next()
+            .find("span.luna-pos")
+            .toArray()
+            .map((elem) =>
+                $(elem)
+                    .text()
+                    // avoid a case like "reedy" in which we have this "adjective, reed·i·er, reed·i·est."
+                    .replace(",", "")
+                    .trim()
+            );
 
-    if (wordTypes[0] === "adjective") {
-        wordTypes[0] = "adj";
+        if (userInputTypes[0] === "adjective") {
+            userInputTypes[0] = "adj";
+        }
     }
-    // console.log(wordTypes);
 
     // Thesaurus.com
     $ = cheerio.load(thesaurus_response.data);
@@ -112,7 +130,7 @@ async function scrapeWord(word) {
                 .text()
                 .trim()
                 // replace "as in" with the first word type found since it most likely only has one.
-                .replace("as in", wordTypes[0])
+                .replace("as in", userInputTypes[0])
                 .replace(".", "");
         });
 
@@ -131,7 +149,7 @@ async function scrapeWord(word) {
             {
                 type: "list",
                 name: "spellingChoice",
-                message: `Multiple definitions found. Choose one to use for "${word}":`,
+                message: `Multiple definitions found. Choose one to use for "${userInput}":`,
                 choices: definitionChoices,
             },
         ]);

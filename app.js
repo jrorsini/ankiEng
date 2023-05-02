@@ -2,7 +2,6 @@ import inquirer from "inquirer";
 import scrapeWord from "./scrape.js";
 import saveWordCardToFile from "./saveWordCardToFile.js";
 import chalk from "chalk";
-import fs from "fs";
 
 let UserInputSearched = false;
 
@@ -56,17 +55,16 @@ async function main() {
                 chalk.yellow.underline.bold("Definition:") + ` ${definition}`
             );
             console.log(``);
-            console.log(
-                `${userInput};${ipa};${spelling};${type};${definition}`
-            );
+
             saveWordCardToFile(
-                `${userInput};${ipa};${spelling};${type};${definition}`
+                `${type};${userInput};${spelling};${ipa};${definition}`
             );
 
             console.log("---");
         } catch (err) {
             console.log(``);
             console.log(chalk.red.bold(`could not find ${userInput}`));
+            console.error(err, err.stack);
             console.log("---");
         }
     }
