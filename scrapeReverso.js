@@ -1,15 +1,30 @@
 import Reverso from "reverso-api";
 const reverso = new Reverso();
 
-reverso.getTranslation("clear", "english", "french", (err, response) => {
-    if (err) throw new Error(err.message);
+async function scrapeReverso(word) {
+    let translations = await reverso.getTranslation(
+        word,
+        "english",
+        "french",
+        (err, response) => {
+            if (err) throw new Error(err.message);
 
-    // console.log(response.translations);
-    // console.log(response.context.examples);
-});
+            return response.translations;
+        }
+    );
 
-reverso.getContext("clear", "english", "french", (err, response) => {
-    if (err) throw new Error(err.message);
+    let examples = await reverso.getContext(
+        "dismiss",
+        "english",
+        "french",
+        (err, response) => {
+            if (err) throw new Error(err.message);
 
-    console.log(response);
-});
+            return response.examples;
+        }
+    );
+
+    return { translations, examples };
+}
+
+export default scrapeReverso;

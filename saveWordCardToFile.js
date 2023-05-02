@@ -1,6 +1,6 @@
 import fs from "fs";
 
-const fileName = "ankiTest";
+const fileName = "ankiTest.txt";
 
 function saveWordCardToFile(newWordCard) {
     if (fs.existsSync(fileName)) {
@@ -8,7 +8,18 @@ function saveWordCardToFile(newWordCard) {
             if (err) throw err;
             const content = data;
 
-            const WordCard = content + " " + newWordCard;
+            // Check if the new sentence already exists in the file
+            if (content.includes(newWordCard)) {
+                console.log(
+                    `The sentence "${newWordCard}" already exists in the file ${fileName}`
+                );
+                return;
+            }
+
+            const WordCard =
+                content.trim() === ""
+                    ? newWordCard
+                    : content + "\n" + newWordCard;
 
             fs.writeFile(fileName, WordCard, (err) => {
                 if (err) throw err;
