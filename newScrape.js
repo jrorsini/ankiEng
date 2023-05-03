@@ -1,28 +1,29 @@
 import {
     fetchDictionaryBodyResponse,
-    fetchTranslations,
-    fetchExamples,
+    fetchThesaurusBodyResponse,
     fetchIPAs,
     fetchSpellings,
-    fetchTypes,
-} from "./scrapeReverso.js";
+    fetchDefinitions,
+    fetchTranslations,
+    fetchExamples,
+} from "./scrape.js";
 
-let type, ipa, spellings, definition, translations, examples;
+let ipa, spellings, definitions, translations, examples;
 
 async function scrape(userInput) {
     const dictionaryRes = await fetchDictionaryBodyResponse(userInput);
-
-    type = fetchTypes(userInput, dictionaryRes);
-    ipa = fetchIPAs(dictionaryRes);
-    spellings = fetchSpellings(dictionaryRes);
+    const thesaurusRes = await fetchThesaurusBodyResponse(userInput);
     translations = await fetchTranslations(userInput);
     examples = await fetchExamples(userInput);
 
-    console.log(type);
-    console.log(ipa);
-    console.log(spellings);
-    console.log(translations);
-    console.log(examples);
+    ipa = fetchIPAs(dictionaryRes);
+    spellings = fetchSpellings(dictionaryRes);
+
+    definitions = fetchDefinitions(thesaurusRes);
+
+    return { ipa, spellings, definitions, translations, examples };
 }
 
-scrape("clear");
+const res = await scrape("clear");
+
+console.log(res);
