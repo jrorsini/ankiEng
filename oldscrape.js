@@ -1,7 +1,7 @@
 import axios from "axios";
 import cheerio from "cheerio";
 import inquirer from "inquirer";
-import isPhrasalVerb from "./isPhrasalVerb.js";
+import isPhrasalVerb from "./utility/isPhrasalVerb.js";
 
 async function scrapeWord(userInput) {
     // website's urls

@@ -50,18 +50,53 @@ export async function whichSpelling(spellings) {
 }
 
 /**
- * Asks which IPA to choose
- * @param {Array} definitions - IPAs to choose from
- * @returns {String} the choosen IPA word search body response scraped from thesaurus.com
+ * Asks which Definition to choose
+ * @param {Array} definitions - Definitions to choose from
+ * @returns {String} the choosen Definition
  */
-export async function whichDefinitions(definitions) {
+export async function whichDefinition(definitions) {
     const answers = await inquirer.prompt([
         {
-            type: "list",
+            type: "rawlist",
             name: "definition",
-            message: "Which Definition?",
+            message: "Which definition?",
             choices: definitions,
         },
     ]);
     return answers.definition;
+}
+
+/**
+ * Asks which Tranlation to choose
+ * @param {Array} translation - Tranlations to choose from
+ * @returns {String} the choosen Tranlation
+ */
+export async function whichTranslation(translations) {
+    const answers = await inquirer.prompt([
+        {
+            type: "rawlist",
+            name: "translation",
+            message: "Which translation?",
+            choices: translations,
+        },
+    ]);
+    return answers.translation;
+}
+
+/**
+ * Asks which Example to choose
+ * @param {Array} examples - Examples to choose from
+ * @returns {String} the choosen Example
+ */
+export async function whichExample(examples) {
+    console.log(examples);
+    const answers = await inquirer.prompt([
+        {
+            type: "rawlist",
+            name: "example",
+            message: "Which Definition?",
+            choices: examples,
+        },
+    ]);
+    return answers.example;
 }

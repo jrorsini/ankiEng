@@ -53,7 +53,7 @@ export function fetchDefinitions(body) {
     $(".postab-container ul li a strong") // definitions
         .toArray()
         .map((e, i) => {
-            definitions[i] += " | " + $(e).text().trim();
+            definitions[i] += "|" + $(e).text().trim();
         });
 
     return definitions;
@@ -140,11 +140,11 @@ export function fetchTypes(word, body) {
 }
 
 /**
- * Get translations from Reverso API
+ * retrieve  response from Reverso API
  * @param {String} word - response from Reverso
- * @returns {Array}  Translations
+ * @returns {Object} response from Reverso API
  */
-export async function fetchTranslations(word) {
+export async function fetchReversoResponse(word) {
     let res = await reverso.getTranslation(
         word,
         "english",
@@ -155,25 +155,23 @@ export async function fetchTranslations(word) {
         }
     );
 
+    return res;
+}
+
+/**
+ * Get translations from Reverso API
+ * @param {String} res - response from Reverso
+ * @returns {Array}  Translations
+ */
+export function fetchTranslations(res) {
     return res.translations;
 }
 
 /**
  * Get examples from Reverso API
- * @param {String} word - word to search in Reverso API
+ * @param {String} res - word to search in Reverso API
  * @returns {Array}  Examples
  */
-export async function fetchExamples(word) {
-    let res = await reverso.getContext(
-        word,
-        "english",
-        "french",
-        (err, response) => {
-            if (err) throw new Error(err.message);
-
-            return response;
-        }
-    );
-
-    return res.examples;
+export function fetchExamples(res) {
+    return res.context.examples.map((e) => e.source);
 }

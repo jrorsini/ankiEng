@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import scrapeWord from "./scrape.js";
+import scrapeWord from "./utility/scrapeFuncs.js";
 import saveWordCardToFile from "./saveWordCardToFile.js";
 import chalk from "chalk";
 
