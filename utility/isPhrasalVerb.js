@@ -1,4 +1,10 @@
-function isPhrasalVerb(inputStr) {
+/**
+ * check if input is phrasal verb
+ * @param {String} input - user's input to search
+ * @returns {Boolean} wether or not the input is a phrasal verb
+ */
+
+function isPhrasalVerb(input) {
     // List of common particles in phrasal verbs
     const particles = [
         "up",
@@ -21,8 +27,7 @@ function isPhrasalVerb(inputStr) {
     ];
 
     // Split the input string into words
-    const words = inputStr.trim().split(/\s+/);
-
+    const words = input.trim().split(/\s+/);
     // Check if the last word is a particle
     const lastWord = words[words.length - 1];
     if (particles.includes(lastWord)) {
