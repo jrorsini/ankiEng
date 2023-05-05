@@ -88,8 +88,14 @@ export async function whichTranslation(translations) {
  * @param {Array} examples - Examples to choose from
  * @returns {String} the choosen Example
  */
+export async function AskIfExamplesAreNeeded(examples) {}
+
+/**
+ * Asks which Example to choose
+ * @param {Array} examples - Examples to choose from
+ * @returns {String} the choosen Example
+ */
 export async function whichExample(examples) {
-    console.log(examples);
     const answers = await inquirer.prompt([
         {
             type: "rawlist",
