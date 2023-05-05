@@ -178,7 +178,7 @@ export function fetchTypes(word, body) {
  * @returns {Array}  Translations
  */
 export function fetchTranslations(res) {
-    return res.translations;
+    return [...new Set(res.translations)];
 }
 
 /**

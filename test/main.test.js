@@ -2,6 +2,7 @@ import isPhrasalVerb from "../utility/isPhrasalVerb.js";
 import {
     fetchReversoResponse,
     errorLogMessage,
+    fetchTranslations,
 } from "../utility/scrapeFuncs.js";
 import assert from "assert";
 
@@ -26,6 +27,14 @@ describe("Utility", function () {
             assert.equal(result, errorLogMessage);
         });
     });
+    describe("#fetchTranslations()", function () {
+        it("should return the translations without duplicates", async function () {
+            const reversoRes = await fetchReversoResponse("reedy");
+            const result = fetchTranslations(reversoRes);
+            assert.equal(result.length, 5);
+        });
+    });
 });
 
 // there's a case like "multivariate" in which an error is returned from thesaurus.com cause it can't find the word.
+// in case of "reedy" translations there are duplicates.
