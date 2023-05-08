@@ -24,7 +24,8 @@ import {
     whichDefinition,
     whichSpelling,
     whichTranslation,
-    askIfIWantExamples,
+    askIfUserWantExamples,
+    askIfUserWantsMoreTranslation,
 } from "./prompt.js";
 
 import fs from "fs";
@@ -69,12 +70,14 @@ while (true) {
 
         let ipa, spelling, definition, translation, example;
 
+        // IPA
         try {
             ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0];
         } catch (err) {
             console.log(err);
         }
 
+        // SPELLING
         try {
             spelling =
                 spellings.length > 1
@@ -86,7 +89,8 @@ while (true) {
 
         logExamples(examples);
 
-        if (await askIfIWantExamples()) {
+        // EXAMPLE
+        if (await askIfUserWantExamples()) {
             try {
                 example =
                     examples.length > 1
@@ -97,15 +101,56 @@ while (true) {
             }
         }
 
-        console.log(translations);
-        try {
-            translation =
-                translations.length > 1
-                    ? await whichTranslation(translations)
-                    : translations[0];
-        } catch (error) {
-            console.log(error);
+        // log definitions
+        // try {
+        //     definition =
+        //         definitions.length > 1
+        //             ? await whichDefinition(definitions)
+        //             : definitions[0];
+        // } catch (error) {
+        //     console.log(error);
+        // }
+
+        // TRANSLATION
+        translation = await whichTranslation(translations);
+
+        //
+        // const newWordCard = `${
+        //     definition.split(" | ")[0]
+        // };${userInput};${ipa};${spelling};${
+        //     definition.split(" | ")[1]
+        // };${translation}`;
+
+        const newWordCard = `${userInput};${ipa};${spelling};${translation}`;
+
+        if (fileExists("ankiTest.txt")) {
+            const fileContent = await getFileContent("ankiTest.txt");
+            if (fileContent.includes(newWordCard)) {
+                console.log(
+                    `\nThe word ` +
+                        chalk.yellow.bold(`"${newWordCard.split(";")[1]}"`) +
+                        ` with the ` +
+                        chalk.underline.bold(`exact SAME content`) +
+                        ` already exists in file\n`
+                );
+            } else {
+                try {
+                    saveContentToFile(
+                        "ankiTest.txt",
+                        fileContent.trim() === ""
+                            ? newWordCard
+                            : fileContent + "\n" + newWordCard
+                    );
+                    console.log("File saved");
+                } catch (err) {
+                    console.error(`Failed to save data`);
+                }
+            }
         }
+
+        // } else {
+        //     console.log("file doesn't exist");
+        // }
 
         // console.log(definitions);
         // try {

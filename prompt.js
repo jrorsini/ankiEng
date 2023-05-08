@@ -73,18 +73,23 @@ export async function whichDefinition(definitions) {
  * @returns {String} the choosen Tranlation
  */
 export async function whichTranslation(translations) {
-    const answers = await inquirer.prompt([
+    const results = await inquirer.prompt([
         {
-            type: "rawlist",
+            type: "checkbox",
             name: "translation",
             message: "Which translation?",
             choices: translations,
         },
     ]);
-    return answers.translation;
+
+    return results.translation;
 }
 
-export async function askIfIWantExamples() {
+/**
+ * Asks if user wants examples
+ * @returns {Boolean} user's answer
+ */
+export async function askIfUserWantExamples() {
     const answers = await inquirer.prompt([
         {
             type: "confirm",
@@ -93,6 +98,21 @@ export async function askIfIWantExamples() {
         },
     ]);
     return answers.exampleConfirmation;
+}
+
+/**
+ * Asks if user wants examples
+ * @returns {Boolean} user's answer
+ */
+export async function askIfUserWantsMoreTranslation() {
+    const answers = await inquirer.prompt([
+        {
+            type: "confirm",
+            name: "translationConfirmation",
+            message: `Is there one more translation you wish to add ? (press Enter if "Yes")`,
+        },
+    ]);
+    return answers.translationConfirmation;
 }
 
 /**
