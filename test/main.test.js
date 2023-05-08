@@ -1,4 +1,7 @@
 import isPhrasalVerb from "../utility/isPhrasalVerb.js";
+import Reverso from "reverso-api";
+const reverso = new Reverso();
+
 import {
     fetchReversoResponse,
     errorLogMessage,
@@ -29,9 +32,14 @@ describe("Utility", function () {
             const result = await fetchReversoResponse("test");
             assert.equal(result.ok, true);
         });
-        it("should return an error", async function () {
-            const result = await fetchReversoResponse("asdfadss");
-            assert.equal(result, errorLogMessage);
+        it("should return false", async function () {
+            let result;
+            try {
+                result = await fetchReversoResponse("asdfadss");
+            } catch (error) {
+                result = false;
+            }
+            assert.equal(result, false);
         });
     });
 
@@ -46,13 +54,14 @@ describe("Utility", function () {
 
     describe("#fileExists()", function () {
         it("should return true because the file exists", async function () {
-            assert.equal(await fileExists(), true);
+            const result = await fileExists("./testingFile.txt");
+            assert.equal(result, true);
         });
     });
 
     describe("#getFileContent()", function () {
         it("should return the whole content of the file", async function () {
-            const data = await getFileContent();
+            const data = await getFileContent("./testingFile.txt");
             assert.equal(data.length > 0, true);
         });
     });
@@ -62,6 +71,21 @@ describe("Utility", function () {
             const result = await fetchReversoResponse("test");
             const examples = fetchExamples(result);
             assert.equal(examples.length, 3);
+        });
+    });
+
+    describe("#test", function () {
+        it("should return ", async function () {
+            const result = await reverso.getTranslation(
+                "she digs him",
+                "english",
+                "french",
+                (err, res) => {
+                    if (err) throw new Error(err.message);
+                    return res;
+                }
+            );
+            // console.log(result.context.examples);
         });
     });
 });

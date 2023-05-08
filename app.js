@@ -101,6 +101,9 @@ while (true) {
             }
         }
 
+        // DEFINITION
+        translation = await whichDefinition(definitions);
+
         // log definitions
         // try {
         //     definition =
@@ -113,13 +116,6 @@ while (true) {
 
         // TRANSLATION
         translation = await whichTranslation(translations);
-
-        //
-        // const newWordCard = `${
-        //     definition.split(" | ")[0]
-        // };${userInput};${ipa};${spelling};${
-        //     definition.split(" | ")[1]
-        // };${translation}`;
 
         const newWordCard = `${userInput};${ipa};${spelling};${translation}`;
 
@@ -141,7 +137,7 @@ while (true) {
                             ? newWordCard
                             : fileContent + "\n" + newWordCard
                     );
-                    console.log("File saved");
+                    console.log(`\n` + chalk.bold.green("File saved"));
                 } catch (err) {
                     console.error(`Failed to save data`);
                 }
