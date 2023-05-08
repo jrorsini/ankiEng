@@ -55,6 +55,7 @@ export async function whichSpelling(spellings) {
  * @returns {String} the choosen Definition
  */
 export async function whichDefinition(definitions) {
+    console.log(definitions);
     const answers = await inquirer.prompt([
         {
             type: "rawlist",
@@ -83,12 +84,16 @@ export async function whichTranslation(translations) {
     return answers.translation;
 }
 
-/**
- * Asks which Example to choose
- * @param {Array} examples - Examples to choose from
- * @returns {String} the choosen Example
- */
-export async function AskIfExamplesAreNeeded(examples) {}
+export async function askIfIWantExamples() {
+    const answers = await inquirer.prompt([
+        {
+            type: "confirm",
+            name: "exampleConfirmation",
+            message: "Is there an example you wish to add",
+        },
+    ]);
+    return answers.exampleConfirmation;
+}
 
 /**
  * Asks which Example to choose
@@ -100,8 +105,8 @@ export async function whichExample(examples) {
         {
             type: "rawlist",
             name: "example",
-            message: "Which Definition?",
-            choices: examples,
+            message: "Which example?",
+            choices: examples.map((e) => e.source),
         },
     ]);
     return answers.example;

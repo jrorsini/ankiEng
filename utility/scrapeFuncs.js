@@ -2,6 +2,8 @@ import Reverso from "reverso-api";
 import axios from "axios";
 import cheerio from "cheerio";
 import isPhrasalVerb from "./isPhrasalVerb.js";
+import chalk from "chalk";
+
 const reverso = new Reverso();
 
 export const errorLogMessage = "Couldn't find what you're looking for...";
@@ -12,12 +14,8 @@ export const errorLogMessage = "Couldn't find what you're looking for...";
  * @returns {String} html body response scraped from dictionary.com
  */
 export async function fetchDictionaryBodyResponse(word) {
-    try {
-        let body = await axios.get(`https://www.dictionary.com/browse/${word}`);
-        return body;
-    } catch (err) {
-        return errorLogMessage;
-    }
+    let body = await axios.get(`https://www.dictionary.com/browse/${word}`);
+    return body;
 }
 
 /**
@@ -26,12 +24,8 @@ export async function fetchDictionaryBodyResponse(word) {
  * @returns {String} html body response scraped from thesaurus.com
  */
 export async function fetchThesaurusBodyResponse(word) {
-    try {
-        let body = await axios.get(`https://www.thesaurus.com/browse/${word}`);
-        return body;
-    } catch (err) {
-        return errorLogMessage;
-    }
+    let body = await axios.get(`https://www.thesaurus.com/browse/${word}`);
+    return body;
 }
 
 /**
@@ -40,24 +34,49 @@ export async function fetchThesaurusBodyResponse(word) {
  * @returns {Object} response from Reverso API
  */
 export async function fetchReversoResponse(word) {
-    try {
-        let res = await reverso.getTranslation(
-            word,
-            "english",
-            "french",
-            (err, response) => {
-                if (err) {
-                    // throw new Error(err.message);
-                    return false;
-                }
-                return response;
+    let res = await reverso.getTranslation(
+        word,
+        "english",
+        "french",
+        (err, response) => {
+            if (err) {
+                // throw new Error(err.message);
+                return false;
             }
-        );
+            return response;
+        }
+    );
 
-        return res;
-    } catch (error) {
-        return errorLogMessage;
-    }
+    return res;
+}
+
+/**
+ * log examples in chalk format
+ * @param {Array} examples - to log
+ */
+export function logExamples(examples) {
+    examples.map((e) => {
+        const sourceOffset = e.source_phrases[0].offset;
+        const sourceLength = e.source_phrases[0].length;
+        const sourcePhrase = e.source_phrases[0].phrase;
+
+        const targetOffset = e.target_phrases[0].offset;
+        const targetLength = e.target_phrases[0].length;
+        const targetPhrase = e.target_phrases[0].phrase;
+        console.log(
+            `${e.source.slice(0, sourceOffset)}` +
+                chalk.red.bold.underline(sourcePhrase) +
+                `${e.source.slice(
+                    sourceOffset + sourceLength,
+                    e.source.length
+                )}\n${e.target.slice(0, targetOffset)}` +
+                chalk.cyan.bold.underline(targetPhrase) +
+                `${e.target.slice(
+                    targetOffset + targetLength,
+                    e.target.length
+                )}\n`
+        );
+    });
 }
 
 /**
@@ -187,5 +206,6 @@ export function fetchTranslations(res) {
  * @returns {Array}  Examples
  */
 export function fetchExamples(res) {
-    return res.context.examples.map((e) => e.source);
+    // console.log(res);
+    return res.context.examples;
 }

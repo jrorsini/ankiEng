@@ -1,73 +1,175 @@
-import inquirer from "inquirer";
-import scrapeWord from "./utility/scrapeFuncs.js";
-import saveWordCardToFile from "./saveWordCardToFile.js";
+import {
+    fetchDictionaryBodyResponse,
+    fetchThesaurusBodyResponse,
+    fetchReversoResponse,
+    fetchIPAs,
+    fetchSpellings,
+    fetchDefinitions,
+    fetchTranslations,
+    fetchExamples,
+    fetchTypes,
+    logExamples,
+} from "./utility/scrapeFuncs.js";
+
+import {
+    saveContentToFile,
+    fileExists,
+    getFileContent,
+} from "./utility/saveWordCardToFile.js";
+
+import {
+    askWhatWordToEnter,
+    whichIPA,
+    whichExample,
+    whichDefinition,
+    whichSpelling,
+    whichTranslation,
+    askIfIWantExamples,
+} from "./prompt.js";
+
+import fs from "fs";
 import chalk from "chalk";
 
-let UserInputSearched = false;
+async function scrape(userInput) {
+    let dictionaryRes;
+    let thesaurusRes;
+    let reversoRes;
+    dictionaryRes = await fetchDictionaryBodyResponse(userInput);
+    thesaurusRes = await fetchThesaurusBodyResponse(userInput);
+    reversoRes = await fetchReversoResponse(userInput);
 
-async function main() {
-    while (true && UserInputSearched === false) {
-        let userInput;
-        // let userInputType;
+    const ipas = fetchIPAs(dictionaryRes);
+    const types = fetchTypes(userInput, dictionaryRes);
+    const spellings = fetchSpellings(dictionaryRes);
+    const definitions = fetchDefinitions(thesaurusRes, types);
+    const translations = fetchTranslations(reversoRes);
+    const examples = fetchExamples(reversoRes);
 
-        // user input
+    return {
+        userInput,
+        ipas,
+        spellings,
+        definitions,
+        translations,
+        examples,
+    };
+}
+while (true) {
+    const word = await askWhatWordToEnter();
 
-        if (process.argv.length <= 2) {
-            console.log("No user input provided.");
-        } else {
-            const userInput = process.argv.slice(2).join(" ");
-            console.log(`User input: ${userInput}`);
-            UserInputSearched = true;
-        }
+    if (word.length > 0) {
+        let {
+            userInput,
+            ipas,
+            spellings,
+            definitions,
+            translations,
+            examples,
+        } = await scrape(word);
 
-        if (process.argv[2] !== undefined) {
-            userInput = process.argv[2].toLowerCase();
-        } else {
-            const answers = await inquirer.prompt([
-                {
-                    type: "input",
-                    name: "word",
-                    message: "Enter a word to search (or press Enter to quit):",
-                },
-            ]);
-            userInput = answers.word.trim();
-        }
+        let ipa, spelling, definition, translation, example;
 
-        if (!userInput) {
-            break;
-        }
-
-        console.log(chalk.magenta.bold(`Searching for "${userInput}"...`));
-
-        // scrape
         try {
-            const { ipa, spelling, type, definition } = await scrapeWord(
-                userInput
-            );
-            console.log(``);
-            console.log(chalk.yellow.underline.bold("Word:") + ` ${userInput}`);
-            console.log(chalk.yellow.underline.bold("IPA:") + ` ${ipa}`);
-            console.log(
-                chalk.yellow.underline.bold("Spelling:") + ` ${spelling}`
-            );
-            console.log(chalk.yellow.underline.bold("Type:") + ` ${type}`);
-            console.log(
-                chalk.yellow.underline.bold("Definition:") + ` ${definition}`
-            );
-            console.log(``);
-
-            saveWordCardToFile(
-                `${type};${userInput};${spelling};${ipa};${definition}`
-            );
-
-            console.log("---");
+            ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0];
         } catch (err) {
-            console.log(``);
-            console.log(chalk.red.bold(`could not find ${userInput}`));
-            console.error(err, err.stack);
-            console.log("---");
+            console.log(err);
         }
+
+        try {
+            spelling =
+                spellings.length > 1
+                    ? await whichSpelling(spellings)
+                    : spellings[0];
+        } catch (err) {
+            console.log(err);
+        }
+
+        logExamples(examples);
+
+        if (await askIfIWantExamples()) {
+            try {
+                example =
+                    examples.length > 1
+                        ? await whichExample(examples)
+                        : examples[0];
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        console.log(translations);
+        try {
+            translation =
+                translations.length > 1
+                    ? await whichTranslation(translations)
+                    : translations[0];
+        } catch (error) {
+            console.log(error);
+        }
+
+        // console.log(definitions);
+        // try {
+        //     example =
+        //         examples.length > 1
+        //             ? await whichExample(examples)
+        //             : examples[0];
+        // } catch (error) {
+        //     console.log(error);
+        // }
+
+        // try {
+        //     definition =
+        //         definitions.length > 1
+        //             ? await whichDefinition(definitions)
+        //             : definitions[0];
+        // } catch (error) {
+        //     console.log(error);
+        // }
+
+        // const newWordCard = `${
+        //     definition.split(" | ")[0]
+        // };${userInput};${ipa};${spelling};${
+        //     definition.split(" | ")[1]
+        // };${translation}`;
+        // const fileName = "ankiTest.txt";
+        // if (fs.existsSync(fileName)) {
+        //     const fileContent = fs.readFileSync(fileName, "utf8");
+        //     console.log(fileContent);
+        //     if (fileContent.includes(newWordCard)) {
+        //         console.log(
+        //             `\nThe word ` +
+        //                 chalk.yellow.bold(`"${newWordCard.split(";")[1]}"`) +
+        //                 ` with the ` +
+        //                 chalk.underline.bold(`same content`) +
+        //                 ` already exists in file\n`
+        //         );
+        //     } else {
+        //     }
+        // const fileContent = await getFileContent();
+        // if (fileContent.includes(newWordCard)) {
+        //     console.log(
+        //         `The sentence "${
+        //             newWordCard.split(";")[1]
+        //         }" already exists in file`
+        //     );
+        // } else {
+        // }
+        // const WordCard =
+        //     fileContent.trim() === ""
+        //         ? newWordCard
+        //         : fileContent + "\n" + newWordCard;
+        // console.log(WordCard);
+        // try {
+        //     await saveContentToFile(WordCard);
+        //     console.log("File saved");
+        // } catch (err) {
+        //     console.error(`Failed to save data`);
+        // }
+        // } else {
+        //     console.log("file doesn't exist");
+        // }
+    } else {
+        console.log("No input");
+        break;
     }
 }
-
-main();
