@@ -39,10 +39,9 @@ export async function fetchReversoResponse(word) {
         "english",
         "french",
         (err, response) => {
-            if (err) {
-                // throw new Error(err.message);
-                return false;
-            }
+            if (err) throw new Error(err.message);
+
+            // console.log(response);
             return response;
         }
     );

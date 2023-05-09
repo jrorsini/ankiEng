@@ -68,7 +68,7 @@ while (true) {
             examples,
         } = await scrape(word);
 
-        let ipa, spelling, definition, translation, example;
+        let ipa, spelling, translation, example;
 
         // IPA
         ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0];
@@ -80,25 +80,26 @@ while (true) {
                 : spellings[0];
 
         // DEFINITION
-
-        definition =
+        let { typ, def } =
             definitions.length > 1
                 ? await whichDefinition(definitions)
                 : definitions[0];
 
         // EXAMPLE
-        logExamples(examples);
-        if (await askIfUserWantExamples()) {
-            example =
-                examples.length > 1
-                    ? await whichExample(examples)
-                    : examples[0];
+        if (examples.length > 0) {
+            logExamples(examples);
+            if (await askIfUserWantExamples()) {
+                example =
+                    examples.length > 1
+                        ? await whichExample(examples)
+                        : examples[0];
+            }
         }
 
         // TRANSLATION
         translation = await whichTranslation(translations);
 
-        const newWordCard = `${userInput};${ipa};${spelling};${translation}`;
+        const newWordCard = `${userInput};${ipa};${spelling};${typ};${translation};${def}`;
 
         if (fileExists("ankiTest.txt")) {
             const fileContent = await getFileContent("ankiTest.txt");

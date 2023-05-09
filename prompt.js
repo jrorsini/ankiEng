@@ -75,7 +75,11 @@ export async function whichDefinition(definitions) {
             choices: definitions,
         },
     ]);
-    return answers.definition;
+
+    const typ = answers.definition.split(" | ")[0];
+    const def = answers.definition.split(" | ")[1];
+
+    return { typ, def };
 }
 
 /**
