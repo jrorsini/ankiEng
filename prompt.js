@@ -1,4 +1,5 @@
 import inquirer from "inquirer";
+import chalk from "chalk";
 
 /**
  * Asks what word to search
@@ -55,7 +56,17 @@ export async function whichSpelling(spellings) {
  * @returns {String} the choosen Definition
  */
 export async function whichDefinition(definitions) {
-    console.log(definitions);
+    console.log("");
+    definitions.map((e) => {
+        console.log(
+            "\t" +
+                chalk.yellow.bold.underline(
+                    `${e.split(" | ")[0].toUpperCase()}:`
+                ) +
+                chalk(` ${e.split(" | ")[1]}`)
+        );
+    });
+    console.log("");
     const answers = await inquirer.prompt([
         {
             type: "rawlist",
