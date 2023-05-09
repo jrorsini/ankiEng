@@ -102,9 +102,7 @@ export function fetchDefinitions(body, types) {
     $(".postab-container ul li a strong") // definitions
         .toArray()
         .map((e, i) => {
-            definitions[i] +=
-                " | " +
-                $(e).text().trim().replaceAll(";", " -").replaceAll(",", " -");
+            definitions[i] += " | " + $(e).text().trim().replaceAll(";", ",");
         });
 
     return definitions;
