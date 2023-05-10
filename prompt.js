@@ -93,7 +93,14 @@ export async function whichTranslation(translations) {
             type: "checkbox",
             name: "translation",
             message: "Which translation?",
-            choices: translations,
+            choices: [
+                { name: chalk.yellow.bold.underline("Apple"), value: "apple" },
+                { name: "Orange", value: "apple" },
+                { name: "Banana", value: "apple" },
+                new inquirer.Separator(),
+                { name: "Other", value: "apple" },
+            ],
+            // choices: translations,
         },
     ]);
 
