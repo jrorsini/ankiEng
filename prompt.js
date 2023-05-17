@@ -2,6 +2,44 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 
 /**
+ * Full prompt
+ */
+
+export async function fullPrompt(translations) {
+    const questions = [];
+    console.log(translations);
+    translations.map((e) => {
+        questions.push({
+            name: e,
+            value: e,
+            checked: false,
+
+            short: chalk.bgGreen.white(" Green "),
+            when: (answers) =>
+                chalk.yellow.bold.underline(answers.translation.includes(e)),
+            disabled: false,
+            filter: (choice) => {
+                // Perform action when choice is selected
+                console.log("Red selected!");
+                return choice;
+            },
+            extra: " (this is an extra property)",
+        });
+    });
+    questions.push(new inquirer.Separator('Fruits with an "e" in the name:'));
+    console.log(questions);
+    const answers = await inquirer.prompt([
+        {
+            type: "checkbox",
+            name: "translation",
+            message: "which translation",
+            choices: questions,
+        },
+    ]);
+    return answers.translation;
+}
+
+/**
  * Asks what word to search
  * @returns {String} the word search body response scraped from thesaurus.com
  */
@@ -56,17 +94,6 @@ export async function whichSpelling(spellings) {
  * @returns {String} the choosen Definition
  */
 export async function whichDefinition(definitions) {
-    console.log("");
-    definitions.map((e) => {
-        console.log(
-            "\t" +
-                chalk.yellow.bold.underline(
-                    `${e.split(" | ")[0].toUpperCase()}:`
-                ) +
-                chalk(` ${e.split(" | ")[1]}`)
-        );
-    });
-    console.log("");
     const answers = await inquirer.prompt([
         {
             type: "rawlist",

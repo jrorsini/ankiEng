@@ -12,12 +12,6 @@ import {
 } from "./utility/scrapeFuncs.js";
 
 import {
-    saveContentToFile,
-    fileExists,
-    getFileContent,
-} from "./utility/saveWordCardToFile.js";
-
-import {
     askWhatWordToEnter,
     whichIPA,
     whichExample,
@@ -26,9 +20,9 @@ import {
     whichTranslation,
     askIfUserWantExamples,
     askIfUserWantsMoreTranslation,
+    fullPrompt,
 } from "./prompt.js";
 
-import fs from "fs";
 import chalk from "chalk";
 
 async function scrape(userInput) {
@@ -55,6 +49,8 @@ async function scrape(userInput) {
         examples,
     };
 }
+
+const log = console.log;
 while (true) {
     const word = await askWhatWordToEnter();
 
@@ -68,13 +64,51 @@ while (true) {
             examples,
         } = await scrape(word);
 
-        let ipa, spelling, translation, example;
+        log(
+            "\n\t\t" +
+                chalk.yellow.bold.underline(`WORD:`) +
+                ` ${userInput}\n` +
+                "\n\t" +
+                chalk.yellow.bold.underline(`IPA:`) +
+                ` ${ipas.join(" | ")}` +
+                "\t" +
+                chalk.yellow.bold.underline(`SPELLING:`) +
+                ` ${spellings.join(" | ")}`
+        );
+        log(``);
+
+        definitions.map((e) => {
+            log(
+                "\t" +
+                    chalk.yellow.inverse(
+                        ` ${e.split(" | ")[0].toUpperCase()}: `
+                    ) +
+                    chalk.yellow.bold(` ${e.split(" | ")[1]}`)
+            );
+        });
+        log(``);
+        log(
+            "\t" +
+                chalk.cyan.bold(
+                    `${translations
+                        .map((line, index) =>
+                            (index + 1) % 4 === 0 ? line + "\n\t" : line + " - "
+                        )
+                        .join("")
+                        .slice(0, -2)}`
+                )
+        );
+        log(``);
+        logExamples(examples);
+        log(``);
+
+        // await fullPrompt(translations);
 
         // IPA
-        ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0];
+        let ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0];
 
         // SPELLING
-        spelling =
+        let spelling =
             spellings.length > 1
                 ? await whichSpelling(spellings)
                 : spellings[0];
@@ -86,8 +120,9 @@ while (true) {
                 : definitions[0];
 
         // EXAMPLE
+        let example;
         if (examples.length > 0) {
-            logExamples(examples);
+            // logExamples(examples);
             if (await askIfUserWantExamples()) {
                 example =
                     examples.length > 1
@@ -97,36 +132,11 @@ while (true) {
         }
 
         // TRANSLATION
-        translation = await whichTranslation(translations);
+        let translation = await whichTranslation(translations);
 
         const newWordCard = `${userInput};${ipa};${spelling};${typ};${translation};${def}`;
-
-        if (fileExists("ankiTest.txt")) {
-            const fileContent = await getFileContent("ankiTest.txt");
-            if (fileContent.includes(newWordCard)) {
-                console.log(
-                    `\nThe word ` +
-                        chalk.yellow.bold(`"${newWordCard.split(";")[1]}"`) +
-                        ` with the ` +
-                        chalk.underline.bold(`exact SAME content`) +
-                        ` already exists in file\n`
-                );
-            } else {
-                try {
-                    saveContentToFile(
-                        "ankiTest.txt",
-                        fileContent.trim() === ""
-                            ? newWordCard
-                            : fileContent + "\n" + newWordCard
-                    );
-                    console.log(`\n` + chalk.bold.green("File saved"));
-                } catch (err) {
-                    console.error(`Failed to save data`);
-                }
-            }
-        }
     } else {
-        console.log("No input");
+        log("No input");
         break;
     }
 }

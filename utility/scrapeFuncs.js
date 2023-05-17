@@ -63,12 +63,12 @@ export function logExamples(examples) {
         const targetLength = e.target_phrases[0].length;
         const targetPhrase = e.target_phrases[0].phrase;
         console.log(
-            `${e.source.slice(0, sourceOffset)}` +
+            `\t${e.source.slice(0, sourceOffset)}` +
                 chalk.red.bold.underline(sourcePhrase) +
                 `${e.source.slice(
                     sourceOffset + sourceLength,
                     e.source.length
-                )}\n${e.target.slice(0, targetOffset)}` +
+                )}\n\t${e.target.slice(0, targetOffset)}` +
                 chalk.cyan.bold.underline(targetPhrase) +
                 `${e.target.slice(
                     targetOffset + targetLength,
