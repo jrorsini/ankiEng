@@ -14,8 +14,7 @@ export const errorLogMessage = "Couldn't find what you're looking for...";
  * @returns {String} html body response scraped from dictionary.com
  */
 export async function fetchDictionaryBodyResponse(word) {
-    let body = await axios.get(`https://www.dictionary.com/browse/${word}`);
-    return body;
+    return axios.get(`https://www.dictionary.com/browse/${word}`);
 }
 
 /**
@@ -50,10 +49,55 @@ export async function fetchReversoResponse(word) {
 }
 
 /**
- * log examples in chalk format
+ * log the entire content of the searched word
+ * @param {String} userInput - to log
+ * @param {Array} ipas - to log
+ * @param {Array} spellings - to log
+ * @param {Array} definitions - to log
+ * @param {Array} translations - to log
  * @param {Array} examples - to log
  */
-export function logExamples(examples) {
+export function logWordContent(
+    userInput,
+    ipas,
+    spellings,
+    definitions,
+    translations,
+    examples
+) {
+    const log = console.log;
+
+    log(
+        "\n\t\t" +
+            chalk.yellow.bold.underline(`WORD:`) +
+            ` ${userInput}\n` +
+            "\n\t" +
+            chalk.yellow.bold.underline(`IPA:`) +
+            ` ${ipas.join(" | ")}` +
+            "   |   " +
+            chalk.yellow.bold.underline(`SPELLING:`) +
+            ` ${spellings.join(" | ")}\n`
+    );
+
+    definitions.map((e) => {
+        log(
+            "\t" +
+                chalk.yellow.inverse(` ${e.split(" | ")[0].toUpperCase()}: `) +
+                chalk.yellow.bold(` ${e.split(" | ")[1]}`)
+        );
+    });
+    log(
+        "\n\t" +
+            chalk.cyan.bold(
+                `${translations
+                    .map((line, index) =>
+                        (index + 1) % 4 === 0 ? line + "\n\t" : line + " - "
+                    )
+                    .join("")
+                    .slice(0, -2)}`
+            ) +
+            "\n"
+    );
     examples.map((e) => {
         const sourceOffset = e.source_phrases[0].offset;
         const sourceLength = e.source_phrases[0].length;
@@ -62,7 +106,7 @@ export function logExamples(examples) {
         const targetOffset = e.target_phrases[0].offset;
         const targetLength = e.target_phrases[0].length;
         const targetPhrase = e.target_phrases[0].phrase;
-        console.log(
+        log(
             `\t${e.source.slice(0, sourceOffset)}` +
                 chalk.red.bold.underline(sourcePhrase) +
                 `${e.source.slice(

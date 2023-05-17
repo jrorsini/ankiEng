@@ -8,7 +8,7 @@ import {
     fetchTranslations,
     fetchExamples,
     fetchTypes,
-    logExamples,
+    logWordContent,
 } from "./utility/scrapeFuncs.js";
 
 import {
@@ -64,43 +64,14 @@ while (true) {
             examples,
         } = await scrape(word);
 
-        log(
-            "\n\t\t" +
-                chalk.yellow.bold.underline(`WORD:`) +
-                ` ${userInput}\n` +
-                "\n\t" +
-                chalk.yellow.bold.underline(`IPA:`) +
-                ` ${ipas.join(" | ")}` +
-                "\t" +
-                chalk.yellow.bold.underline(`SPELLING:`) +
-                ` ${spellings.join(" | ")}`
+        logWordContent(
+            userInput,
+            ipas,
+            spellings,
+            definitions,
+            translations,
+            examples
         );
-        log(``);
-
-        definitions.map((e) => {
-            log(
-                "\t" +
-                    chalk.yellow.inverse(
-                        ` ${e.split(" | ")[0].toUpperCase()}: `
-                    ) +
-                    chalk.yellow.bold(` ${e.split(" | ")[1]}`)
-            );
-        });
-        log(``);
-        log(
-            "\t" +
-                chalk.cyan.bold(
-                    `${translations
-                        .map((line, index) =>
-                            (index + 1) % 4 === 0 ? line + "\n\t" : line + " - "
-                        )
-                        .join("")
-                        .slice(0, -2)}`
-                )
-        );
-        log(``);
-        logExamples(examples);
-        log(``);
 
         // await fullPrompt(translations);
 
@@ -122,7 +93,7 @@ while (true) {
         // EXAMPLE
         let example;
         if (examples.length > 0) {
-            // logExamples(examples);
+            // logWordContent(examples);
             if (await askIfUserWantExamples()) {
                 example =
                     examples.length > 1
