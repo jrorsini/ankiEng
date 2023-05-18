@@ -6,7 +6,9 @@ import {
     fetchTranslations,
     fetchExamples,
     fetchDictionaryBodyResponse,
-    fetchIPAs,
+    fetchThesaurusBodyResponse,
+    fetchTypes,
+    fetchDefinitions,
 } from "../utility/scrapeFuncs.js";
 import assert from "assert";
 
@@ -75,7 +77,21 @@ describe("Utility", function () {
             assert.equal(apis, false);
         });
     });
+
+    describe("#fetchThesaurusBodyResponse", function () {
+        it("should return ", async function () {
+            const dictionaryRes = await fetchDictionaryBodyResponse("dyke");
+            const thesaurusRes = await fetchThesaurusBodyResponse("dyke");
+            const types = dictionaryRes
+                ? fetchTypes("dyke", dictionaryRes)
+                : false;
+            const definitions = thesaurusRes
+                ? fetchDefinitions(thesaurusRes, types)
+                : false;
+            console.log(definitions);
+        });
+    });
 });
 
-// seawall doesn't return any IPA
+// "dyke" error
 // there's a case like "multivariate" in which an error is returned from thesaurus.com cause it can't find the word.
