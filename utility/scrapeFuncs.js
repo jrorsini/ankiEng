@@ -112,6 +112,7 @@ export function logWordContent(
                 chalk.hex(typeColor[wordType]).bold(` ${e.split(" | ")[1]}`)
         );
     });
+    log("\n\t" + chalk.yellow.bold.underline(`TRANSLATIONS:`));
     log(
         "\n\t" +
             chalk.cyan.bold(
@@ -124,7 +125,7 @@ export function logWordContent(
             ) +
             "\n"
     );
-
+    log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
     examples.map((e) => {
         const sourceOffset = e.source_phrases[0].offset;
         const sourceLength = e.source_phrases[0].length;

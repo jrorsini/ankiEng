@@ -1,43 +1,6 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
-
-/**
- * Full prompt
- */
-
-export async function fullPrompt(translations) {
-    const questions = [];
-    console.log(translations);
-    translations.map((e) => {
-        questions.push({
-            name: e,
-            value: e,
-            checked: false,
-
-            short: chalk.bgGreen.white(" Green "),
-            when: (answers) =>
-                chalk.yellow.bold.underline(answers.translation.includes(e)),
-            disabled: false,
-            filter: (choice) => {
-                // Perform action when choice is selected
-                console.log("Red selected!");
-                return choice;
-            },
-            extra: " (this is an extra property)",
-        });
-    });
-    questions.push(new inquirer.Separator('Fruits with an "e" in the name:'));
-    console.log(questions);
-    const answers = await inquirer.prompt([
-        {
-            type: "checkbox",
-            name: "translation",
-            message: "which translation",
-            choices: questions,
-        },
-    ]);
-    return answers.translation;
-}
+import { typeColor } from "./utility/global.js";
 
 /**
  * Asks what word to search
@@ -64,7 +27,7 @@ export async function whichIPA(ipas) {
         {
             type: "list",
             name: "ipa",
-            message: "Which IPA?",
+            message: "Which " + chalk.underline.bold.yellow("IPA") + "?",
             choices: ipas,
         },
     ]);
@@ -81,7 +44,7 @@ export async function whichSpelling(spellings) {
         {
             type: "list",
             name: "spelling",
-            message: "Which spelling?",
+            message: "Which " + chalk.underline.bold.yellow("spelling") + "?",
             choices: spellings,
         },
     ]);
@@ -94,12 +57,21 @@ export async function whichSpelling(spellings) {
  * @returns {String} the choosen Definition
  */
 export async function whichDefinition(definitions) {
+    const choices = definitions.map((e) => {
+        const type = e.split(" | ")[0].replace(" ", "_");
+        console.log(type);
+        return (
+            chalk.hex(typeColor[type]).inverse(` ${type.toUpperCase()} `) +
+            " | " +
+            e.split(" | ")[1]
+        );
+    });
     const answers = await inquirer.prompt([
         {
-            type: "rawlist",
+            type: "list",
             name: "definition",
-            message: "Which definition?",
-            choices: definitions,
+            message: "Which " + chalk.underline.bold.yellow("definition") + "?",
+            choices,
         },
     ]);
 
@@ -119,14 +91,9 @@ export async function whichTranslation(translations) {
         {
             type: "checkbox",
             name: "translation",
-            message: "Which translation?",
-            choices: [
-                { name: chalk.yellow.bold.underline("Apple"), value: "apple" },
-                { name: "Orange", value: "apple" },
-                { name: "Banana", value: "apple" },
-                new inquirer.Separator(),
-                { name: "Other", value: "apple" },
-            ],
+            message:
+                "Which " + chalk.underline.bold.yellow("translation") + "?",
+            choices: translations,
             // choices: translations,
         },
     ]);
@@ -174,7 +141,7 @@ export async function whichExample(examples) {
         {
             type: "rawlist",
             name: "example",
-            message: "Which example?",
+            message: "Which " + chalk.underline.bold.yellow("example") + "?",
             choices: examples.map((e) => e.source),
         },
     ]);

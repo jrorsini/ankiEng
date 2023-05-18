@@ -50,6 +50,7 @@ async function scrape(userInput) {
 
 const log = console.log;
 while (true) {
+    console.log("\n");
     const word = await askWhatWordToEnter();
 
     if (word.length > 0) {
