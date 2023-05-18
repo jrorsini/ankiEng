@@ -14,7 +14,23 @@ export const errorLogMessage = "Couldn't find what you're looking for...";
  * @returns {String} html body response scraped from dictionary.com
  */
 export async function fetchDictionaryBodyResponse(word) {
-    return axios.get(`https://www.dictionary.com/browse/${word}`);
+    // return axios.get(`https://www.dictionary.com/browse/${word}`);
+
+    try {
+        const response = await axios.get(
+            `https://www.dictionary.com/browse/${word}`
+        );
+    } catch (error) {
+        if (error.response) {
+            console.log("Status:", error.response.status);
+            // console.log("Data:", error.response.data);
+        } else if (error.request) {
+            console.log("Request:", error.request);
+        } else {
+            console.log("Error:", error.message);
+        }
+        return false;
+    }
 }
 
 /**
@@ -67,17 +83,17 @@ export function logWordContent(
 ) {
     const log = console.log;
 
-    log(
-        "\n\t\t" +
-            chalk.yellow.bold.underline(`WORD:`) +
-            ` ${userInput}\n` +
+    log("\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${userInput}\n`);
+
+    if (ipas !== "")
+        log(
             "\n\t" +
-            chalk.yellow.bold.underline(`IPA:`) +
-            ` ${ipas.join(" | ")}` +
-            "   |   " +
-            chalk.yellow.bold.underline(`SPELLING:`) +
-            ` ${spellings.join(" | ")}\n`
-    );
+                chalk.yellow.bold.underline(`IPA:`) +
+                ` ${ipas.join(" | ")}` +
+                "   |   " +
+                chalk.yellow.bold.underline(`SPELLING:`) +
+                ` ${spellings.join(" | ")}\n`
+        );
 
     definitions.map((e) => {
         log(
@@ -98,6 +114,7 @@ export function logWordContent(
             ) +
             "\n"
     );
+
     examples.map((e) => {
         const sourceOffset = e.source_phrases[0].offset;
         const sourceLength = e.source_phrases[0].length;

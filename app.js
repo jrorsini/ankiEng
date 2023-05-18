@@ -23,8 +23,6 @@ import {
     fullPrompt,
 } from "./prompt.js";
 
-import chalk from "chalk";
-
 async function scrape(userInput) {
     let dictionaryRes;
     let thesaurusRes;
@@ -33,9 +31,9 @@ async function scrape(userInput) {
     thesaurusRes = await fetchThesaurusBodyResponse(userInput);
     reversoRes = await fetchReversoResponse(userInput);
 
-    const ipas = fetchIPAs(dictionaryRes);
-    const types = fetchTypes(userInput, dictionaryRes);
-    const spellings = fetchSpellings(dictionaryRes);
+    const ipas = dictionaryRes ? fetchIPAs(dictionaryRes) : "";
+    const types = dictionaryRes ? fetchTypes(userInput, dictionaryRes) : "";
+    const spellings = dictionaryRes ? fetchSpellings(dictionaryRes) : "";
     const definitions = fetchDefinitions(thesaurusRes, types);
     const translations = fetchTranslations(reversoRes);
     const examples = fetchExamples(reversoRes);
