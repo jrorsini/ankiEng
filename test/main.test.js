@@ -1,18 +1,13 @@
 import isPhrasalVerb from "../utility/isPhrasalVerb.js";
 import Reverso from "reverso-api";
 const reverso = new Reverso();
-
 import {
     fetchReversoResponse,
-    errorLogMessage,
     fetchTranslations,
     fetchExamples,
+    fetchDictionaryBodyResponse,
+    fetchIPAs,
 } from "../utility/scrapeFuncs.js";
-import {
-    saveWordCardToFile,
-    fileExists,
-    getFileContent,
-} from "../utility/saveWordCardToFile.js";
 import assert from "assert";
 
 describe("Utility", function () {
@@ -52,20 +47,6 @@ describe("Utility", function () {
         });
     });
 
-    describe("#fileExists()", function () {
-        it("should return true because the file exists", async function () {
-            const result = await fileExists("./testingFile.txt");
-            assert.equal(result, true);
-        });
-    });
-
-    describe("#getFileContent()", function () {
-        it("should return the whole content of the file", async function () {
-            const data = await getFileContent("./testingFile.txt");
-            assert.equal(data.length > 0, true);
-        });
-    });
-
     describe("#fetchExamples()", function () {
         it("should return examples", async function () {
             const result = await fetchReversoResponse("test");
@@ -74,7 +55,7 @@ describe("Utility", function () {
         });
     });
 
-    describe("#test", function () {
+    describe("#getTranslation", function () {
         it("should return ", async function () {
             const result = await reverso.getTranslation(
                 "she digs him",
@@ -85,9 +66,16 @@ describe("Utility", function () {
                     return res;
                 }
             );
-            // console.log(result.context.examples);
+        });
+    });
+
+    describe("#fetchDictionaryBodyResponse", function () {
+        it("should return false", async function () {
+            const apis = await fetchDictionaryBodyResponse("seawall");
+            assert.equal(apis, false);
         });
     });
 });
 
+// seawall doesn't return any IPA
 // there's a case like "multivariate" in which an error is returned from thesaurus.com cause it can't find the word.

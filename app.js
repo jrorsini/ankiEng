@@ -19,8 +19,6 @@ import {
     whichSpelling,
     whichTranslation,
     askIfUserWantExamples,
-    askIfUserWantsMoreTranslation,
-    fullPrompt,
 } from "./prompt.js";
 
 async function scrape(userInput) {
@@ -31,10 +29,12 @@ async function scrape(userInput) {
     thesaurusRes = await fetchThesaurusBodyResponse(userInput);
     reversoRes = await fetchReversoResponse(userInput);
 
-    const ipas = dictionaryRes ? fetchIPAs(dictionaryRes) : "";
-    const types = dictionaryRes ? fetchTypes(userInput, dictionaryRes) : "";
-    const spellings = dictionaryRes ? fetchSpellings(dictionaryRes) : "";
-    const definitions = fetchDefinitions(thesaurusRes, types);
+    const ipas = dictionaryRes ? fetchIPAs(dictionaryRes) : false;
+    const types = dictionaryRes ? fetchTypes(userInput, dictionaryRes) : false;
+    const spellings = dictionaryRes ? fetchSpellings(dictionaryRes) : false;
+    const definitions = thesaurusRes
+        ? fetchDefinitions(thesaurusRes, types)
+        : false;
     const translations = fetchTranslations(reversoRes);
     const examples = fetchExamples(reversoRes);
 
@@ -71,16 +71,14 @@ while (true) {
             examples
         );
 
-        // await fullPrompt(translations);
-
         // IPA
-        let ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0];
+        let ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0] || ipas;
 
         // SPELLING
         let spelling =
             spellings.length > 1
                 ? await whichSpelling(spellings)
-                : spellings[0];
+                : spellings[0] || spellings;
 
         // DEFINITION
         let { typ, def } =

@@ -3,6 +3,7 @@ import axios from "axios";
 import cheerio from "cheerio";
 import isPhrasalVerb from "./isPhrasalVerb.js";
 import chalk from "chalk";
+import { typeColor } from "./global.js";
 
 const reverso = new Reverso();
 
@@ -14,20 +15,16 @@ export const errorLogMessage = "Couldn't find what you're looking for...";
  * @returns {String} html body response scraped from dictionary.com
  */
 export async function fetchDictionaryBodyResponse(word) {
-    // return axios.get(`https://www.dictionary.com/browse/${word}`);
-
     try {
-        const response = await axios.get(
-            `https://www.dictionary.com/browse/${word}`
-        );
+        return await axios.get(`https://www.dictionary.com/browse/${word}`);
     } catch (error) {
         if (error.response) {
-            console.log("Status:", error.response.status);
+            // console.log("Status:", error.response.status);
             // console.log("Data:", error.response.data);
         } else if (error.request) {
-            console.log("Request:", error.request);
+            // console.log("Request:", error.request);
         } else {
-            console.log("Error:", error.message);
+            // console.log("Error:", error.message);
         }
         return false;
     }
@@ -39,8 +36,19 @@ export async function fetchDictionaryBodyResponse(word) {
  * @returns {String} html body response scraped from thesaurus.com
  */
 export async function fetchThesaurusBodyResponse(word) {
-    let body = await axios.get(`https://www.thesaurus.com/browse/${word}`);
-    return body;
+    try {
+        return await axios.get(`https://www.thesaurus.com/browse/${word}`);
+    } catch (error) {
+        if (error.response) {
+            // console.log("Status:", error.response.status);
+            // console.log("Data:", error.response.data);
+        } else if (error.request) {
+            // console.log("Request:", error.request);
+        } else {
+            // console.log("Error:", error.message);
+        }
+        return false;
+    }
 }
 
 /**
@@ -56,7 +64,6 @@ export async function fetchReversoResponse(word) {
         (err, response) => {
             if (err) throw new Error(err.message);
 
-            // console.log(response);
             return response;
         }
     );
@@ -83,23 +90,26 @@ export function logWordContent(
 ) {
     const log = console.log;
 
-    log("\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${userInput}\n`);
+    log("\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${userInput}`);
 
-    if (ipas !== "")
+    if (ipas)
         log(
             "\n\t" +
                 chalk.yellow.bold.underline(`IPA:`) +
-                ` ${ipas.join(" | ")}` +
+                ` ${ipas.join(" - ")}` +
                 "   |   " +
                 chalk.yellow.bold.underline(`SPELLING:`) +
-                ` ${spellings.join(" | ")}\n`
+                ` ${spellings.join(" - ")}\n`
         );
 
     definitions.map((e) => {
+        const wordType = e.split(" | ")[0];
         log(
             "\t" +
-                chalk.yellow.inverse(` ${e.split(" | ")[0].toUpperCase()}: `) +
-                chalk.yellow.bold(` ${e.split(" | ")[1]}`)
+                chalk
+                    .hex(typeColor[wordType])
+                    .inverse(` ${wordType.toUpperCase()} `) +
+                chalk.hex(typeColor[wordType]).bold(` ${e.split(" | ")[1]}`)
         );
     });
     log(
