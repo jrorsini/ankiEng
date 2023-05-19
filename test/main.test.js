@@ -14,12 +14,16 @@ import assert from "assert";
 
 describe("Utility", function () {
     describe("#isPhrasalVerb()", function () {
-        it("should be a phrasal verb", function () {
-            assert.equal(isPhrasalVerb("dig up"), true);
+        it('"figure out"should be a phrasal verb', function () {
             assert.equal(isPhrasalVerb("figure out"), true);
         });
-        it("should should not be a phrasal verb", function () {
+        it('"dig up" should be a phrasal verb', function () {
+            assert.equal(isPhrasalVerb("dig up"), true);
+        });
+        it('"dig" should should not be a phrasal verb', function () {
             assert.equal(isPhrasalVerb("dig"), false);
+        });
+        it('"test " should should not be a phrasal verb', function () {
             assert.equal(isPhrasalVerb("test  "), false);
         });
     });
@@ -79,7 +83,7 @@ describe("Utility", function () {
     });
 
     describe("#fetchThesaurusBodyResponse", function () {
-        it("should return ", async function () {
+        it("should return false", async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse("dyke");
             const thesaurusRes = await fetchThesaurusBodyResponse("dyke");
             const types = dictionaryRes
@@ -88,10 +92,25 @@ describe("Utility", function () {
             const definitions = thesaurusRes
                 ? fetchDefinitions(thesaurusRes, types)
                 : false;
-            console.log(definitions);
+
+            assert.equal(definitions, false);
+        });
+        it("should return nothing for moose in thesaurus", async function () {
+            const dictionaryRes = await fetchDictionaryBodyResponse("moose");
+            const thesaurusRes = await fetchThesaurusBodyResponse("moose");
+            const types = dictionaryRes
+                ? fetchTypes("moose", dictionaryRes)
+                : false;
+            const definitions = thesaurusRes
+                ? fetchDefinitions(thesaurusRes, types)
+                : false;
+            assert.equal(definitions, false);
         });
     });
 });
 
 // "dyke" error
+// "stand out" error on reverso
+// "moose" doesn't return definition
+// "noticeably" logs adj adj adj after answering IPA
 // there's a case like "multivariate" in which an error is returned from thesaurus.com cause it can't find the word.

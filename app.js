@@ -85,7 +85,7 @@ while (true) {
         let { typ, def } =
             definitions.length > 1
                 ? await whichDefinition(definitions)
-                : definitions[0];
+                : definitions[0] || definitions;
 
         // EXAMPLE
         let example;
