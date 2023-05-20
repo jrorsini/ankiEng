@@ -102,16 +102,17 @@ export function logWordContent(
                 ` ${spellings.join(" - ")}\n`
         );
 
-    definitions.map((e) => {
-        const wordType = e.split(" | ")[0];
-        log(
-            "\t" +
-                chalk
-                    .hex(typeColor[wordType])
-                    .inverse(` ${wordType.toUpperCase()} `) +
-                chalk.hex(typeColor[wordType]).bold(` ${e.split(" | ")[1]}`)
-        );
-    });
+    if (definitions)
+        definitions.map((e) => {
+            const wordType = e.split(" | ")[0];
+            log(
+                "\t" +
+                    chalk
+                        .hex(typeColor[wordType])
+                        .inverse(` ${wordType.toUpperCase()} `) +
+                    chalk.hex(typeColor[wordType]).bold(` ${e.split(" | ")[1]}`)
+            );
+        });
     log("\n\t" + chalk.yellow.bold.underline(`TRANSLATIONS:`));
     log(
         "\n\t" +
@@ -254,7 +255,7 @@ export function fetchTypes(word, body) {
                   $(e)
                       .text()
                       // avoid a case like "reedy" in which we have this "adjective, reed·i·er, reed·i·est."
-                      .replace(",", "")
+                      .replaceAll(",", "")
                       .trim()
                       .replace("adjective", "adj")
               );

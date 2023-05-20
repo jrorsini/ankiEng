@@ -21,6 +21,8 @@ import {
     askIfUserWantExamples,
 } from "./prompt.js";
 
+import { addCard } from "./import.js";
+
 async function scrape(userInput) {
     let dictionaryRes;
     let thesaurusRes;
@@ -102,7 +104,24 @@ while (true) {
         // TRANSLATION
         let translation = await whichTranslation(translations);
 
-        const newWordCard = `${userInput};${ipa};${spelling};${typ};${translation};${def}`;
+        let note = {
+            deckName: "ankiEng",
+            modelName: "American English",
+            fields: {
+                word: userInput,
+                type: typ,
+                pronunciation: spelling,
+                ipa,
+                "thesaurus definition": def,
+                example,
+                translation: translation.join(", "),
+            },
+            options: {
+                allowDuplicate: false,
+            },
+        };
+
+        await addCard(note);
     } else {
         log("No input");
         break;
