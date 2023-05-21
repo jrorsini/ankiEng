@@ -2,10 +2,43 @@ import Reverso from "reverso-api";
 import axios from "axios";
 import cheerio from "cheerio";
 import isPhrasalVerb from "./isPhrasalVerb.js";
-import chalk from "chalk";
-import { typeColor } from "./global.js";
 
 const reverso = new Reverso();
+
+export async function mainScrape(userInput) {
+    let dictionaryRes;
+    let thesaurusRes;
+    dictionaryRes = await fetchDictionaryBodyResponse(userInput);
+    thesaurusRes = await fetchThesaurusBodyResponse(userInput);
+
+    const ipas = dictionaryRes ? getIPAs(dictionaryRes) : false;
+    const types = dictionaryRes ? getTypes(userInput, dictionaryRes) : false;
+    const spellings = dictionaryRes ? getPronunciation(dictionaryRes) : false;
+    const definitions = thesaurusRes
+        ? getDefinitions(thesaurusRes, types)
+        : false;
+    const translations = getTranslations(userInput);
+    const examples = fetchExamples(reversoRes);
+
+    const response = {
+        word: "",
+        ipa: "",
+        pronunciation: "",
+        type: "",
+        definitions: "",
+        translation: "",
+        examples: "",
+    };
+
+    return {
+        userInput,
+        ipas,
+        spellings,
+        definitions,
+        translations,
+        examples,
+    };
+}
 
 export const errorLogMessage = "Couldn't find what you're looking for...";
 
@@ -19,15 +52,34 @@ export async function fetchDictionaryBodyResponse(word) {
         return await axios.get(`https://www.dictionary.com/browse/${word}`);
     } catch (error) {
         if (error.response) {
-            // console.log("Status:", error.response.status);
+            console.log(
+                `"${word}" ` + "Dictionary Status:",
+                error.response.status
+            );
             // console.log("Data:", error.response.data);
         } else if (error.request) {
-            // console.log("Request:", error.request);
+            console.log("Request:", error.request);
         } else {
-            // console.log("Error:", error.message);
+            console.log("Error:", error.message);
         }
         return false;
     }
+}
+
+/**
+ *
+ * @param {String} word to search synonyms for
+ * @returns {Array} synonyms
+ */
+export async function getSynonyms(word) {
+    let response;
+    try {
+        response = await reverso.getSynonyms(word, "english");
+    } catch (err) {
+        console.log(err);
+    }
+
+    return response.synonyms.map((e) => e.synonym);
 }
 
 /**
@@ -40,12 +92,14 @@ export async function fetchThesaurusBodyResponse(word) {
         return await axios.get(`https://www.thesaurus.com/browse/${word}`);
     } catch (error) {
         if (error.response) {
-            // console.log("Status:", error.response.status);
-            // console.log("Data:", error.response.data);
+            console.log(
+                `"${word}" ` + "Thesaurus Status:",
+                error.response.status
+            ); // console.log("Data:", error.response.data);
         } else if (error.request) {
-            // console.log("Request:", error.request);
+            console.log("Request:", error.request);
         } else {
-            // console.log("Error:", error.message);
+            console.log("Error:", error.message);
         }
         return false;
     }
@@ -63,7 +117,6 @@ export async function fetchReversoResponse(word) {
         "french",
         (err, response) => {
             if (err) throw new Error(err.message);
-
             return response;
         }
     );
@@ -77,7 +130,7 @@ export async function fetchReversoResponse(word) {
  * @param {Array} types - types from dictionary.com
  * @returns {String} html body response scraped from thesaurus.com
  */
-export function fetchDefinitions(body, types) {
+export function getDefinitions(body, types) {
     let $ = cheerio.load(body.data);
 
     let definitions = [];
@@ -112,7 +165,7 @@ export function fetchDefinitions(body, types) {
  * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
  * @returns {Array} List of IPAs
  */
-export function fetchIPAs(body) {
+export function getIPAs(body) {
     // arg: dictionary.com html body from fetchDictionaryBodyResponse.
     let $ = cheerio.load(body.data);
     const ipaContainer = $(".pron-spell-ipa-container").find(
@@ -145,7 +198,7 @@ export function fetchIPAs(body) {
  * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
  * @returns {Array} List of Spellings
  */
-export function fetchSpellings(body) {
+export function getPronunciation(body) {
     let $ = cheerio.load(body.data);
     const spellingContainer = $(
         ".pron-spell-ipa-container .pron-spell-container"
@@ -168,7 +221,7 @@ export function fetchSpellings(body) {
  * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
  * @returns {Array} List of Types
  */
-export function fetchTypes(word, body) {
+export function getTypes(word, body) {
     let $ = cheerio.load(body.data);
     const types = isPhrasalVerb(word)
         ? ["phrasal verb"]
@@ -191,19 +244,30 @@ export function fetchTypes(word, body) {
 
 /**
  * Get translations from Reverso API
- * @param {String} res - response from Reverso
+ * @param {String} word - response from Reverso
  * @returns {Array}  Translations
  */
-export function fetchTranslations(res) {
-    return [...new Set(res.translations)];
+export async function getTranslations(word) {
+    try {
+        let res = await reverso.getTranslation(word, "english", "french");
+        return res.translations;
+    } catch (err) {
+        console.log(err);
+        return false;
+    }
 }
 
 /**
  * Get examples from Reverso API
- * @param {String} res - word to search in Reverso API
+ * @param {String} word - word to search in Reverso API
  * @returns {Array}  Examples
  */
-export function fetchExamples(res) {
-    // console.log(res);
-    return res.context.examples;
+export async function getExamples(word) {
+    try {
+        let res = await reverso.getContext(word, "english", "french");
+        return res.examples;
+    } catch (err) {
+        console.log(err);
+        return fasle;
+    }
 }

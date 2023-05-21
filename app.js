@@ -1,17 +1,5 @@
-import {
-    fetchDictionaryBodyResponse,
-    fetchThesaurusBodyResponse,
-    fetchReversoResponse,
-    fetchIPAs,
-    fetchSpellings,
-    fetchDefinitions,
-    fetchTranslations,
-    fetchExamples,
-    fetchTypes,
-} from "./utility/scrapeFuncs.js";
-
+import { mainScrape } from "./utility/scrapeFuncs.js";
 import { logWordContent } from "./utility/log.js";
-
 import {
     askWhatWordToEnter,
     whichIPA,
@@ -24,37 +12,16 @@ import {
 
 import { addCard } from "./anki.js";
 
-async function scrape(userInput) {
-    let dictionaryRes;
-    let thesaurusRes;
-    let reversoRes;
-    dictionaryRes = await fetchDictionaryBodyResponse(userInput);
-    thesaurusRes = await fetchThesaurusBodyResponse(userInput);
-    reversoRes = await fetchReversoResponse(userInput);
-
-    const ipas = dictionaryRes ? fetchIPAs(dictionaryRes) : false;
-    const types = dictionaryRes ? fetchTypes(userInput, dictionaryRes) : false;
-    const spellings = dictionaryRes ? fetchSpellings(dictionaryRes) : false;
-    const definitions = thesaurusRes
-        ? fetchDefinitions(thesaurusRes, types)
-        : false;
-    const translations = fetchTranslations(reversoRes);
-    const examples = fetchExamples(reversoRes);
-
-    return {
-        userInput,
-        ipas,
-        spellings,
-        definitions,
-        translations,
-        examples,
-    };
-}
-
 const log = console.log;
+
 while (true) {
     console.log("\n");
-    const word = await askWhatWordToEnter();
+    let word;
+    if (process.argv.length <= 2) {
+        word = await askWhatWordToEnter();
+    } else {
+        word = process.argv.slice(2).join(" ").toLowerCase().trim();
+    }
 
     if (word.length > 0) {
         let {
@@ -64,7 +31,7 @@ while (true) {
             definitions,
             translations,
             examples,
-        } = await scrape(word);
+        } = await mainScrape(word);
 
         logWordContent(
             userInput,

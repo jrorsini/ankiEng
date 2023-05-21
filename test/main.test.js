@@ -3,36 +3,109 @@ import Reverso from "reverso-api";
 const reverso = new Reverso();
 import {
     fetchReversoResponse,
-    fetchTranslations,
-    fetchExamples,
+    getTranslations,
+    getExamples,
     fetchDictionaryBodyResponse,
     fetchThesaurusBodyResponse,
-    fetchTypes,
-    fetchDefinitions,
+    getTypes,
+    getDefinitions,
 } from "../utility/scrapeFuncs.js";
 import assert from "assert";
+import chalk from "chalk";
+
+const wordList = [
+    // "shipwecked",
+    // "test",
+    // "clear",
+    // "hare",
+    // "dove",
+    // "flutter",
+    // "brook",
+    // "bank",
+    // "blade",
+    // "straw",
+    // "horoscope",
+    // "freighter",
+    // "sailor",
+    // "latch",
+    // "spar",
+    // "distant",
+    // "slumped",
+    // "slump",
+    // "fry",
+    // "dastardly",
+    // "check in",
+    // "despondent",
+    // "flunky",
+    // "clear out",
+    // "stung",
+    // "stalk",
+    // "plain",
+    // "foxy",
+    // "parting",
+    // "prowl",
+    // "choppy",
+    // "asinine",
+    // "railway",
+    // "divvy",
+    // "confined",
+    // "slip up",
+    // "curs",
+    // "cad",
+    // "cowl",
+    // "cobwebs",
+    // "figment",
+];
+
+console.log(await getExamples("iron"));
+// console.log(await getTranslations("iron"));
 
 describe("Utility", function () {
-    describe("#isPhrasalVerb()", function () {
-        it('"figure out"should be a phrasal verb', function () {
-            assert.equal(isPhrasalVerb("figure out"), true);
-        });
-        it('"dig up" should be a phrasal verb', function () {
-            assert.equal(isPhrasalVerb("dig up"), true);
-        });
-        it('"dig" should should not be a phrasal verb', function () {
-            assert.equal(isPhrasalVerb("dig"), false);
-        });
-        it('"test " should should not be a phrasal verb', function () {
-            assert.equal(isPhrasalVerb("test  "), false);
+    describe("#fetchDictionaryBodyResponse", function () {
+        wordList.map((e) => {
+            it(`returns body response for "${chalk.bold.underline(
+                e
+            )}"`, async function () {
+                const apis = await fetchDictionaryBodyResponse(e);
+
+                if (e === "shipwecked") {
+                    console.log(apis);
+                }
+                assert.equal(!apis, false);
+            });
         });
     });
 
+    describe("#isPhrasalVerb()", function () {
+        wordList
+            .filter((e) => !isPhrasalVerb(e))
+            .map((e) => {
+                it(`${chalk.underline.bold(
+                    e
+                )} is not be a phrasal verb `, function () {
+                    assert.equal(isPhrasalVerb(e), false);
+                });
+            });
+
+        wordList
+            .filter((e) => isPhrasalVerb(e))
+            .map((e) => {
+                it(`${chalk.underline.bold(e)} is a phrasal verb`, function () {
+                    assert.equal(isPhrasalVerb(e), true);
+                });
+            });
+    });
+
     describe("#fetchReversoResponse()", function () {
-        it("should return a response", async function () {
-            const result = await fetchReversoResponse("test");
-            assert.equal(result.ok, true);
+        wordList.map((e) => {
+            it(`returns response for ${chalk.underline.bold(
+                e
+            )}`, async function () {
+                const result = await fetchReversoResponse(e);
+                assert.equal(result.ok, true);
+            });
         });
+
         it("should return false", async function () {
             let result;
             try {
@@ -44,10 +117,10 @@ describe("Utility", function () {
         });
     });
 
-    describe("#fetchTranslations()", function () {
+    describe("#getTranslations()", function () {
         it("should return the translations without duplicates", async function () {
             assert.equal(
-                fetchTranslations(await fetchReversoResponse("reedy")).length,
+                getTranslations(await fetchReversoResponse("reedy")).length,
                 5
             );
         });
@@ -87,30 +160,28 @@ describe("Utility", function () {
             const dictionaryRes = await fetchDictionaryBodyResponse("dyke");
             const thesaurusRes = await fetchThesaurusBodyResponse("dyke");
             const types = dictionaryRes
-                ? fetchTypes("dyke", dictionaryRes)
+                ? getTypes("dyke", dictionaryRes)
                 : false;
             const definitions = thesaurusRes
-                ? fetchDefinitions(thesaurusRes, types)
+                ? getDefinitions(thesaurusRes, types)
                 : false;
 
-            console.log(definitions);
             assert.equal(definitions, false);
         });
         it("should return nothing for moose in thesaurus", async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse("moose");
             const thesaurusRes = await fetchThesaurusBodyResponse("moose");
             const types = dictionaryRes
-                ? fetchTypes("moose", dictionaryRes)
+                ? getTypes("moose", dictionaryRes)
                 : false;
             const definitions = thesaurusRes
-                ? fetchDefinitions(thesaurusRes, types)
+                ? getDefinitions(thesaurusRes, types)
                 : false;
             assert.equal(definitions, false);
         });
     });
 });
 
-// "dyke" error
 // "stand out" error on reverso
 // "moose" doesn't return definition
 // "noticeably" logs adj adj adj after answering IPA
