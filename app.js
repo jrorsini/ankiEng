@@ -8,8 +8,9 @@ import {
     fetchTranslations,
     fetchExamples,
     fetchTypes,
-    logWordContent,
 } from "./utility/scrapeFuncs.js";
+
+import { logWordContent } from "./utility/log.js";
 
 import {
     askWhatWordToEnter,
@@ -21,7 +22,7 @@ import {
     askIfUserWantExamples,
 } from "./prompt.js";
 
-import { addCard } from "./import.js";
+import { addCard } from "./anki.js";
 
 async function scrape(userInput) {
     let dictionaryRes;
@@ -104,24 +105,8 @@ while (true) {
         // TRANSLATION
         let translation = await whichTranslation(translations);
 
-        let note = {
-            deckName: "ankiEng",
-            modelName: "American English",
-            fields: {
-                word: userInput,
-                type: typ,
-                pronunciation: spelling,
-                ipa,
-                "thesaurus definition": def,
-                example,
-                translation: translation.join(", "),
-            },
-            options: {
-                allowDuplicate: false,
-            },
-        };
-
-        await addCard(note);
+        // ADD CARD
+        await addCard(userInput, typ, spelling, ipa, def, example, translation);
     } else {
         log("No input");
         break;

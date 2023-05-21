@@ -35,7 +35,32 @@ export async function createAnkiDeck(deckName) {
         });
 }
 
-export async function addCard(note) {
+export async function addCard(
+    word,
+    type,
+    pronunciation,
+    ipa,
+    def,
+    example,
+    translation
+) {
+    let note = {
+        deckName: "ankiEng",
+        modelName: "American English",
+        fields: {
+            word,
+            type,
+            pronunciation,
+            ipa,
+            "thesaurus definition": def,
+            example,
+            translation: translation.join(", "),
+        },
+        options: {
+            allowDuplicate: false,
+        },
+    };
+
     const res = await axios.post(ankiUrl, {
         action: "addNote",
         version: 6,

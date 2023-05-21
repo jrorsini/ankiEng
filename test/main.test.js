@@ -93,6 +93,7 @@ describe("Utility", function () {
                 ? fetchDefinitions(thesaurusRes, types)
                 : false;
 
+            console.log(definitions);
             assert.equal(definitions, false);
         });
         it("should return nothing for moose in thesaurus", async function () {
