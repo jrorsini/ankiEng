@@ -13,7 +13,7 @@ import { typeColor } from "./global.js";
 export function logWordContent(
     userInput,
     ipas,
-    spellings,
+    pronunciation,
     definitions,
     translations,
     examples
@@ -22,6 +22,7 @@ export function logWordContent(
 
     log("\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${userInput}`);
 
+    // IPA & PRONUNCIATION
     if (ipas)
         log(
             "\n\t" +
@@ -29,9 +30,11 @@ export function logWordContent(
                 ` ${ipas}` +
                 "   |   " +
                 chalk.yellow.bold.underline(`SPELLING:`) +
-                ` ${spellings.join(" - ")}\n`
+                ` ${pronunciation}\n`
         );
 
+    // DEFINITION
+    console.log(definitions);
     if (definitions)
         definitions.map((e) => {
             const wordType = e.split(" | ")[0];
@@ -43,11 +46,12 @@ export function logWordContent(
                     chalk.hex(typeColor[wordType]).bold(` ${e.split(" | ")[1]}`)
             );
         });
+
+    // TRANSLATION
     log("\n\t" + chalk.yellow.bold.underline(`TRANSLATIONS:`));
-    // console.log(translations);
     log(
         "\n\t" +
-            chalk.cyan.bold(
+            chalk.bold(
                 `${translations
                     .map((line, index) =>
                         (index + 1) % 4 === 0 ? line + "\n\t" : line + " - "
@@ -57,7 +61,13 @@ export function logWordContent(
             ) +
             "\n"
     );
+
+    // EXAMPLES
     log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
+    examples.slice(0, 5).map((e) => {
+        log(`\t${e.source.replace(userInput, chalk.bold.red(userInput))}`);
+        log(`\t${e.target}\n`);
+    });
     // examples.map((e) => {
     //     const sourceOffset = e.source_phrases[0].offset;
     //     const sourceLength = e.source_phrases[0].length;

@@ -26,8 +26,8 @@ while (true) {
     if (word.length > 0) {
         let {
             userInput,
-            ipas,
-            spellings,
+            ipa,
+            pronunciation,
             definitions,
             translations,
             examples,
@@ -35,21 +35,12 @@ while (true) {
 
         logWordContent(
             userInput,
-            ipas,
-            spellings,
+            ipa,
+            pronunciation,
             definitions,
             translations,
             examples
         );
-
-        // IPA
-        let ipa = ipas.length > 1 ? await whichIPA(ipas) : ipas[0] || ipas;
-
-        // SPELLING
-        let spelling =
-            spellings.length > 1
-                ? await whichSpelling(spellings)
-                : spellings[0] || spellings;
 
         // DEFINITION
         let { typ, def } =

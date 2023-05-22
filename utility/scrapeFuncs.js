@@ -11,9 +11,11 @@ export async function mainScrape(userInput) {
     dictionaryRes = await fetchDictionaryBodyResponse(userInput);
     thesaurusRes = await fetchThesaurusBodyResponse(userInput);
 
-    const ipas = dictionaryRes ? getIPAs(dictionaryRes) : false;
+    const ipa = dictionaryRes ? getIPAs(dictionaryRes) : false;
     const types = dictionaryRes ? getTypes(userInput, dictionaryRes) : false;
-    const spellings = dictionaryRes ? getPronunciation(dictionaryRes) : false;
+    const pronunciation = dictionaryRes
+        ? getPronunciation(dictionaryRes)
+        : false;
     const definitions = thesaurusRes
         ? getDefinitions(thesaurusRes, types)
         : false;
@@ -22,8 +24,8 @@ export async function mainScrape(userInput) {
 
     const response = {
         word: "",
-        ipa: "",
-        pronunciation: "",
+        ipa,
+        pronunciation,
         type: "",
         definitions: "",
         translation: "",
@@ -32,8 +34,8 @@ export async function mainScrape(userInput) {
 
     return {
         userInput,
-        ipas,
-        spellings,
+        ipa,
+        pronunciation,
         definitions,
         translations,
         examples,
@@ -155,9 +157,8 @@ export function getDefinitions(body, types) {
                 definitions[i] +=
                     " | " + $(e).text().trim().replaceAll(";", ",");
             });
-
-        return definitions;
     }
+    return definitions;
 }
 
 /**
@@ -229,7 +230,7 @@ export function getPronunciation(body) {
 export function getTypes(word, body) {
     let $ = cheerio.load(body.data);
     const types = isPhrasalVerb(word)
-        ? ["phrasal verb"]
+        ? "phrasal verb"
         : $("section.serp-nav-button")
               .next()
               .find("span.luna-pos")
@@ -243,7 +244,6 @@ export function getTypes(word, body) {
                       .replace("adjective", "adj")
               )
               .toString();
-
     return types;
 }
 

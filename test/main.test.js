@@ -11,9 +11,11 @@ import {
     getTypes,
     getDefinitions,
     getPronunciation,
+    mainScrape,
 } from "../utility/scrapeFuncs.js";
 import assert from "assert";
 import chalk from "chalk";
+import { logWordContent } from "../utility/log.js";
 
 const wordList = [
     "stand out",
@@ -21,44 +23,62 @@ const wordList = [
     "horoscope",
     "check in",
     "cobwebs",
-    // "shipwecked",
-    // "test",
-    // "clear",
-    // "hare",
-    // "dove",
-    // "flutter",
-    // "brook",
-    // "bank",
-    // "blade",
-    // "straw",
-    // "freighter",
-    // "sailor",
-    // "latch",
-    // "spar",
-    // "distant",
-    // "slumped",
-    // "slump",
-    // "fry",
-    // "dastardly",
-    // "despondent",
-    // "flunky",
-    // "clear out",
-    // "stung",
-    // "stalk",
-    // "plain",
-    // "foxy",
-    // "parting",
-    // "prowl",
-    // "choppy",
-    // "asinine",
-    // "railway",
-    // "divvy",
-    // "confined",
-    // "curs",
-    // "cad",
-    // "cowl",
-    // "figment",
+    "shipwrecked",
+    "test",
+    "clear",
+    "hare",
+    "dove",
+    "flutter",
+    "brook",
+    "bank",
+    "blade",
+    "straw",
+    "freighter",
+    "sailor",
+    "latch",
+    "spar",
+    "distant",
+    "slumped",
+    "slump",
+    "fry",
+    "dastardly",
+    "despondent",
+    "flunky",
+    "clear out",
+    "stung",
+    "stalk",
+    "plain",
+    "foxy",
+    "parting",
+    "prowl",
+    "choppy",
+    "asinine",
+    "railway",
+    "divvy",
+    "confined",
+    "curs",
+    "cad",
+    "cowl",
+    "figment",
 ];
+
+// let testDictionary = await fetchDictionaryBodyResponse("test");
+// let testTypes = getTypes("test", testDictionary);
+// console.log(testTypes);
+// console.log(await fetchThesaurusBodyResponse("test"));
+// await getDefinitions(, testTypes);
+
+let { userInput, ipa, pronunciation, definitions, translations, examples } =
+    await mainScrape("test");
+
+// logWordContent(
+//     userInput,
+//     ipa,
+//     pronunciation,
+//     definitions,
+//     translations,
+//     examples
+// );
 
 describe("Utility", function () {
     describe("#fetchDictionaryBodyResponse", function () {
@@ -66,8 +86,10 @@ describe("Utility", function () {
             it(`returns body response for "${chalk.bold.underline(
                 e
             )}" from dictionary.com`, async function () {
-                const ipas = await fetchDictionaryBodyResponse(e);
-                assert.equal(!ipas, false);
+                const dictionaryRes = await fetchDictionaryBodyResponse(e);
+                // console.log(dictionaryRes.data);
+                console.log(getTypes(e, dictionaryRes));
+                assert.equal(!dictionaryRes, false);
             });
         });
     });
