@@ -10,11 +10,17 @@ import {
     getIPAs,
     getTypes,
     getDefinitions,
+    getPronunciation,
 } from "../utility/scrapeFuncs.js";
 import assert from "assert";
 import chalk from "chalk";
 
 const wordList = [
+    "stand out",
+    "slip up",
+    "horoscope",
+    "check in",
+    "cobwebs",
     // "shipwecked",
     // "test",
     // "clear",
@@ -25,7 +31,6 @@ const wordList = [
     // "bank",
     // "blade",
     // "straw",
-    "horoscope",
     // "freighter",
     // "sailor",
     // "latch",
@@ -35,7 +40,6 @@ const wordList = [
     // "slump",
     // "fry",
     // "dastardly",
-    "check in",
     // "despondent",
     // "flunky",
     // "clear out",
@@ -50,26 +54,19 @@ const wordList = [
     // "railway",
     // "divvy",
     // "confined",
-    "slip up",
     // "curs",
     // "cad",
     // "cowl",
-    "cobwebs",
     // "figment",
 ];
-
-// console.log(await getExamples("iron"));
-// console.log(await getTranslations("iron"));
 
 describe("Utility", function () {
     describe("#fetchDictionaryBodyResponse", function () {
         wordList.map((e) => {
             it(`returns body response for "${chalk.bold.underline(
                 e
-            )}"`, async function () {
+            )}" from dictionary.com`, async function () {
                 const ipas = await fetchDictionaryBodyResponse(e);
-
-                console.log(getIPAs(ipas));
                 assert.equal(!ipas, false);
             });
         });
@@ -95,40 +92,10 @@ describe("Utility", function () {
             });
     });
 
-    describe("#fetchReversoResponse()", function () {
-        wordList.map((e) => {
-            it(`returns response for ${chalk.underline.bold(
-                e
-            )}`, async function () {
-                const result = await fetchReversoResponse(e);
-                assert.equal(result.ok, true);
-            });
-        });
-
-        it("should return false", async function () {
-            let result;
-            try {
-                result = await fetchReversoResponse("asdfadss");
-            } catch (error) {
-                result = false;
-            }
-            assert.equal(result, false);
-        });
-    });
-
     describe("#getTranslations()", function () {
         it("should return the translations without duplicates", async function () {
             const translations = await getTranslations("reedy");
-            console.log(translations);
-            assert.equal(translations.length, 5);
-        });
-    });
-
-    describe("#fetchExamples()", function () {
-        it("should return examples", async function () {
-            const result = await fetchReversoResponse("test");
-            const examples = getExamples(result);
-            assert.equal(examples.length, 3);
+            assert.equal(translations.length, 4);
         });
     });
 

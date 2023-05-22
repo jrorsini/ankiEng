@@ -193,7 +193,7 @@ export function getIPAs(body) {
                   ),
               ][0];
 
-    return ipa;
+    return ipa.split(", ")[0];
 }
 
 /**
@@ -207,15 +207,17 @@ export function getPronunciation(body) {
         ".pron-spell-ipa-container .pron-spell-container"
     ).find(".pron-spell-content");
 
-    return spellingContainer.length === 1
-        ? [spellingContainer.text().replace(/\[|\]/g, "").trim()]
-        : [
-              ...new Set(
-                  spellingContainer
-                      .toArray()
-                      .map((e) => $(e).text().replace(/\[|\]/g, "").trim())
-              ),
-          ];
+    let pronunciation =
+        spellingContainer.length === 1
+            ? [spellingContainer.text().replace(/\[|\]/g, "").trim()]
+            : [
+                  ...new Set(
+                      spellingContainer
+                          .toArray()
+                          .map((e) => $(e).text().replace(/\[|\]/g, "").trim())
+                  ),
+              ];
+    return pronunciation.length > 0 ? pronunciation[0].split(", ")[0] : ""; //;
 }
 
 /**

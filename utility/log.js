@@ -26,7 +26,7 @@ export function logWordContent(
         log(
             "\n\t" +
                 chalk.yellow.bold.underline(`IPA:`) +
-                ` ${ipas.join(" - ")}` +
+                ` ${ipas}` +
                 "   |   " +
                 chalk.yellow.bold.underline(`SPELLING:`) +
                 ` ${spellings.join(" - ")}\n`
@@ -44,6 +44,7 @@ export function logWordContent(
             );
         });
     log("\n\t" + chalk.yellow.bold.underline(`TRANSLATIONS:`));
+    // console.log(translations);
     log(
         "\n\t" +
             chalk.cyan.bold(
@@ -57,26 +58,26 @@ export function logWordContent(
             "\n"
     );
     log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
-    examples.map((e) => {
-        const sourceOffset = e.source_phrases[0].offset;
-        const sourceLength = e.source_phrases[0].length;
-        const sourcePhrase = e.source_phrases[0].phrase;
+    // examples.map((e) => {
+    //     const sourceOffset = e.source_phrases[0].offset;
+    //     const sourceLength = e.source_phrases[0].length;
+    //     const sourcePhrase = e.source_phrases[0].phrase;
 
-        const targetOffset = e.target_phrases[0].offset;
-        const targetLength = e.target_phrases[0].length;
-        const targetPhrase = e.target_phrases[0].phrase;
-        log(
-            `\t${e.source.slice(0, sourceOffset)}` +
-                chalk.red.bold.underline(sourcePhrase) +
-                `${e.source.slice(
-                    sourceOffset + sourceLength,
-                    e.source.length
-                )}\n\t${e.target.slice(0, targetOffset)}` +
-                chalk.cyan.bold.underline(targetPhrase) +
-                `${e.target.slice(
-                    targetOffset + targetLength,
-                    e.target.length
-                )}\n`
-        );
-    });
+    //     const targetOffset = e.target_phrases[0].offset;
+    //     const targetLength = e.target_phrases[0].length;
+    //     const targetPhrase = e.target_phrases[0].phrase;
+    //     log(
+    //         `\t${e.source.slice(0, sourceOffset)}` +
+    //             chalk.red.bold.underline(sourcePhrase) +
+    //             `${e.source.slice(
+    //                 sourceOffset + sourceLength,
+    //                 e.source.length
+    //             )}\n\t${e.target.slice(0, targetOffset)}` +
+    //             chalk.cyan.bold.underline(targetPhrase) +
+    //             `${e.target.slice(
+    //                 targetOffset + targetLength,
+    //                 e.target.length
+    //             )}\n`
+    //     );
+    // });
 }
