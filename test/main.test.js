@@ -7,6 +7,7 @@ import {
     getExamples,
     fetchDictionaryBodyResponse,
     fetchThesaurusBodyResponse,
+    getIPAs,
     getTypes,
     getDefinitions,
 } from "../utility/scrapeFuncs.js";
@@ -24,7 +25,7 @@ const wordList = [
     // "bank",
     // "blade",
     // "straw",
-    // "horoscope",
+    "horoscope",
     // "freighter",
     // "sailor",
     // "latch",
@@ -34,7 +35,7 @@ const wordList = [
     // "slump",
     // "fry",
     // "dastardly",
-    // "check in",
+    "check in",
     // "despondent",
     // "flunky",
     // "clear out",
@@ -49,15 +50,15 @@ const wordList = [
     // "railway",
     // "divvy",
     // "confined",
-    // "slip up",
+    "slip up",
     // "curs",
     // "cad",
     // "cowl",
-    // "cobwebs",
+    "cobwebs",
     // "figment",
 ];
 
-console.log(await getExamples("iron"));
+// console.log(await getExamples("iron"));
 // console.log(await getTranslations("iron"));
 
 describe("Utility", function () {
@@ -66,12 +67,10 @@ describe("Utility", function () {
             it(`returns body response for "${chalk.bold.underline(
                 e
             )}"`, async function () {
-                const apis = await fetchDictionaryBodyResponse(e);
+                const ipas = await fetchDictionaryBodyResponse(e);
 
-                if (e === "shipwecked") {
-                    console.log(apis);
-                }
-                assert.equal(!apis, false);
+                console.log(getIPAs(ipas));
+                assert.equal(!ipas, false);
             });
         });
     });
@@ -119,17 +118,16 @@ describe("Utility", function () {
 
     describe("#getTranslations()", function () {
         it("should return the translations without duplicates", async function () {
-            assert.equal(
-                getTranslations(await fetchReversoResponse("reedy")).length,
-                5
-            );
+            const translations = await getTranslations("reedy");
+            console.log(translations);
+            assert.equal(translations.length, 5);
         });
     });
 
     describe("#fetchExamples()", function () {
         it("should return examples", async function () {
             const result = await fetchReversoResponse("test");
-            const examples = fetchExamples(result);
+            const examples = getExamples(result);
             assert.equal(examples.length, 3);
         });
     });

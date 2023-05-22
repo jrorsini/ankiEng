@@ -17,8 +17,8 @@ export async function mainScrape(userInput) {
     const definitions = thesaurusRes
         ? getDefinitions(thesaurusRes, types)
         : false;
-    const translations = getTranslations(userInput);
-    const examples = fetchExamples(reversoRes);
+    const translations = await getTranslations(userInput);
+    const examples = await getExamples(userInput);
 
     const response = {
         word: "",
@@ -172,25 +172,28 @@ export function getIPAs(body) {
         ".pron-ipa-content"
     );
 
-    return ipaContainer.length === 1
-        ? [
-              ipaContainer
-                  .text()
-                  .replace(/[/()[\]]/g, "")
-                  .trim(),
-          ]
-        : [
-              ...new Set(
+    const ipa =
+        ipaContainer.length === 1
+            ? [
                   ipaContainer
-                      .map((i, el) =>
-                          $(el)
-                              .text()
-                              .replace(/[/()[\]]/g, "")
-                              .trim()
-                      )
-                      .toArray()
-              ),
-          ];
+                      .text()
+                      .replace(/[/()[\]]/g, "")
+                      .trim(),
+              ][0]
+            : [
+                  ...new Set(
+                      ipaContainer
+                          .map((i, el) =>
+                              $(el)
+                                  .text()
+                                  .replace(/[/()[\]]/g, "")
+                                  .trim()
+                          )
+                          .toArray()
+                  ),
+              ][0];
+
+    return ipa;
 }
 
 /**
@@ -250,7 +253,10 @@ export function getTypes(word, body) {
 export async function getTranslations(word) {
     try {
         let res = await reverso.getTranslation(word, "english", "french");
-        return res.translations;
+        let translations = res.translations.filter(
+            (e) => e.toLowerCase() !== word
+        );
+        return [...new Set(translations)];
     } catch (err) {
         console.log(err);
         return false;
