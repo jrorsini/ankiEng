@@ -136,13 +136,15 @@ export async function askIfUserWantsMoreTranslation() {
  * @param {Array} examples - Examples to choose from
  * @returns {String} the choosen Example
  */
-export async function whichExample(examples) {
+export async function whichExample(word, examples) {
     const answers = await inquirer.prompt([
         {
-            type: "rawlist",
+            type: "checkbox",
             name: "example",
             message: "Which " + chalk.underline.bold.yellow("example") + "?",
-            choices: examples.map((e) => e.source),
+            choices: examples.map((e) =>
+                e.source.replace(word, chalk.bold.red(word))
+            ),
         },
     ]);
     return answers.example;

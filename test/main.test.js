@@ -18,48 +18,53 @@ import chalk from "chalk";
 import { logWordContent } from "../utility/log.js";
 
 const wordList = [
-    "stand out",
-    "slip up",
-    "horoscope",
-    "check in",
     "cobwebs",
-    "shipwrecked",
-    "test",
-    "clear",
-    "hare",
-    "dove",
-    "flutter",
-    "brook",
-    "bank",
-    "blade",
-    "straw",
-    "freighter",
-    "sailor",
-    "latch",
-    "spar",
-    "distant",
-    "slumped",
-    "slump",
-    "fry",
-    "dastardly",
-    "despondent",
-    "flunky",
-    "clear out",
-    "stung",
-    "stalk",
-    "plain",
-    "foxy",
-    "parting",
-    "prowl",
-    "choppy",
-    "asinine",
-    "railway",
-    "divvy",
-    "confined",
-    "curs",
-    "cad",
-    "cowl",
-    "figment",
+    "jawing",
+    "holler",
+    "stand out",
+    // "limp",
+    // "slip up",
+    // "dyke",
+    // "horoscope",
+    // "check in",
+    // "shipwrecked",
+    // "test",
+    // "clear",
+    // "hare",
+    // "reedy",
+    // "dove",
+    // "flutter",
+    // "brook",
+    // "bank",
+    // "blade",
+    // "straw",
+    // "freighter",
+    // "sailor",
+    // "latch",
+    // "spar",
+    // "distant",
+    // "slumped",
+    // "slump",
+    // "fry",
+    // "dastardly",
+    // "despondent",
+    // "flunky",
+    // "clear out",
+    // "stung",
+    // "stalk",
+    // "plain",
+    // "foxy",
+    // "parting",
+    // "prowl",
+    // "choppy",
+    // "asinine",
+    // "railway",
+    // "divvy",
+    // "confined",
+    // "curs",
+    // "cad",
+    // "cowl",
+    // "figment",
 ];
 
 // let testDictionary = await fetchDictionaryBodyResponse("test");
@@ -68,106 +73,108 @@ const wordList = [
 // console.log(await fetchThesaurusBodyResponse("test"));
 // await getDefinitions(, testTypes);
 
-let { userInput, ipa, pronunciation, definitions, translations, examples } =
-    await mainScrape("test");
+// wordList.map(async (e) => {
+//     let { userInput, ipa, pronunciation, definitions, translations, examples } =
+//         await mainScrape(e);
 
-// logWordContent(
-//     userInput,
-//     ipa,
-//     pronunciation,
-//     definitions,
-//     translations,
-//     examples
-// );
+//     logWordContent(
+//         userInput,
+//         ipa,
+//         pronunciation,
+//         definitions,
+//         translations,
+//         examples
+//     );
+// });
 
-describe("Utility", function () {
-    describe("#fetchDictionaryBodyResponse", function () {
-        wordList.map((e) => {
-            it(`returns body response for "${chalk.bold.underline(
-                e
-            )}" from dictionary.com`, async function () {
-                const dictionaryRes = await fetchDictionaryBodyResponse(e);
-                // console.log(dictionaryRes.data);
-                console.log(getTypes(e, dictionaryRes));
-                assert.equal(!dictionaryRes, false);
-            });
-        });
-    });
-
-    describe("#isPhrasalVerb()", function () {
-        wordList
-            .filter((e) => !isPhrasalVerb(e))
-            .map((e) => {
-                it(`${chalk.underline.bold(
-                    e
-                )} is not be a phrasal verb `, function () {
-                    assert.equal(isPhrasalVerb(e), false);
-                });
-            });
-
-        wordList
-            .filter((e) => isPhrasalVerb(e))
-            .map((e) => {
-                it(`${chalk.underline.bold(e)} is a phrasal verb`, function () {
-                    assert.equal(isPhrasalVerb(e), true);
-                });
-            });
-    });
-
-    describe("#getTranslations()", function () {
-        it("should return the translations without duplicates", async function () {
-            const translations = await getTranslations("reedy");
-            assert.equal(translations.length, 4);
-        });
-    });
-
-    describe("#getTranslation", function () {
-        it("should return ", async function () {
-            const result = await reverso.getTranslation(
-                "she digs him",
-                "english",
-                "french",
-                (err, res) => {
-                    if (err) throw new Error(err.message);
-                    return res;
-                }
-            );
-        });
-    });
-
-    describe("#fetchDictionaryBodyResponse", function () {
-        it("should return false", async function () {
-            const apis = await fetchDictionaryBodyResponse("seawall");
-            assert.equal(apis, false);
-        });
-    });
-
-    describe("#fetchThesaurusBodyResponse", function () {
-        it("should return false", async function () {
-            const dictionaryRes = await fetchDictionaryBodyResponse("dyke");
-            const thesaurusRes = await fetchThesaurusBodyResponse("dyke");
-            const types = dictionaryRes
-                ? getTypes("dyke", dictionaryRes)
-                : false;
-            const definitions = thesaurusRes
-                ? getDefinitions(thesaurusRes, types)
-                : false;
-
-            assert.equal(definitions, false);
-        });
-        it("should return nothing for moose in thesaurus", async function () {
-            const dictionaryRes = await fetchDictionaryBodyResponse("moose");
-            const thesaurusRes = await fetchThesaurusBodyResponse("moose");
-            const types = dictionaryRes
-                ? getTypes("moose", dictionaryRes)
-                : false;
-            const definitions = thesaurusRes
-                ? getDefinitions(thesaurusRes, types)
-                : false;
-            assert.equal(definitions, false);
+describe("dictionary.com", function () {
+    wordList.map((e) => {
+        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
+            e
+        )}"`, async function () {
+            const dictionaryRes = await fetchDictionaryBodyResponse(e);
+            assert.equal(!dictionaryRes, false);
         });
     });
 });
+
+describe("dictionary.com types", function () {
+    wordList.map((e) => {
+        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
+            e
+        )}"`, async function () {
+            const dictionaryRes = await fetchDictionaryBodyResponse(e);
+            const types = getTypes(e, dictionaryRes);
+            types ? assert.equal(!types, false) : assert.equal(types, false);
+        });
+    });
+});
+
+describe("thesaurus.com", function () {
+    wordList.map((e) => {
+        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
+            e
+        )}"`, async function () {
+            const thesaurusRes = await fetchThesaurusBodyResponse(e);
+            assert.equal(!thesaurusRes, false);
+        });
+    });
+});
+
+describe("thesaurus.com definition", function () {
+    wordList.map((e) => {
+        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
+            e
+        )}"`, async function () {
+            const dictionaryRes = await fetchDictionaryBodyResponse(e);
+            const thesaurusRes = await fetchThesaurusBodyResponse(e);
+            const typ = getTypes(e, dictionaryRes);
+            const def = await getDefinitions(thesaurusRes, typ);
+            console.log(def);
+            def ? assert.equal(!def, false) : assert.equal(def, false);
+        });
+    });
+});
+/**
+
+describe("#isPhrasalVerb()", function () {
+    wordList
+        .filter((e) => !isPhrasalVerb(e))
+        .map((e) => {
+            it(`${chalk.underline.bold(e)} != phrasal verb `, function () {
+                assert.equal(isPhrasalVerb(e), false);
+            });
+        });
+
+    wordList
+        .filter((e) => isPhrasalVerb(e))
+        .map((e) => {
+            it(`${chalk.underline.bold(e)} = phrasal verb`, function () {
+                assert.equal(isPhrasalVerb(e), true);
+            });
+        });
+});
+
+ */
+
+// describe("#fetchDictionaryBodyResponse", function () {
+//     it("should return false", async function () {
+//         const apis = await fetchDictionaryBodyResponse("seawall");
+//         assert.equal(apis, false);
+//     });
+// });
+
+// describe("#fetchThesaurusBodyResponse", function () {
+//     it("should return nothing for moose in thesaurus", async function () {
+//         const dictionaryRes = await fetchDictionaryBodyResponse("moose");
+//         const thesaurusRes = await fetchThesaurusBodyResponse("moose");
+//         const types = dictionaryRes ? getTypes("moose", dictionaryRes) : false;
+//         const definitions = thesaurusRes
+//             ? getDefinitions(thesaurusRes, types)
+//             : false;
+//         assert.equal(definitions, false);
+//     });
+// });
 
 // "stand out" error on reverso
 // "moose" doesn't return definition

@@ -49,22 +49,24 @@ while (true) {
                 : definitions[0] || definitions;
 
         // EXAMPLE
-        let example;
-        if (examples.length > 0) {
-            // logWordContent(examples);
-            if (await askIfUserWantExamples()) {
-                example =
-                    examples.length > 1
-                        ? await whichExample(examples)
-                        : examples[0];
-            }
-        }
+        let example =
+            examples.length > 0
+                ? await whichExample(userInput, examples)
+                : examples[0];
 
         // TRANSLATION
         let translation = await whichTranslation(translations);
 
         // ADD CARD
-        await addCard(userInput, typ, spelling, ipa, def, example, translation);
+        await addCard(
+            userInput,
+            typ,
+            pronunciation,
+            ipa,
+            def,
+            example,
+            translation
+        );
     } else {
         log("No input");
         break;

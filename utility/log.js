@@ -34,7 +34,6 @@ export function logWordContent(
         );
 
     // DEFINITION
-    console.log(definitions);
     if (definitions)
         definitions.map((e) => {
             const wordType = e.split(" | ")[0];

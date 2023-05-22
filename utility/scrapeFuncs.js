@@ -243,7 +243,9 @@ export function getTypes(word, body) {
                       .trim()
                       .replace("adjective", "adj")
               )
-              .toString();
+              .toString()
+              .split(",")[0]
+              .split(" ")[0];
     return types;
 }
 
