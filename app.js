@@ -2,12 +2,9 @@ import { mainScrape } from "./utility/scrapeFuncs.js";
 import { logWordContent } from "./utility/log.js";
 import {
     askWhatWordToEnter,
-    whichIPA,
     whichExample,
     whichDefinition,
-    whichSpelling,
     whichTranslation,
-    askIfUserWantExamples,
 } from "./prompt.js";
 
 import { addCard } from "./anki.js";

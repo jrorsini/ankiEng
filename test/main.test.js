@@ -130,7 +130,6 @@ describe("thesaurus.com definition", function () {
             const thesaurusRes = await fetchThesaurusBodyResponse(e);
             const typ = getTypes(e, dictionaryRes);
             const def = await getDefinitions(thesaurusRes, typ);
-            console.log(def);
             def ? assert.equal(!def, false) : assert.equal(def, false);
         });
     });
