@@ -119,7 +119,16 @@ describe("dictionary.com word", function () {
         )}"`, async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse(e);
             const word = await getWord(dictionaryRes);
-            console.log(word);
+            if (word) {
+                assert.equal(!word, false);
+            } else {
+                assert.equal(word, false);
+                console.log(
+                    `\n\t${chalk.bold.underline.red(
+                        "no word"
+                    )} for ${chalk.bold(e)}`
+                );
+            }
         });
     });
 });

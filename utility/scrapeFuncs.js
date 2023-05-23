@@ -169,9 +169,9 @@ export function getDefinitions(body, type) {
 export function getWord(body) {
     // arg: dictionary.com html body from fetchDictionaryBodyResponse.
     let $ = cheerio.load(body.data);
-    const ipaContainer = $("#top-definitions-section").find("h1").text().trim();
+    const word = $("#top-definitions-section").find("h1").text().trim();
 
-    return ipaContainer;
+    return word;
 }
 
 /**

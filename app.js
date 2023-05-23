@@ -13,25 +13,19 @@ const log = console.log;
 
 while (true) {
     console.log("\n");
-    let word;
+    let input;
     if (process.argv.length <= 2) {
-        word = await askWhatWordToEnter();
+        input = await askWhatWordToEnter();
     } else {
-        word = process.argv.slice(2).join(" ").toLowerCase().trim();
+        input = process.argv.slice(2).join(" ").toLowerCase().trim();
     }
 
-    if (word.length > 0) {
-        let {
-            userInput,
-            ipa,
-            pronunciation,
-            definitions,
-            translations,
-            examples,
-        } = await mainScrape(word);
+    if (input.length > 0) {
+        let { word, ipa, pronunciation, definitions, translations, examples } =
+            await mainScrape(input);
 
         logWordContent(
-            userInput,
+            word,
             ipa,
             pronunciation,
             definitions,
@@ -48,22 +42,14 @@ while (true) {
         // EXAMPLE
         let example =
             examples.length > 0
-                ? await whichExample(userInput, examples)
+                ? await whichExample(word, examples)
                 : examples[0];
 
         // TRANSLATION
         let translation = await whichTranslation(translations);
 
         // ADD CARD
-        await addCard(
-            userInput,
-            typ,
-            pronunciation,
-            ipa,
-            def,
-            example,
-            translation
-        );
+        await addCard(word, typ, pronunciation, ipa, def, example, translation);
     } else {
         log("No input");
         break;
