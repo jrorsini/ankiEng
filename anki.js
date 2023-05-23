@@ -40,20 +40,21 @@ export async function addCard(
     type,
     pronunciation,
     ipa,
-    def,
+    definition,
     example,
     translation
 ) {
     let note = {
         deckName: "ankiEng",
-        modelName: "American English",
+        modelName: "ANKIENG_NOTE",
         fields: {
             word,
             type,
             pronunciation,
             ipa,
-            "thesaurus definition": def,
-            example,
+            definition,
+            example_fr: "",
+            example_en: "",
             translation: translation.join(", "),
         },
         options: {
@@ -69,7 +70,7 @@ export async function addCard(
         },
     });
 
-    console.log(res);
+    console.log(res.data);
 }
 
 // if (!(await checkIfDeckExists("ankiEng"))) {

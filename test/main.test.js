@@ -12,59 +12,62 @@ import {
     getDefinitions,
     getPronunciation,
     mainScrape,
+    getWord,
 } from "../utility/scrapeFuncs.js";
 import assert from "assert";
 import chalk from "chalk";
 import { logWordContent } from "../utility/log.js";
 
 const wordList = [
+    "puffing",
     "cobwebs",
     "jawing",
     "holler",
     "stand out",
-    // "limp",
-    // "slip up",
-    // "dyke",
-    // "horoscope",
-    // "check in",
-    // "shipwrecked",
-    // "test",
-    // "clear",
-    // "hare",
-    // "reedy",
-    // "dove",
-    // "flutter",
-    // "brook",
-    // "bank",
-    // "blade",
-    // "straw",
-    // "freighter",
-    // "sailor",
-    // "latch",
-    // "spar",
-    // "distant",
-    // "slumped",
-    // "slump",
-    // "fry",
-    // "dastardly",
-    // "despondent",
-    // "flunky",
-    // "clear out",
-    // "stung",
-    // "stalk",
-    // "plain",
-    // "foxy",
-    // "parting",
-    // "prowl",
-    // "choppy",
-    // "asinine",
-    // "railway",
-    // "divvy",
-    // "confined",
-    // "curs",
-    // "cad",
-    // "cowl",
-    // "figment",
+    "Ox",
+    "limp",
+    "slip up",
+    "dyke",
+    "horoscope",
+    "check in",
+    "shipwrecked",
+    "test",
+    "clear",
+    "hare",
+    "reedy",
+    "dove",
+    "flutter",
+    "brook",
+    "bank",
+    "blade",
+    "straw",
+    "freighter",
+    "sailor",
+    "latch",
+    "spar",
+    "distant",
+    "slumped",
+    "slump",
+    "fry",
+    "dastardly",
+    "despondent",
+    "flunky",
+    "clear out",
+    "stung",
+    "stalk",
+    "plain",
+    "foxy",
+    "parting",
+    "prowl",
+    "choppy",
+    "asinine",
+    "railway",
+    "divvy",
+    "confined",
+    "curs",
+    "cad",
+    "cowl",
+    "figment",
 ];
 
 // let testDictionary = await fetchDictionaryBodyResponse("test");
@@ -98,18 +101,6 @@ describe("dictionary.com", function () {
     });
 });
 
-describe("dictionary.com types", function () {
-    wordList.map((e) => {
-        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
-            e
-        )}"`, async function () {
-            const dictionaryRes = await fetchDictionaryBodyResponse(e);
-            const types = getTypes(e, dictionaryRes);
-            types ? assert.equal(!types, false) : assert.equal(types, false);
-        });
-    });
-});
-
 describe("thesaurus.com", function () {
     wordList.map((e) => {
         it(`${chalk.bold.green("result")} for "${chalk.bold.white(
@@ -121,16 +112,77 @@ describe("thesaurus.com", function () {
     });
 });
 
+describe("dictionary.com word", function () {
+    wordList.map((e) => {
+        it(`${chalk.bold.green("types")} for "${chalk.bold.white(
+            e
+        )}"`, async function () {
+            const dictionaryRes = await fetchDictionaryBodyResponse(e);
+            const word = await getWord(dictionaryRes);
+            console.log(word);
+        });
+    });
+});
+describe("dictionary.com types", function () {
+    wordList.map((e) => {
+        it(`${chalk.bold.green("types")} for "${chalk.bold.white(
+            e
+        )}"`, async function () {
+            const dictionaryRes = await fetchDictionaryBodyResponse(e);
+            const types = getTypes(e, dictionaryRes);
+            if (types) {
+                assert.equal(!types, false);
+            } else {
+                assert.equal(types, false);
+                console.log(
+                    `\n\t${chalk.bold.underline.red(
+                        "no types"
+                    )} for ${chalk.bold(e)}`
+                );
+            }
+        });
+    });
+});
+
 describe("thesaurus.com definition", function () {
     wordList.map((e) => {
-        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
+        it(`${chalk.bold.green("definition")} for "${chalk.bold.white(
             e
         )}"`, async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse(e);
             const thesaurusRes = await fetchThesaurusBodyResponse(e);
             const typ = getTypes(e, dictionaryRes);
             const def = await getDefinitions(thesaurusRes, typ);
-            def ? assert.equal(!def, false) : assert.equal(def, false);
+            if (def) {
+                assert.equal(!def, false);
+            } else {
+                assert.equal(def, false);
+                console.log(
+                    `\n\t${chalk.bold.underline.red(
+                        "no definition"
+                    )} for ${chalk.bold(e)}`
+                );
+            }
+        });
+    });
+});
+
+describe("getTranslations", function () {
+    wordList.map((e) => {
+        it(`${chalk.bold.green("translations")} for "${chalk.bold.white(
+            e
+        )}"`, async function () {
+            const translations = await getTranslations(e);
+            if (translations) {
+                assert.equal(!translations, false);
+            } else {
+                assert.equal(translations, false);
+                console.log(
+                    `\n\t${chalk.bold.underline.red(
+                        "no translations"
+                    )} for ${chalk.bold(e)}`
+                );
+            }
         });
     });
 });

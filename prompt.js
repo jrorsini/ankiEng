@@ -18,54 +18,23 @@ export async function askWhatWordToEnter() {
 }
 
 /**
- * Asks which IPA to choose
- * @param {Array} ipas - IPAs to choose from
- * @returns {String} the choosen IPA
- */
-export async function whichIPA(ipas) {
-    const answers = await inquirer.prompt([
-        {
-            type: "list",
-            name: "ipa",
-            message: "Which " + chalk.underline.bold.yellow("IPA") + "?",
-            choices: ipas,
-        },
-    ]);
-    return answers.ipa;
-}
-
-/**
- * Asks which spelling to choose
- * @param {Array} spellings - IPAs to choose from
- * @returns {String} the choosen spelling
- */
-export async function whichSpelling(spellings) {
-    const answers = await inquirer.prompt([
-        {
-            type: "list",
-            name: "spelling",
-            message: "Which " + chalk.underline.bold.yellow("spelling") + "?",
-            choices: spellings,
-        },
-    ]);
-    return answers.spelling;
-}
-
-/**
  * Asks which Definition to choose
  * @param {Array} definitions - Definitions to choose from
  * @returns {String} the choosen Definition
  */
 export async function whichDefinition(definitions) {
-    const choices = definitions.map((e) => {
+    const choices = [];
+
+    definitions.map((e) => {
         const type = e.split(" | ")[0].replace(" ", "_");
-        console.log(type);
-        return (
+        choices.push(
             chalk.hex(typeColor[type]).inverse(` ${type.toUpperCase()} `) +
-            " | " +
-            e.split(" | ")[1]
+                " | " +
+                e.split(" | ")[1]
         );
+        return e;
     });
+
     const answers = await inquirer.prompt([
         {
             type: "list",
@@ -75,7 +44,12 @@ export async function whichDefinition(definitions) {
         },
     ]);
 
-    const typ = answers.definition.split(" | ")[0];
+    const typ = definitions
+        .filter(
+            (e) => e.split(" | ")[1] == answers.definition.split(" | ")[1]
+        )[0]
+        .split(" | ")[0];
+
     const def = answers.definition.split(" | ")[1];
 
     return { typ, def };

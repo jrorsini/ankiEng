@@ -11,6 +11,7 @@ export async function mainScrape(userInput) {
     dictionaryRes = await fetchDictionaryBodyResponse(userInput);
     thesaurusRes = await fetchThesaurusBodyResponse(userInput);
 
+    const word = dictionaryRes ? getWord(dictionaryRes) : false;
     const ipa = dictionaryRes ? getIPAs(dictionaryRes) : false;
     const types = dictionaryRes ? getTypes(userInput, dictionaryRes) : false;
     const pronunciation = dictionaryRes
@@ -33,7 +34,7 @@ export async function mainScrape(userInput) {
     };
 
     return {
-        userInput,
+        word,
         ipa,
         pronunciation,
         definitions,
@@ -132,15 +133,13 @@ export async function fetchReversoResponse(word) {
  * @param {Array} types - types from dictionary.com
  * @returns {String} html body response scraped from thesaurus.com
  */
-export function getDefinitions(body, types) {
+export function getDefinitions(body, type) {
     let $ = cheerio.load(body.data);
 
     let definitions = [];
 
-    // check if there isn't a case in which two word types are retrieved
-    if (types.split(" ").length > 1) {
-        return false;
-    } else {
+    // check if there isn't a case in which two word type are retrieved
+    if (type) {
         $(".postab-container ul li a em")
             .toArray()
             .map((e, i) => {
@@ -148,7 +147,7 @@ export function getDefinitions(body, types) {
                     .text()
                     .trim()
                     .replace(".", "")
-                    .replace("as in", types[0]);
+                    .replace("as in", type);
             });
 
         $(".postab-container ul li a strong") // definitions
@@ -157,8 +156,22 @@ export function getDefinitions(body, types) {
                 definitions[i] +=
                     " | " + $(e).text().trim().replaceAll(";", ",");
             });
+        return definitions;
     }
-    return definitions;
+    return false;
+}
+
+/**
+ * obtain original word form
+ * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
+ * @returns {String} List of IPAs
+ */
+export function getWord(body) {
+    // arg: dictionary.com html body from fetchDictionaryBodyResponse.
+    let $ = cheerio.load(body.data);
+    const ipaContainer = $("#top-definitions-section").find("h1").text().trim();
+
+    return ipaContainer;
 }
 
 /**
