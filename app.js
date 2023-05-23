@@ -10,14 +10,16 @@ import {
 import { addCard } from "./anki.js";
 
 const log = console.log;
+let UserInputSearched = false;
 
-while (true) {
+while (true && UserInputSearched === false) {
     console.log("\n");
     let input;
     if (process.argv.length <= 2) {
         input = await askWhatWordToEnter();
     } else {
         input = process.argv.slice(2).join(" ").toLowerCase().trim();
+        UserInputSearched = true;
     }
 
     if (input.length > 0) {
@@ -48,7 +50,7 @@ while (true) {
         // TRANSLATION
         let translation = await whichTranslation(translations);
 
-        // ADD CARD
+        // ADD ANKI CARD
         await addCard(word, typ, pronunciation, ipa, def, example, translation);
     } else {
         log("No input");
