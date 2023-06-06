@@ -1,42 +1,42 @@
 import chalk from "chalk";
 import { typeColor } from "./global.js";
 
-/**
- * log the entire content of the searched word
- * @param {String} userInput - to log
- * @param {Array} ipas - to log
- * @param {Array} spellings - to log
- * @param {Array} definitions - to log
- * @param {Array} translations - to log
- * @param {Array} examples - to log
- */
-export function logWordContent(
-    word,
-    ipas,
-    pronunciation,
-    definitions,
-    translations,
-    examples
-) {
+export function getMatchingWord(wordList, sentence) {
+    for (let i = 0; i < wordList.length; i++) {
+        const word = wordList[i];
+        const regex = new RegExp(`/${word}/`, "i");
+
+        if (sentence.match(word)) {
+            return word; // Return the matching word
+        }
+    }
+
+    return null; // No matching word found
+}
+
+export function logWordContent(object) {
     const log = console.log;
 
     // WORD
-    if (word) log("\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${word}`);
+    if (object.word)
+        log(
+            "\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${object.word}`
+        );
 
     // IPA & PRONUNCIATION
-    if (ipas)
+    if (object.ipa)
         log(
             "\n\t" +
                 chalk.yellow.bold.underline(`IPA:`) +
-                ` ${ipas}` +
+                ` ${object.ipa}` +
                 "   |   " +
                 chalk.yellow.bold.underline(`SPELLING:`) +
-                ` ${pronunciation}\n`
+                ` ${object.pronunciation}\n`
         );
 
     // DEFINITION
-    if (definitions)
-        definitions.map((e) => {
+    if (object.definitions) {
+        object.definitions.map((e) => {
             const wordType = e.split(" | ")[0];
             log(
                 "\t" +
@@ -46,48 +46,50 @@ export function logWordContent(
                     chalk.hex(typeColor[wordType]).bold(` ${e.split(" | ")[1]}`)
             );
         });
+    }
+
+    // SYNONYMS
+    if (object.synonyms) {
+        log("\n\t" + chalk.yellow.bold.underline(`SYNONYMS:`));
+        log("\n\t" + chalk.bold(`${object.synonyms.join(" - ")}`) + "\n");
+    }
 
     // TRANSLATION
-    log("\n\t" + chalk.yellow.bold.underline(`TRANSLATIONS:`));
-    log(
-        "\n\t" +
-            chalk.bold(
-                `${translations
-                    .map((line, index) =>
-                        (index + 1) % 4 === 0 ? line + "\n\t" : line + " - "
-                    )
-                    .join("")
-                    .slice(0, -2)}`
-            ) +
-            "\n"
-    );
+    if (object.translations) {
+        log("\n\t" + chalk.yellow.bold.underline(`TRANSLATIONS:`));
+        log(
+            "\n\t" +
+                chalk.bold(
+                    `${object.translations
+                        .map((line, index) =>
+                            (index + 1) % 4 === 0 ? line + "\n\t" : line + " - "
+                        )
+                        .join("")
+                        .slice(0, -2)}`
+                ) +
+                "\n"
+        );
+    }
 
     // EXAMPLES
-    log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
-    examples.slice(0, 5).map((e) => {
-        log(`\t${e.source.replace(word, chalk.bold.red(word))}`);
-        log(`\t${e.target}\n`);
-    });
-    // examples.map((e) => {
-    //     const sourceOffset = e.source_phrases[0].offset;
-    //     const sourceLength = e.source_phrases[0].length;
-    //     const sourcePhrase = e.source_phrases[0].phrase;
-
-    //     const targetOffset = e.target_phrases[0].offset;
-    //     const targetLength = e.target_phrases[0].length;
-    //     const targetPhrase = e.target_phrases[0].phrase;
-    //     log(
-    //         `\t${e.source.slice(0, sourceOffset)}` +
-    //             chalk.red.bold.underline(sourcePhrase) +
-    //             `${e.source.slice(
-    //                 sourceOffset + sourceLength,
-    //                 e.source.length
-    //             )}\n\t${e.target.slice(0, targetOffset)}` +
-    //             chalk.cyan.bold.underline(targetPhrase) +
-    //             `${e.target.slice(
-    //                 targetOffset + targetLength,
-    //                 e.target.length
-    //             )}\n`
-    //     );
-    // });
+    if (object.examples) {
+        log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
+        object.examples.slice(0, 8).map((e) => {
+            const translationWordToReplace = getMatchingWord(
+                object.translations,
+                e.fr.toLowerCase()
+            );
+            log(
+                `\n\t${e.en.replace(
+                    object.word,
+                    chalk.bold.red(object.word)
+                )}\n\t${e.fr
+                    .toLowerCase()
+                    .replace(
+                        translationWordToReplace,
+                        chalk.bold.underline.cyan(translationWordToReplace)
+                    )}`
+            );
+        });
+    }
 }

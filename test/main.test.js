@@ -17,6 +17,7 @@ import { logWordContent } from "../utility/log.js";
 // farmyard
 // promptly
 // gaze
+// securities
 
 const wordList = [
     "spun",

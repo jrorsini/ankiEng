@@ -1,48 +1,53 @@
 import axios from "axios";
+import { getIPAs, getPronunciation, getTypes } from "./scrapeFuncs.js";
+import cheerio from "cheerio";
 
-/**
- * retrieve body response from thesaurus.com
- * @param {String} word - word to search on thesaurus.com
- * @returns {String} html body response scraped from thesaurus.com
- */
-export async function fetchThesaurusBodyResponse(word) {
+export async function fetchThesaurusBodyResponse(object) {
     try {
-        return await axios.get(`https://www.thesaurus.com/browse/${word}`);
-    } catch (error) {
-        if (error.response) {
-            console.log(
-                `"${word}" ` + "Thesaurus Status:",
-                error.response.status
-            ); // console.log("Data:", error.response.data);
-        } else if (error.request) {
-            console.log("Request:", error.request);
-        } else {
-            console.log("Error:", error.message);
+        const body = await axios.get(
+            `https://www.thesaurus.com/browse/${object.word}`
+        );
+        let $ = cheerio.load(body.data);
+        let definitions = [];
+
+        if (object.type) {
+            $(".postab-container ul li a em")
+                .toArray()
+                .map((e, i) => {
+                    definitions[i] = $(e)
+                        .text()
+                        .trim()
+                        .replace(".", "")
+                        .replace("as in", object.type);
+                });
+
+            $(".postab-container ul li a strong") // definitions
+                .toArray()
+                .map((e, i) => {
+                    definitions[i] +=
+                        " | " + $(e).text().trim().replaceAll(";", ",");
+                });
+
+            object["definitions"] = definitions;
         }
-        return false;
+        return object;
+    } catch (error) {
+        return object;
     }
 }
 
-/**
- * retrieve body response from dictionary.com
- * @param {String} word - word to search on dictionary.com
- * @returns {String} html body response scraped from dictionary.com
- */
-export async function fetchDictionaryBodyResponse(word) {
+export async function fetchDictionaryBodyResponse(object) {
     try {
-        return await axios.get(`https://www.dictionary.com/browse/${word}`);
+        const body = await axios.get(
+            `https://www.dictionary.com/browse/${object.word}`
+        );
+
+        object["ipa"] = getIPAs(body);
+        object["type"] = getTypes(object.word, body);
+        object["pronunciation"] = getPronunciation(body);
+
+        return object;
     } catch (error) {
-        if (error.response) {
-            console.log(
-                `"${word}" ` + "Dictionary Status:",
-                error.response.status
-            );
-            // console.log("Data:", error.response.data);
-        } else if (error.request) {
-            console.log("Request:", error.request);
-        } else {
-            console.log("Error:", error.message);
-        }
-        return false;
+        return object;
     }
 }

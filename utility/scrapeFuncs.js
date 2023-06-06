@@ -1,6 +1,5 @@
-import Reverso from "reverso-api";
-import axios from "axios";
 import cheerio from "cheerio";
+import Reverso from "reverso-api";
 import isPhrasalVerb from "./isPhrasalVerb.js";
 import {
     fetchDictionaryBodyResponse,
@@ -10,109 +9,16 @@ import {
 const reverso = new Reverso();
 
 export async function mainScrape(userInput) {
-    let dictionaryRes;
-    let thesaurusRes;
-    dictionaryRes = await fetchDictionaryBodyResponse(userInput);
-    thesaurusRes = await fetchThesaurusBodyResponse(userInput);
-
-    const word = dictionaryRes ? getWord(dictionaryRes) : userInput;
-    const ipa = dictionaryRes ? getIPAs(dictionaryRes) : false;
-    const types = dictionaryRes ? getTypes(userInput, dictionaryRes) : false;
-    const pronunciation = dictionaryRes
-        ? getPronunciation(dictionaryRes)
-        : false;
-    const definitions = thesaurusRes
-        ? getDefinitions(thesaurusRes, types)
-        : false;
-    const translations = await getTranslations(userInput);
-    const examples = await getExamples(userInput);
-
-    return {
-        word,
-        ipa,
-        pronunciation,
-        definitions,
-        translations,
-        examples,
-    };
-}
-
-export const errorLogMessage = "Couldn't find what you're looking for...";
-
-/**
- *
- * @param {String} word to search synonyms for
- * @returns {Array} synonyms
- */
-export async function getSynonyms(word) {
-    let response;
-    try {
-        response = await reverso.getSynonyms(word, "english");
-    } catch (err) {
-        console.log(err);
-    }
-
-    return response.synonyms.map((e) => e.synonym);
-}
-
-/**
- * retrieve  response from Reverso API
- * @param {String} word - response from Reverso
- * @returns {Object} response from Reverso API
- */
-export async function fetchReversoResponse(word) {
-    let res = await reverso.getTranslation(
-        word,
-        "english",
-        "french",
-        (err, response) => {
-            if (err) throw new Error(err.message);
-            return response;
-        }
-    );
+    let res = { word: userInput };
+    res = await fetchDictionaryBodyResponse(res);
+    res = await fetchThesaurusBodyResponse(res);
+    res = await getSynonyms(res);
+    res = await getTranslations(res);
+    res = await getExamples(res);
 
     return res;
 }
 
-/**
- * retrieve body response from thesaurus.com
- * @param {String} body - word to search on thesaurus.com
- * @param {Array} types - types from dictionary.com
- * @returns {String} html body response scraped from thesaurus.com
- */
-export function getDefinitions(body, type) {
-    let $ = cheerio.load(body.data);
-
-    let definitions = [];
-
-    // check if there isn't a case in which two word type are retrieved
-    if (type) {
-        $(".postab-container ul li a em")
-            .toArray()
-            .map((e, i) => {
-                definitions[i] = $(e)
-                    .text()
-                    .trim()
-                    .replace(".", "")
-                    .replace("as in", type);
-            });
-
-        $(".postab-container ul li a strong") // definitions
-            .toArray()
-            .map((e, i) => {
-                definitions[i] +=
-                    " | " + $(e).text().trim().replaceAll(";", ",");
-            });
-        return definitions;
-    }
-    return false;
-}
-
-/**
- * obtain original word form
- * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
- * @returns {String} List of IPAs
- */
 export function getWord(body) {
     // arg: dictionary.com html body from fetchDictionaryBodyResponse.
     let $ = cheerio.load(body.data);
@@ -121,11 +27,17 @@ export function getWord(body) {
     return word;
 }
 
-/**
- * List IPAs
- * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
- * @returns {Array} List of IPAs
- */
+export async function getSynonyms(object) {
+    let res;
+    try {
+        res = await reverso.getSynonyms(object.word, "english");
+        object["synonyms"] = res.synonyms.map((e) => e.synonym);
+        return object;
+    } catch (err) {
+        return object;
+    }
+}
+
 export function getIPAs(body) {
     // arg: dictionary.com html body from fetchDictionaryBodyResponse.
     let $ = cheerio.load(body.data);
@@ -153,15 +65,9 @@ export function getIPAs(body) {
                           .toArray()
                   ),
               ][0];
-
     return ipa.split(", ")[0];
 }
 
-/**
- * List Spellings
- * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
- * @returns {Array} List of Spellings
- */
 export function getPronunciation(body) {
     let $ = cheerio.load(body.data);
     const spellingContainer = $(
@@ -181,12 +87,6 @@ export function getPronunciation(body) {
     return pronunciation.length > 0 ? pronunciation[0].split(", ")[0] : ""; //;
 }
 
-/**
- * List Types
- * @param {String} word - word searched
- * @param {String} body - dictionary.com html body from fetchDictionaryBodyResponse.
- * @returns {Array} List of Types
- */
 export function getTypes(word, body) {
     let $ = cheerio.load(body.data);
     const types = isPhrasalVerb(word)
@@ -209,35 +109,31 @@ export function getTypes(word, body) {
     return types;
 }
 
-/**
- * Get translations from Reverso API
- * @param {String} word - response from Reverso
- * @returns {Array}  Translations
- */
-export async function getTranslations(word) {
+export async function getTranslations(object) {
     try {
-        let res = await reverso.getTranslation(word, "english", "french");
-        let translations = res.translations.filter(
-            (e) => e.toLowerCase() !== word
+        let res = await reverso.getTranslation(
+            object.word,
+            "english",
+            "french"
         );
-        return [...new Set(translations)];
+        let translations = res.translations.filter(
+            (e) => e.toLowerCase() !== object.word
+        );
+        object["translations"] = [...new Set(translations)];
+        return object;
     } catch (err) {
-        console.log(err);
-        return false;
+        return object;
     }
 }
 
-/**
- * Get examples from Reverso API
- * @param {String} word - word to search in Reverso API
- * @returns {Array}  Examples
- */
-export async function getExamples(word) {
+export async function getExamples(object) {
     try {
-        let res = await reverso.getContext(word, "english", "french");
-        return res.examples;
+        let res = await reverso.getContext(object.word, "english", "french");
+        object["examples"] = res.examples
+            .sort((a, b) => a.source.length - b.source.length)
+            .map((e) => ({ en: e.source, fr: e.target }));
+        return object;
     } catch (err) {
-        console.log(err);
-        return fasle;
+        return object;
     }
 }

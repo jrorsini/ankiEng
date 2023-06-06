@@ -9,17 +9,17 @@ import {
 
 import { addCard } from "./anki.js";
 
-const log = console.log;
-let UserInputSearched = false;
-
-console.log("\n");
 let input = process.argv.slice(2).join(" ").toLowerCase().trim();
 
 if (input.length > 0) {
-    let { word, ipa, pronunciation, definitions, translations, examples } =
-        await mainScrape(input);
+    logWordContent(await mainScrape(input));
+} else {
+    console.log("No input");
+}
 
-    logWordContent(
+/*
+
+ logWordContent(
         word,
         ipa,
         pronunciation,
@@ -43,6 +43,5 @@ if (input.length > 0) {
 
     // ADD ANKI CARD
     await addCard(word, typ, pronunciation, ipa, def, example, translation);
-} else {
-    log("No input");
-}
+
+*/
