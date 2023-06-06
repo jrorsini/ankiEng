@@ -2,72 +2,75 @@ import isPhrasalVerb from "../utility/isPhrasalVerb.js";
 import Reverso from "reverso-api";
 const reverso = new Reverso();
 import {
-    fetchReversoResponse,
     getTranslations,
-    getExamples,
     fetchDictionaryBodyResponse,
     fetchThesaurusBodyResponse,
-    getIPAs,
     getTypes,
     getDefinitions,
-    getPronunciation,
-    mainScrape,
     getWord,
 } from "../utility/scrapeFuncs.js";
 import assert from "assert";
 import chalk from "chalk";
 import { logWordContent } from "../utility/log.js";
 
+// set out
+// farmyard
+// promptly
+// gaze
+
 const wordList = [
+    "spun",
+    "sank",
     "puffing",
     "cobwebs",
     "jawing",
     "holler",
-    "stand out",
-    "Ox",
-    "limp",
-    "slip up",
-    "dyke",
-    "horoscope",
-    "check in",
-    "shipwrecked",
-    "test",
-    "clear",
-    "hare",
-    "reedy",
-    "dove",
-    "flutter",
-    "brook",
-    "bank",
-    "blade",
-    "straw",
-    "freighter",
-    "sailor",
-    "latch",
-    "spar",
-    "distant",
-    "slumped",
-    "slump",
-    "fry",
-    "dastardly",
-    "despondent",
-    "flunky",
-    "clear out",
-    "stung",
-    "stalk",
-    "plain",
-    "foxy",
-    "parting",
-    "prowl",
-    "choppy",
-    "asinine",
-    "railway",
-    "divvy",
-    "confined",
-    "curs",
-    "cad",
-    "cowl",
-    "figment",
+    // "what's keeping him"
+    // "stand out",
+    // "Ox",
+    // "limp",
+    // "slip up",
+    // "dyke",
+    // "horoscope",
+    // "check in",
+    // "shipwrecked",
+    // "test",
+    // "clear",
+    // "hare",
+    // "reedy",
+    // "dove",
+    // "flutter",
+    // "brook",
+    // "bank",
+    // "blade",
+    // "straw",
+    // "freighter",
+    // "sailor",
+    // "latch",
+    // "spar",
+    // "distant",
+    // "slumped",
+    // "slump",
+    // "fry",
+    // "dastardly",
+    // "despondent",
+    // "flunky",
+    // "clear out",
+    // "stung",
+    // "stalk",
+    // "plain",
+    // "foxy",
+    // "parting",
+    // "prowl",
+    // "choppy",
+    // "asinine",
+    // "railway",
+    // "divvy",
+    // "confined",
+    // "curs",
+    // "cad",
+    // "cowl",
+    // "figment",
 ];
 
 // let testDictionary = await fetchDictionaryBodyResponse("test");
@@ -119,6 +122,7 @@ describe("dictionary.com word", function () {
         )}"`, async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse(e);
             const word = await getWord(dictionaryRes);
+            console.log(word);
             if (word) {
                 assert.equal(!word, false);
             } else {

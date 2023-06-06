@@ -2,6 +2,10 @@ import Reverso from "reverso-api";
 import axios from "axios";
 import cheerio from "cheerio";
 import isPhrasalVerb from "./isPhrasalVerb.js";
+import {
+    fetchDictionaryBodyResponse,
+    fetchThesaurusBodyResponse,
+} from "./fetchBodyRes.js";
 
 const reverso = new Reverso();
 
@@ -11,7 +15,7 @@ export async function mainScrape(userInput) {
     dictionaryRes = await fetchDictionaryBodyResponse(userInput);
     thesaurusRes = await fetchThesaurusBodyResponse(userInput);
 
-    const word = dictionaryRes ? getWord(dictionaryRes) : false;
+    const word = dictionaryRes ? getWord(dictionaryRes) : userInput;
     const ipa = dictionaryRes ? getIPAs(dictionaryRes) : false;
     const types = dictionaryRes ? getTypes(userInput, dictionaryRes) : false;
     const pronunciation = dictionaryRes
@@ -22,16 +26,6 @@ export async function mainScrape(userInput) {
         : false;
     const translations = await getTranslations(userInput);
     const examples = await getExamples(userInput);
-
-    const response = {
-        word: "",
-        ipa,
-        pronunciation,
-        type: "",
-        definitions: "",
-        translation: "",
-        examples: "",
-    };
 
     return {
         word,
@@ -44,30 +38,6 @@ export async function mainScrape(userInput) {
 }
 
 export const errorLogMessage = "Couldn't find what you're looking for...";
-
-/**
- * retrieve body response from dictionary.com
- * @param {String} word - word to search on dictionary.com
- * @returns {String} html body response scraped from dictionary.com
- */
-export async function fetchDictionaryBodyResponse(word) {
-    try {
-        return await axios.get(`https://www.dictionary.com/browse/${word}`);
-    } catch (error) {
-        if (error.response) {
-            console.log(
-                `"${word}" ` + "Dictionary Status:",
-                error.response.status
-            );
-            // console.log("Data:", error.response.data);
-        } else if (error.request) {
-            console.log("Request:", error.request);
-        } else {
-            console.log("Error:", error.message);
-        }
-        return false;
-    }
-}
 
 /**
  *
@@ -83,29 +53,6 @@ export async function getSynonyms(word) {
     }
 
     return response.synonyms.map((e) => e.synonym);
-}
-
-/**
- * retrieve body response from thesaurus.com
- * @param {String} word - word to search on thesaurus.com
- * @returns {String} html body response scraped from thesaurus.com
- */
-export async function fetchThesaurusBodyResponse(word) {
-    try {
-        return await axios.get(`https://www.thesaurus.com/browse/${word}`);
-    } catch (error) {
-        if (error.response) {
-            console.log(
-                `"${word}" ` + "Thesaurus Status:",
-                error.response.status
-            ); // console.log("Data:", error.response.data);
-        } else if (error.request) {
-            console.log("Request:", error.request);
-        } else {
-            console.log("Error:", error.message);
-        }
-        return false;
-    }
 }
 
 /**

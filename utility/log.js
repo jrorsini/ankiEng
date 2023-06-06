@@ -11,7 +11,7 @@ import { typeColor } from "./global.js";
  * @param {Array} examples - to log
  */
 export function logWordContent(
-    userInput,
+    word,
     ipas,
     pronunciation,
     definitions,
@@ -20,7 +20,8 @@ export function logWordContent(
 ) {
     const log = console.log;
 
-    log("\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${userInput}`);
+    // WORD
+    if (word) log("\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${word}`);
 
     // IPA & PRONUNCIATION
     if (ipas)
@@ -64,7 +65,7 @@ export function logWordContent(
     // EXAMPLES
     log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
     examples.slice(0, 5).map((e) => {
-        log(`\t${e.source.replace(userInput, chalk.bold.red(userInput))}`);
+        log(`\t${e.source.replace(word, chalk.bold.red(word))}`);
         log(`\t${e.target}\n`);
     });
     // examples.map((e) => {
