@@ -9,13 +9,9 @@ import {
 
 import { addCard } from "./anki.js";
 
-let input = process.argv.slice(2).join(" ").toLowerCase().trim();
-
-if (input.length > 0) {
-    logWordContent(await mainScrape(input));
-} else {
-    console.log("No input");
-}
+logWordContent(
+    await mainScrape(process.argv.slice(2).join(" ").toLowerCase().trim())
+);
 
 /*
 
