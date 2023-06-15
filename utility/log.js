@@ -74,24 +74,22 @@ export function logWordContent(object) {
     // EXAMPLES
     if (object.examples) {
         log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
-        object.examples
-            //.slice(0, 8)
-            .map((e) => {
-                const translationWordToReplace = getMatchingWord(
-                    object.translations,
-                    e.fr.toLowerCase()
-                );
-                log(
-                    `\n\t${e.en.replace(
-                        object.word,
-                        chalk.bold.red(object.word)
-                    )}\n\t${e.fr
-                        .toLowerCase()
-                        .replace(
-                            translationWordToReplace,
-                            chalk.bold.underline.cyan(translationWordToReplace)
-                        )}`
-                );
-            });
+        object.examples.slice(0, 8).map((e) => {
+            const translationWordToReplace = getMatchingWord(
+                object.translations,
+                e.fr.toLowerCase()
+            );
+            log(
+                `\n\t${e.en.replace(
+                    object.word,
+                    chalk.bold.red(object.word)
+                )}\n\t${e.fr
+                    .toLowerCase()
+                    .replace(
+                        translationWordToReplace,
+                        chalk.bold.underline.cyan(translationWordToReplace)
+                    )}`
+            );
+        });
     }
 }
