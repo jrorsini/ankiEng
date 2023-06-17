@@ -1,5 +1,6 @@
 import { mainScrape } from "./utility/scrapeFuncs.js";
 import { logWordContent } from "./utility/log.js";
+import { exec } from "child_process";
 import {
     askWhatWordToEnter,
     whichExample,
@@ -7,11 +8,23 @@ import {
     whichTranslation,
 } from "./prompt.js";
 
+import axios from "axios";
 import { addCard } from "./anki.js";
 
-logWordContent(
-    await mainScrape(process.argv.slice(2).join(" ").toLowerCase().trim())
+console.clear();
+
+const ankiEngNote = await mainScrape(
+    process.argv.slice(2).join(" ").toLowerCase().trim()
 );
+
+const res = await axios.get(
+    "https://api.dictionaryapi.dev/api/v2/entries/en/hello"
+);
+
+console.log(res.data);
+
+// console.log(ankiEngNote);
+logWordContent(ankiEngNote);
 
 /*
 

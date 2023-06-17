@@ -30,6 +30,7 @@ export async function fetchThesaurusBodyResponse(object) {
 
             object["definitions"] = definitions;
         }
+        console.log(object);
         return object;
     } catch (error) {
         return object;

@@ -65,6 +65,8 @@ export function getIPAs(body) {
                           .toArray()
                   ),
               ][0];
+
+    console.log(ipa);
     return ipa.split(", ")[0];
 }
 

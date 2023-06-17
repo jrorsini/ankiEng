@@ -19,9 +19,7 @@ export function logWordContent(object) {
 
     // WORD
     if (object.word)
-        log(
-            "\n\t\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${object.word}`
-        );
+        log("\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${object.word}`);
 
     // IPA & PRONUNCIATION
     if (object.ipa)
@@ -51,7 +49,18 @@ export function logWordContent(object) {
     // SYNONYMS
     if (object.synonyms) {
         log("\n\t" + chalk.yellow.bold.underline(`SYNONYMS:`));
-        log("\n\t" + chalk.bold(`${object.synonyms.join(" - ")}`) + "\n");
+        log(
+            "\n\t" +
+                chalk.bold(
+                    `${object.synonyms
+                        .map((line, index) =>
+                            (index + 1) % 6 === 0 ? line + "\n\t" : line + " - "
+                        )
+                        .join("")
+                        .slice(0, -2)}`
+                ) +
+                "\n"
+        );
     }
 
     // TRANSLATION
@@ -62,7 +71,7 @@ export function logWordContent(object) {
                 chalk.bold(
                     `${object.translations
                         .map((line, index) =>
-                            (index + 1) % 4 === 0 ? line + "\n\t" : line + " - "
+                            (index + 1) % 6 === 0 ? line + "\n\t" : line + " - "
                         )
                         .join("")
                         .slice(0, -2)}`
@@ -74,7 +83,7 @@ export function logWordContent(object) {
     // EXAMPLES
     if (object.examples) {
         log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
-        object.examples.slice(0, 8).map((e) => {
+        object.examples.slice(0, 5).map((e) => {
             const translationWordToReplace = getMatchingWord(
                 object.translations,
                 e.fr.toLowerCase()
@@ -91,5 +100,6 @@ export function logWordContent(object) {
                     )}`
             );
         });
+        log("\n");
     }
 }
