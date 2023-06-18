@@ -67,12 +67,14 @@ export async function whichTranslation(translations) {
             name: "translation",
             message:
                 "Which " + chalk.underline.bold.yellow("translation") + "?",
-            choices: translations,
+            choices: this.translations,
             // choices: translations,
         },
     ]);
 
-    return results.translation;
+    this.translations = results.translation[0];
+
+    return this;
 }
 
 /**

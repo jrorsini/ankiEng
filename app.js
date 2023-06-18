@@ -17,14 +17,11 @@ const ankiEngNote = await mainScrape(
     process.argv.slice(2).join(" ").toLowerCase().trim()
 );
 
-const res = await axios.get(
-    "https://api.dictionaryapi.dev/api/v2/entries/en/hello"
-);
-
-console.log(res.data);
-
-// console.log(ankiEngNote);
 logWordContent(ankiEngNote);
+
+await whichTranslation.call(ankiEngNote);
+
+console.log(ankiEngNote);
 
 /*
 
