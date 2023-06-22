@@ -14,27 +14,25 @@ export function getMatchingWord(wordList, sentence) {
     return null; // No matching word found
 }
 
-export function logWordContent(object) {
+const titleLog = (str) => chalk.yellow.bold.underline(str);
+
+export function logWordContent() {
     const log = console.log;
 
     // WORD
-    if (object.word)
-        log("\t" + chalk.yellow.bold.underline(`WORD:`) + ` ${object.word}`);
+    if (this.word) log("\t" + titleLog(`WORD:`) + ` ${this.word}`);
 
     // IPA & PRONUNCIATION
-    if (object.ipa)
+    if (this.ipa)
         log(
-            "\n\t" +
-                chalk.yellow.bold.underline(`IPA:`) +
-                ` ${object.ipa}` +
-                "   |   " +
-                chalk.yellow.bold.underline(`SPELLING:`) +
-                ` ${object.pronunciation}\n`
+            `\n\t${titleLog(`IPA:`)} ${this.ipa}    |   ${titleLog(
+                `SPELLING:`
+            )} ${this.pronunciation}\n`
         );
 
     // DEFINITION
-    if (object.definitions) {
-        object.definitions.map((e) => {
+    if (this.definitions) {
+        this.definitions.map((e) => {
             const wordType = e.split(" | ")[0];
             log(
                 "\t" +
@@ -47,43 +45,38 @@ export function logWordContent(object) {
     }
 
     // SYNONYMS
-    if (object.synonyms) {
-        log("\n\t" + chalk.yellow.bold.underline(`SYNONYMS:`));
+    if (this.synonyms) {
         log(
-            "\n\t" +
-                chalk.bold(
-                    `${object.synonyms
-                        .map((line, index) =>
-                            (index + 1) % 6 === 0 ? line + "\n\t" : line + " - "
-                        )
-                        .join("")
-                        .slice(0, -2)}`
-                ) +
-                "\n"
+            `\n\t${titleLog(`SYNONYMS:`)} ${chalk.bold(
+                this.synonyms
+                    .map((line, index) =>
+                        (index + 1) % 6 === 0 ? `${line}\n\t` : `${line} - `
+                    )
+                    .join("")
+                    .slice(0, -2)
+            )}\n`
         );
     }
 
     // TRANSLATION
-    if (object.translations) {
-        log("\n\t" + chalk.yellow.bold.underline(`TRANSLATIONS:`));
+    if (this.translations) {
+        log(`\n\t${titleLog(`TRANSLATIONS:`)}`);
         log(
-            "\n\t" +
-                chalk.bold(
-                    `${object.translations
-                        .map((line, index) =>
-                            (index + 1) % 6 === 0 ? line + "\n\t" : line + " - "
-                        )
-                        .join("")
-                        .slice(0, -2)}`
-                ) +
-                "\n"
+            `\n\t ${chalk.bold(
+                `${this.translations
+                    .map((line, index) =>
+                        (index + 1) % 6 === 0 ? `${line}\n\t` : `${line} - `
+                    )
+                    .join("")
+                    .slice(0, -2)}`
+            )}\n`
         );
     }
 
     // EXAMPLES
-    if (object.examples) {
-        log("\t" + chalk.yellow.bold.underline(`EXAMPLES:`) + "\n");
-        object.examples.slice(0, 5).map((e) => {
+    if (this.examples) {
+        log(`\t${titleLog(`EXAMPLES:`)}`);
+        this.examples.slice(0, 5).map((e) => {
             const translationWordToReplace = getMatchingWord(
                 object.translations,
                 e.fr.toLowerCase()
