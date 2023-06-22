@@ -60,7 +60,7 @@ export async function whichDefinition(definitions) {
  * @param {Array} translation - Tranlations to choose from
  * @returns {String} the choosen Tranlation
  */
-export async function whichTranslation(translations) {
+export async function chooseTranslation() {
     const results = await inquirer.prompt([
         {
             type: "checkbox",
@@ -68,7 +68,6 @@ export async function whichTranslation(translations) {
             message:
                 "Which " + chalk.underline.bold.yellow("translation") + "?",
             choices: this.translations,
-            // choices: translations,
         },
     ]);
 
@@ -78,48 +77,22 @@ export async function whichTranslation(translations) {
 }
 
 /**
- * Asks if user wants examples
- * @returns {Boolean} user's answer
- */
-export async function askIfUserWantExamples() {
-    const answers = await inquirer.prompt([
-        {
-            type: "confirm",
-            name: "exampleConfirmation",
-            message: "Is there an example you wish to add",
-        },
-    ]);
-    return answers.exampleConfirmation;
-}
-
-/**
- * Asks if user wants examples
- * @returns {Boolean} user's answer
- */
-export async function askIfUserWantsMoreTranslation() {
-    const answers = await inquirer.prompt([
-        {
-            type: "confirm",
-            name: "translationConfirmation",
-            message: `Is there one more translation you wish to add ? (press Enter if "Yes")`,
-        },
-    ]);
-    return answers.translationConfirmation;
-}
-
-/**
  * Asks which Example to choose
  * @param {Array} examples - Examples to choose from
  * @returns {String} the choosen Example
  */
-export async function whichExample(word, examples) {
+export async function chooseExample() {
     const answers = await inquirer.prompt([
         {
             type: "checkbox",
             name: "example",
             message: "Which " + chalk.underline.bold.yellow("example") + "?",
-            choices: examples.map((e) =>
-                e.source.replace(word, chalk.bold.red(word))
+            choices: this.examples.map(
+                (e) =>
+                    `${e.en.replace(
+                        this.word,
+                        chalk.bold.red(this.word)
+                    )} | ${e.fr.replace(this.word, chalk.bold.red(this.word))}`
             ),
         },
     ]);
