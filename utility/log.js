@@ -14,20 +14,19 @@ export function getMatchingWord(wordList, sentence) {
     return null; // No matching word found
 }
 
-const titleLog = (str) => chalk.yellow.bold.underline(str);
-
 export function logWordContent() {
     const log = console.log;
+    const headLog = (str) => chalk.yellow.bold.underline(str);
 
     // WORD
-    if (this.word) log("\t" + titleLog(`WORD:`) + ` ${this.word}`);
+    if (this.word) log(`\t${headLog(`WORD:`)} ${this.word}`);
 
     // IPA & PRONUNCIATION
     if (this.ipa)
         log(
-            `\n\t${titleLog(`IPA:`)} ${this.ipa}    |   ${titleLog(
-                `SPELLING:`
-            )} ${this.pronunciation}\n`
+            `\n\t${headLog(`IPA:`)} ${this.ipa}   |   ${headLog(`SPELLING:`)} ${
+                this.pronunciation
+            }\n`
         );
 
     // DEFINITION
@@ -47,7 +46,7 @@ export function logWordContent() {
     // SYNONYMS
     if (this.synonyms) {
         log(
-            `\n\t${titleLog(`SYNONYMS:`)} ${chalk.bold(
+            `\n\t${headLog(`SYNONYMS:`)} ${chalk.bold(
                 this.synonyms
                     .map((line, index) =>
                         (index + 1) % 6 === 0 ? `${line}\n\t` : `${line} - `
@@ -60,7 +59,7 @@ export function logWordContent() {
 
     // TRANSLATION
     if (this.translations) {
-        log(`\n\t${titleLog(`TRANSLATIONS:`)}`);
+        log(`\n\t${headLog(`TRANSLATIONS:`)}`);
         log(
             `\n\t ${chalk.bold(
                 `${this.translations
@@ -75,16 +74,16 @@ export function logWordContent() {
 
     // EXAMPLES
     if (this.examples) {
-        log(`\t${titleLog(`EXAMPLES:`)}`);
+        log(`\t${headLog(`EXAMPLES:`)}`);
         this.examples.slice(0, 5).map((e) => {
             const translationWordToReplace = getMatchingWord(
-                object.translations,
+                this.translations,
                 e.fr.toLowerCase()
             );
             log(
                 `\n\t${e.en.replace(
-                    object.word,
-                    chalk.bold.red(object.word)
+                    this.word,
+                    chalk.bold.red(this.word)
                 )}\n\t${e.fr
                     .toLowerCase()
                     .replace(
