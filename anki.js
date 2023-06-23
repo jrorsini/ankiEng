@@ -47,16 +47,7 @@ export async function addCard(
     let note = {
         deckName: "ankiEng",
         modelName: "ANKIENG_NOTE",
-        fields: {
-            word,
-            type,
-            pronunciation,
-            ipa,
-            definition,
-            example_fr: "",
-            example_en: "",
-            translation: translation.join(", "),
-        },
+        fields: this,
         options: {
             allowDuplicate: false,
         },
