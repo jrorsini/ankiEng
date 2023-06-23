@@ -1,6 +1,7 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 import { typeColor } from "./utility/global.js";
+import { getMatchingWord } from "./utility/log.js";
 
 /**
  * Asks what word to search
@@ -87,14 +88,26 @@ export async function chooseExample() {
             type: "checkbox",
             name: "example",
             message: "Which " + chalk.underline.bold.yellow("example") + "?",
-            choices: this.examples.map(
-                (e) =>
-                    `${e.en.replace(
-                        this.word,
-                        chalk.bold.red(this.word)
-                    )} | ${e.fr.replace(this.word, chalk.bold.red(this.word))}`
-            ),
+            choices: this.examples.map((e) => {
+                const translationWordToReplace = getMatchingWord(
+                    this.translations,
+                    e.fr.toLowerCase()
+                );
+                return `${e.en.replace(
+                    this.word,
+                    chalk.bold.red(this.word)
+                )} | ${e.fr
+                    .toLowerCase()
+                    .replace(
+                        translationWordToReplace,
+                        chalk.bold.underline.cyan(translationWordToReplace)
+                    )}}`;
+            }),
         },
     ]);
-    return answers.example;
+
+    this.example_en = answers.example[0].split(" | ")[0];
+    this.example_fr = answers.example[0].split(" | ")[1];
+    delete this.examples;
+    return this;
 }
