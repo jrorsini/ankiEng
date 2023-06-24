@@ -5,6 +5,7 @@ import {
     fetchDictionaryBodyResponse,
     fetchThesaurusBodyResponse,
 } from "./fetchBodyRes.js";
+import axios from "axios";
 
 const reverso = new Reverso();
 
@@ -27,24 +28,12 @@ export function getWord(body) {
     return word;
 }
 
-export async function getSynonyms(object) {
-    let res;
-    try {
-        res = await reverso.getSynonyms(object.word, "english");
-        object["synonyms"] = res.synonyms.map((e) => e.synonym);
-        return object;
-    } catch (err) {
-        return object;
-    }
-}
-
 export function getIPAs(body) {
     // arg: dictionary.com html body from fetchDictionaryBodyResponse.
     let $ = cheerio.load(body.data);
-    const ipaContainer = $(".pron-spell-ipa-container").find(
-        ".pron-ipa-content"
-    );
-
+    const ipaContainer = $(`data-type="pronunciation-text"`);
+    console.log(ipaContainer.text());
+    console.log("hello");
     const ipa =
         ipaContainer.length === 1
             ? [
@@ -111,31 +100,69 @@ export function getTypes(word, body) {
     return types;
 }
 
-export async function getTranslations(object) {
+export async function getSynonyms() {
+    let res;
     try {
-        let res = await reverso.getTranslation(
-            object.word,
-            "english",
-            "french"
-        );
-        let translations = res.translations.filter(
-            (e) => e.toLowerCase() !== object.word
-        );
-        object["translations"] = [...new Set(translations)];
-        return object;
+        res = await reverso.getSynonyms(this.word, "english");
+        this["synonyms"] = res.synonyms.map((e) => e.synonym);
+        return this;
     } catch (err) {
-        return object;
+        return this;
     }
 }
 
-export async function getExamples(object) {
+export async function getTranslations() {
     try {
-        let res = await reverso.getContext(object.word, "english", "french");
-        object["examples"] = res.examples
+        let res = await reverso.getTranslation(this.word, "english", "french");
+        let translations = res.translations.filter(
+            (e) => e.toLowerCase() !== this.word
+        );
+        this["translations"] = [...new Set(translations)];
+        return this;
+    } catch (err) {
+        return this;
+    }
+}
+
+export async function getExamples() {
+    try {
+        let res = await reverso.getContext(this.word, "english", "french");
+        this["examples"] = res.examples
             .sort((a, b) => a.source.length - b.source.length)
             .map((e) => ({ en: e.source, fr: e.target }));
-        return object;
+        return this;
     } catch (err) {
-        return object;
+        return this;
+    }
+}
+
+export async function getDictionaryContent() {
+    try {
+        const res = await axios.get(
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
+        );
+        if (res.data[0].phonetic) {
+            this.ipa = res.data[0].phonetic.replace(/[/()[\]]/g, "").trim();
+        }
+        // const defArr = [];
+        // res.data[0].meanings
+        //     .filter((e) => e.definitions.length > 0)
+        //     .map((el) => ({
+        //         partOfSpeech: el.partOfSpeech,
+        //         definitions: el.definitions
+        //             .filter((e) => e.hasOwnProperty("example"))
+        //             .map((e) =>
+        //                 defArr.push({
+        //                     type: el.partOfSpeech,
+        //                     definition: e.definition,
+        //                     example: e.example,
+        //                 })
+        //             ),
+        //     }))
+        //     .filter((e) => e.definitions.length > 0);
+        // this.definitions = defArr;
+        return this;
+    } catch (error) {
+        return this;
     }
 }
