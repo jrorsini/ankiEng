@@ -76,7 +76,7 @@ export function logWordContent() {
     if (this.examples) {
         log(`\t${headLog(`EXAMPLES:`)}`);
         this.examples.slice(0, 5).map((e) => {
-            const translationWordToReplace = getMatchingWord(
+            const trslt2Rep = getMatchingWord(
                 this.translations,
                 e.fr.toLowerCase()
             );
@@ -86,10 +86,7 @@ export function logWordContent() {
                     chalk.bold.red(this.word)
                 )}\n\t${e.fr
                     .toLowerCase()
-                    .replace(
-                        translationWordToReplace,
-                        chalk.bold.underline.cyan(translationWordToReplace)
-                    )}`
+                    .replace(trslt2Rep, chalk.bold.underline.cyan(trslt2Rep))}`
             );
         });
         log("\n");
