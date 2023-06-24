@@ -62,17 +62,31 @@ export async function whichDefinition(definitions) {
  * @returns {String} the choosen Tranlation
  */
 export async function chooseTranslation() {
-    const results = await inquirer.prompt([
+    const answers = await inquirer.prompt([
         {
-            type: "checkbox",
+            type: "list",
             name: "translation",
-            message:
-                "Which " + chalk.underline.bold.yellow("translation") + "?",
+            message: `Which ${chalk.underline.bold.yellow("translation")} ?`,
             choices: this.translations,
         },
     ]);
 
-    this.translations = results.translation[0];
+    this.translation = answers.translation;
+
+    return this;
+}
+
+export async function chooseSynonyms() {
+    const answers = await inquirer.prompt([
+        {
+            type: "checkbox",
+            name: "synonyms",
+            message: `Which ${chalk.underline.bold.yellow("synonyms")} ?`,
+            choices: this.synonyms,
+        },
+    ]);
+
+    this.synonyms = answers.synonyms.join(", ");
 
     return this;
 }
@@ -85,11 +99,11 @@ export async function chooseTranslation() {
 export async function chooseExample() {
     const answers = await inquirer.prompt([
         {
-            type: "checkbox",
+            type: "list",
             name: "example",
-            message: "Which " + chalk.underline.bold.yellow("example") + "?",
+            message: `Which ${chalk.underline.bold.yellow("example")} ?`,
             choices: this.examples.map((e) => {
-                const translationWordToReplace = getMatchingWord(
+                const trslt2Rep = getMatchingWord(
                     this.translations,
                     e.fr.toLowerCase()
                 );
@@ -98,16 +112,21 @@ export async function chooseExample() {
                     chalk.bold.red(this.word)
                 )} | ${e.fr
                     .toLowerCase()
-                    .replace(
-                        translationWordToReplace,
-                        chalk.bold.underline.cyan(translationWordToReplace)
-                    )}}`;
+                    .replace(trslt2Rep, chalk.bold.red(trslt2Rep))}`;
             }),
         },
     ]);
 
-    this.example_en = answers.example[0].split(" | ")[0];
-    this.example_fr = answers.example[0].split(" | ")[1];
+    this.example_en = JSON.stringify(answers.example.split(" | ")[0])
+        .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+        .slice(1, -1);
+
+    this.example_fr = JSON.stringify(answers.example.split(" | ")[1])
+        .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+        .slice(1, -1);
+
     delete this.examples;
+    delete this.translations;
+
     return this;
 }
