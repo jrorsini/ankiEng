@@ -35,6 +35,15 @@ const ankiUrl = "http://localhost:8765/";
 //         });
 // }
 
+/*
+- word
+- ipa
+- example_en
+- example_fr
+- translation
+- synonyms
+*/
+
 export async function addCard() {
     let note = {
         deckName: "ankiEng",

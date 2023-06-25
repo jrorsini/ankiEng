@@ -17,28 +17,24 @@ export function getMatchingWord(wordList, sentence) {
 export function logWordContent() {
     const log = console.log;
     const headLog = (str) => chalk.yellow.bold.underline(str);
+    console.clear();
 
     // WORD
     if (this.word) log(`\t${headLog(`WORD:`)} ${this.word}`);
 
     // IPA & PRONUNCIATION
-    if (this.ipa)
-        log(
-            `\n\t${headLog(`IPA:`)} ${this.ipa}   |   ${headLog(`SPELLING:`)} ${
-                this.pronunciation
-            }\n`
-        );
+    if (this.ipa) log(`\n\t${headLog(`IPA:`)} ${this.ipa}`);
 
     // DEFINITION
     if (this.definitions) {
         this.definitions.map((e) => {
-            const wordType = e.split(" | ")[0];
+            const wordType = e.type;
             log(
                 "\t" +
                     chalk
                         .hex(typeColor[wordType])
                         .inverse(` ${wordType.toUpperCase()} `) +
-                    chalk.hex(typeColor[wordType]).bold(` ${e.split(" | ")[1]}`)
+                    chalk.hex(typeColor[wordType]).bold(` ${e.definition}`)
             );
         });
     }
