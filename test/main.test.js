@@ -8,7 +8,7 @@ import {
     getTypes,
     getDefinitions,
     getWord,
-} from "../utility/scrapeFuncs.js";
+} from "../utility/api.js";
 import assert from "assert";
 import chalk from "chalk";
 import { logWordContent } from "../utility/log.js";

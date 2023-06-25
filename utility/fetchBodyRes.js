@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getIPAs, getPronunciation, getTypes } from "./scrapeFuncs.js";
+import { getIPAs, getPronunciation, getTypes } from "./api.js";
 import cheerio from "cheerio";
 
 export async function fetchThesaurusBodyResponse(object) {
