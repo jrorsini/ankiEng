@@ -9,17 +9,6 @@ import axios from "axios";
 
 const reverso = new Reverso();
 
-export async function mainScrape(userInput) {
-    let res = { word: userInput };
-    res = await fetchDictionaryBodyResponse(res);
-    res = await fetchThesaurusBodyResponse(res);
-    res = await getSynonyms(res);
-    res = await getTranslations(res);
-    res = await getExamples(res);
-
-    return res;
-}
-
 export function getWord(body) {
     // arg: dictionary.com html body from fetchDictionaryBodyResponse.
     let $ = cheerio.load(body.data);

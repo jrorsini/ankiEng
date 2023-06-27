@@ -80,20 +80,6 @@ const wordList = [
 // console.log(await fetchThesaurusBodyResponse("test"));
 // await getDefinitions(, testTypes);
 
-// wordList.map(async (e) => {
-//     let { userInput, ipa, pronunciation, definitions, translations, examples } =
-//         await mainScrape(e);
-
-//     logWordContent(
-//         userInput,
-//         ipa,
-//         pronunciation,
-//         definitions,
-//         translations,
-//         examples
-//     );
-// });
-
 describe("dictionary.com", function () {
     wordList.map((e) => {
         it(`${chalk.bold.green("result")} for "${chalk.bold.white(
