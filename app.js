@@ -21,16 +21,38 @@ console.log(`loading "${usrInput}"`);
 // let $ = cheerio.load(body.data);
 // console.log($(`[data-type="pronunciation-text"]`).text());
 
+const linguee_translations = await axios.get(
+    `https://linguee-api.fly.dev/api/v2/translations`,
+    {
+        params: { query: usrInput, src: "en", dst: "fr" },
+    }
+);
+
+const linguee_external_sources = await axios.get(
+    `https://linguee-api.fly.dev/api/v2/external_sources`,
+    {
+        params: { query: usrInput, src: "en", dst: "fr" },
+    }
+);
+
+const linguee_examples = await axios.get(
+    `https://linguee-api.fly.dev/api/v2/examples`,
+    {
+        params: { query: usrInput, src: "en", dst: "fr" },
+    }
+);
+
+// console.log(linguee_translations.data.map((e) => e.translations.text));
+console.log(linguee_examples);
+
+/*
+
 const ankiEngNote = { word: usrInput };
 
 await getDictionaryContent.call(ankiEngNote);
 await getSynonyms.call(ankiEngNote);
 await getTranslations.call(ankiEngNote);
 await getExamples.call(ankiEngNote);
-
-// console.log(ankiEngNote);
-
-// const ankiEngNote = await mainScrape(usrInput);
 
 logWordContent.call(ankiEngNote);
 
@@ -42,3 +64,5 @@ console.log(ankiEngNote);
 
 // ADD ANKI CARD
 await addCard.call(ankiEngNote);
+
+ */
