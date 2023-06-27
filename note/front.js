@@ -121,12 +121,53 @@ setTimeout(() => {
     const example_en = document.getElementById("example_en").innerHTML;
     const example_en_match = example_en.match(/\|.+\|/gi);
 
-    document.getElementById("example_en").innerHTML = example_en.replace(
-        /\|.+\|/gi,
-        `<b id="example_en_b">${example_en_match[0].slice(1, -1)}</b>`
-    );
+    // document.getElementById("example_en").innerHTML = example_en.replace(
+    //     /\|.+\|/gi,
+    //     `<b id="example_en_b">${example_en_match[0].slice(1, -1)}</b>`
+    // );
 
-    // append #ipa_field_hint
-    const node = document.getElementById("ipa_field_hint");
-    document.getElementById("example_en_b").appendChild(node);
+    /*
+        // append #ipa_field_hint
+        const node = document.getElementById("ipa_field_hint");
+        document.getElementById("example_en_b").appendChild(node);
+    */
+
+    function fadeWords(sentenceElement) {
+        const words = sentenceElement.textContent.split(" ");
+
+        // Clear the existing content
+        sentenceElement.textContent = "";
+
+        words.forEach((word) => {
+            const wordElement = document.createElement("span");
+
+            // Add a class to the word element
+            wordElement.classList.add("word-fade");
+            word.includes("|") && wordElement.classList.add("word-fade_bold");
+
+            wordElement.textContent = word.replace(/\|/gi, "");
+            wordElement.style.opacity = "0";
+
+            sentenceElement.appendChild(wordElement);
+        });
+
+        const wordElements = sentenceElement.querySelectorAll("span.word-fade");
+        let currentIndex = 0;
+
+        function revealNextWord() {
+            if (currentIndex < wordElements.length) {
+                const wordElement = wordElements[currentIndex];
+                wordElement.style.opacity = "1";
+                currentIndex++;
+
+                setTimeout(revealNextWord, 500); // Adjust the delay as needed
+            }
+        }
+
+        revealNextWord();
+    }
+
+    // Call the function with the target sentence element
+    const sentenceElement = document.getElementById("example_en");
+    fadeWords(sentenceElement);
 }, 100);

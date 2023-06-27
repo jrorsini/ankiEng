@@ -23,6 +23,18 @@ input[type="text"] {
     font-size: 25px;
 }
 
+#example_en span {
+    margin-right: 8px;
+}
+
+span.word-fade_bold {
+    position: relative;
+    font-weight: bold;
+    color: gold;
+    font-size: 40px;
+    text-decoration: underline;
+}
+
 #example_fr {
     font-size: 25px;
 }
@@ -98,3 +110,18 @@ input[type="text"] {
 .ipa_diphthong.nightMode {
     background-color: rgb(79, 255, 255);
 }
+
+/* 
+#example_en .word-fade {
+    opacity: 0;
+    animation: fade-in 0.5s ease-in-out forwards !important;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+} */
