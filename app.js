@@ -68,9 +68,11 @@ const linguee_examples = linguee_examples_res.data.map((e) => ({
 }));
 
 console.clear();
-console.log(linguee_translations);
-console.log(linguee_examples);
-console.log(linguee_external_sources);
+console.log(linguee_translations[0]);
+console.log(linguee_translations[0].translations[0]);
+console.log(linguee_translations[0].translations[0].examples);
+// console.log(linguee_examples);
+// console.log(linguee_external_sources);
 
 /*
 
