@@ -160,7 +160,7 @@ setTimeout(() => {
                 wordElement.style.opacity = "1";
                 currentIndex++;
 
-                setTimeout(revealNextWord, 500); // Adjust the delay as needed
+                setTimeout(revealNextWord, 400); // Adjust the delay as needed
             }
         }
 
