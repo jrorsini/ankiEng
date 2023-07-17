@@ -37,4 +37,4 @@ ankiEngNote.examples && (await chooseExample.call(ankiEngNote));
 console.log(ankiEngNote);
 
 // ADD ANKI CARD
-await addCard.call(ankiEngNote);
+await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");

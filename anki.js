@@ -5,36 +5,6 @@ import axios from "axios";
 // Define the AnkiConnect API URL
 const ankiUrl = "http://localhost:8765/";
 
-// export async function checkIfDeckExists(deckName) {
-//     let deckList;
-//     await axios
-//         .post(ankiUrl, {
-//             action: "deckNamesAndIds",
-//             version: 6,
-//         })
-//         .then((res) => {
-//             deckList = res.data.result;
-//         });
-//     return deckList.hasOwnProperty(deckName);
-// }
-
-// export async function createAnkiDeck(deckName) {
-//     await axios
-//         .post(ankiUrl, {
-//             action: "createDeck",
-//             version: 6,
-//             params: {
-//                 deck: deckName,
-//             },
-//         })
-//         .then((res) => {
-//             console.log("deck " + res.data.result + "has been created");
-//         })
-//         .catch((err) => {
-//             console.log(err);
-//         });
-// }
-
 /*
 - word
 - ipa
@@ -44,10 +14,10 @@ const ankiUrl = "http://localhost:8765/";
 - synonyms
 */
 
-export async function addCard() {
+export async function addCard(deck, noteType) {
     let note = {
-        deckName: "ankiEng",
-        modelName: "ANKIENG_NOTE",
+        deckName: deck,
+        modelName: noteType,
         fields: this,
         options: {
             allowDuplicate: false,
