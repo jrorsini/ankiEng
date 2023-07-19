@@ -7,7 +7,7 @@
 <script src="ankiEng/front.js"/>
 */
 
-setTimeout(() => {
+function colorizeIPA() {
     var div = document.getElementById("ipa_field_hint").innerText;
     var html = "";
 
@@ -114,7 +114,9 @@ setTimeout(() => {
             html += '<span class="ipa_block ipa_vowel">' + div[i] + "</span>";
         }
     }
+}
 
+setTimeout(() => {
     // document.getElementById("ipa_field_hint").innerHTML = html;
 
     // replace "|" by "b" tags for example_en.
@@ -133,7 +135,7 @@ setTimeout(() => {
     */
 
     function fadeWords(sentenceElement) {
-        const words = sentenceElement.textContent.split(" ");
+        const words = sentenceElement.textContent.split("");
 
         // Clear the existing content
         sentenceElement.textContent = "";
@@ -142,8 +144,8 @@ setTimeout(() => {
             const wordElement = document.createElement("span");
 
             // Add a class to the word element
-            wordElement.classList.add("word-fade");
-            word.includes("|") && wordElement.classList.add("word-fade_bold");
+            wordElement.classList.add("char-fade");
+            word.includes("|") && wordElement.classList.add("char-fade_bold");
 
             wordElement.textContent = word.replace(/\|/gi, "");
             wordElement.style.opacity = "0";
@@ -151,23 +153,23 @@ setTimeout(() => {
             sentenceElement.appendChild(wordElement);
         });
 
-        const wordElements = sentenceElement.querySelectorAll("span.word-fade");
+        const wordElements = sentenceElement.querySelectorAll("span.char-fade");
         let currentIndex = 0;
 
-        function revealNextWord() {
+        function revealNextLetter() {
             if (currentIndex < wordElements.length) {
                 const wordElement = wordElements[currentIndex];
                 wordElement.style.opacity = "1";
                 currentIndex++;
 
-                setTimeout(revealNextWord, 400); // Adjust the delay as needed
+                setTimeout(revealNextLetter, 300); // Adjust the delay as needed
             }
         }
 
-        revealNextWord();
+        revealNextLetter();
     }
 
     // Call the function with the target sentence element
-    const sentenceElement = document.getElementById("example_en");
-    fadeWords(sentenceElement);
+    const sentenceBreakDown = document.getElementById("example_en").split("|");
+    setTimeout(fadeWords(sentenceBreakDown[0]), 100);
 }, 100);
