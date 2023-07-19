@@ -24,15 +24,15 @@ input[type="text"] {
 }
 
 #example_en span {
-    margin-right: 8px;
+    margin-right: 5px;
 }
 
-span.word-fade_bold {
+span.char-fade_bold {
     position: relative;
     font-weight: bold;
     color: gold;
     font-size: 40px;
-    text-decoration: underline;
+    /* text-decoration: underline; */
 }
 
 #example_fr {
@@ -111,8 +111,7 @@ span.word-fade_bold {
     background-color: rgb(79, 255, 255);
 }
 
-/* 
-#example_en .word-fade {
+/* #example_en .word-fade {
     opacity: 0;
     animation: fade-in 0.5s ease-in-out forwards !important;
 }

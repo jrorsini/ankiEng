@@ -140,12 +140,20 @@ setTimeout(() => {
         // Clear the existing content
         sentenceElement.textContent = "";
 
+        let englishWordColorOn = false;
+
         words.forEach((word) => {
+            if (!englishWordColorOn && word === "|") {
+                englishWordColorOn = true;
+            } else if (englishWordColorOn && word === "|") {
+                englishWordColorOn = false;
+            }
+
             const wordElement = document.createElement("span");
 
             // Add a class to the word element
             wordElement.classList.add("char-fade");
-            word.includes("|") && wordElement.classList.add("char-fade_bold");
+            englishWordColorOn && wordElement.classList.add("char-fade_bold");
 
             wordElement.textContent = word.replace(/\|/gi, "");
             wordElement.style.opacity = "0";
@@ -162,7 +170,7 @@ setTimeout(() => {
                 wordElement.style.opacity = "1";
                 currentIndex++;
 
-                setTimeout(revealNextLetter, 300); // Adjust the delay as needed
+                setTimeout(revealNextLetter, 50); // Adjust the delay as needed
             }
         }
 
@@ -170,6 +178,6 @@ setTimeout(() => {
     }
 
     // Call the function with the target sentence element
-    const sentenceBreakDown = document.getElementById("example_en").split("|");
-    setTimeout(fadeWords(sentenceBreakDown[0]), 100);
+    const sentenceBreakDown = document.getElementById("example_en");
+    fadeWords(sentenceBreakDown);
 }, 100);
