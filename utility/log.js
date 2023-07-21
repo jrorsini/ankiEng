@@ -17,7 +17,6 @@ export function getMatchingWord(wordList, sentence) {
 export function logWordContent() {
     const log = console.log;
     const headLog = (str) => chalk.yellow.bold.underline(str);
-    console.clear();
 
     // WORD
     if (this.word) log(`\t${headLog(`WORD:`)} ${this.word}`);
@@ -57,13 +56,14 @@ export function logWordContent() {
     if (this.translations) {
         log(`\n\t${headLog(`TRANSLATIONS:`)}`);
         log(
-            `\n\t ${chalk.bold(
+            `\n\t${chalk.bold(
                 `${this.translations
                     .map((line, index) =>
                         (index + 1) % 6 === 0 ? `${line}\n\t` : `${line} - `
                     )
                     .join("")
-                    .slice(0, -2)}`
+                    .slice(0, -2)
+                    .trim()}`
             )}\n`
         );
     }

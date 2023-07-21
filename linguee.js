@@ -27,16 +27,25 @@ const linguee_examples_res = await axios.get(
     }
 );
 
+const translations = [];
+const examples = [];
+
 const linguee_translations = linguee_translations_res.data.map((e) => ({
     text: e.text,
     pos: e.pos,
     translations: e.translations
-        // .filter((e) => e.featured)
-        .map((e) => ({
-            text: e.text,
-            pos: e.pos,
-            examples: e.examples,
-        })),
+        .filter((e) => e.featured)
+        .map((tr) => {
+            translations.push(`${e.pos} | ${tr.text}`);
+            return {
+                text: tr.text,
+                pos: tr.pos,
+                examples: tr.examples.map((ex) => {
+                    examples.push(`${ex.src} | ${ex.dst}`);
+                    return ex;
+                }),
+            };
+        }),
 }));
 
 const linguee_external_sources = linguee_external_sources_res.data
@@ -53,6 +62,8 @@ const linguee_examples = linguee_examples_res.data.map((e) => ({
 }));
 
 console.clear();
-console.log(linguee_translations);
-console.log(linguee_examples);
-console.log(linguee_external_sources);
+console.log(translations);
+console.log(examples);
+// console.log(linguee_translations);
+// console.log(linguee_examples);
+// console.log(linguee_external_sources);

@@ -1,11 +1,10 @@
 import {
     getExamples,
-    getSynonyms,
     getTranslations,
     getDictionaryContent,
 } from "./utility/api.js";
 import { logWordContent } from "./utility/log.js";
-import { chooseExample, chooseTranslation, chooseSynonyms } from "./prompt.js";
+import { chooseExample, chooseTranslation } from "./prompt.js";
 
 import axios from "axios";
 import { addCard } from "./anki.js";
@@ -24,17 +23,16 @@ console.log(`loading "${usrInput}"`);
 const ankiEngNote = { word: usrInput };
 
 await getDictionaryContent.call(ankiEngNote);
-await getSynonyms.call(ankiEngNote);
 await getTranslations.call(ankiEngNote);
-await getExamples.call(ankiEngNote);
+// await getExamples.call(ankiEngNote);
 
+console.clear();
 logWordContent.call(ankiEngNote);
 
 ankiEngNote.translations && (await chooseTranslation.call(ankiEngNote));
-ankiEngNote.synonyms && (await chooseSynonyms.call(ankiEngNote));
 ankiEngNote.examples && (await chooseExample.call(ankiEngNote));
 
 console.log(ankiEngNote);
 
 // ADD ANKI CARD
-await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
+// await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");

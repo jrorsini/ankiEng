@@ -76,20 +76,20 @@ export async function chooseTranslation() {
     return this;
 }
 
-export async function chooseSynonyms() {
-    const answers = await inquirer.prompt([
-        {
-            type: "checkbox",
-            name: "synonyms",
-            message: `Which ${chalk.underline.bold.yellow("synonyms")} ?`,
-            choices: this.synonyms,
-        },
-    ]);
+// export async function chooseSynonyms() {
+//     const answers = await inquirer.prompt([
+//         {
+//             type: "checkbox",
+//             name: "synonyms",
+//             message: `Which ${chalk.underline.bold.yellow("synonyms")} ?`,
+//             choices: this.synonyms,
+//         },
+//     ]);
 
-    this.synonyms = answers.synonyms.join(", ");
+//     this.synonyms = answers.synonyms.join(", ");
 
-    return this;
-}
+//     return this;
+// }
 
 /**
  * Asks which Example to choose
