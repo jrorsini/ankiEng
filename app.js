@@ -32,7 +32,7 @@ logWordContent.call(ankiEngNote);
 ankiEngNote.translations && (await chooseTranslation.call(ankiEngNote));
 ankiEngNote.examples && (await chooseExample.call(ankiEngNote));
 
-console.log(ankiEngNote);
+// console.log(ankiEngNote);
 
 // ADD ANKI CARD
-// await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
+await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
