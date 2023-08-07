@@ -56,40 +56,41 @@ export async function whichDefinition(definitions) {
     return { typ, def };
 }
 
-/**
- * Asks which Tranlation to choose
- * @param {Array} translation - Tranlations to choose from
- * @returns {String} the choosen Tranlation
- */
-export async function chooseTranslation() {
+export async function chooseLingueeTranslation() {
+    const translationsArr = this.translations.map((e) => e.translation);
     const answers = await inquirer.prompt([
         {
             type: "list",
             name: "translation",
             message: `Which ${chalk.underline.bold.yellow("translation")} ?`,
-            choices: this.translations,
+            choices: translationsArr,
+        },
+    ]);
+    const translation = this.translations.find(
+        (e) => e["translation"] === answers.translation
+    );
+
+    delete this.translations;
+    return { ...this, ...translation };
+}
+
+export async function chooseLingueeExample() {
+    const answers = await inquirer.prompt([
+        {
+            type: "list",
+            name: "example",
+            message: `Which ${chalk.underline.bold.yellow("example")} ?`,
+            choices: this.examples.map((e) => `${e.en} .-. ${e.fr}`),
         },
     ]);
 
-    this.translation = answers.translation;
-
-    return this;
+    delete this.examples;
+    return {
+        ...this,
+        example_en: answers.example.split(" .-. ")[0],
+        example_fr: answers.example.split(" .-. ")[1],
+    };
 }
-
-// export async function chooseSynonyms() {
-//     const answers = await inquirer.prompt([
-//         {
-//             type: "checkbox",
-//             name: "synonyms",
-//             message: `Which ${chalk.underline.bold.yellow("synonyms")} ?`,
-//             choices: this.synonyms,
-//         },
-//     ]);
-
-//     this.synonyms = answers.synonyms.join(", ");
-
-//     return this;
-// }
 
 /**
  * Asks which Example to choose

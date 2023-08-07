@@ -1,102 +1,55 @@
-import cheerio from "cheerio";
 import Reverso from "reverso-api";
-import isPhrasalVerb from "./isPhrasalVerb.js";
-import {
-    fetchDictionaryBodyResponse,
-    fetchThesaurusBodyResponse,
-} from "./fetchBodyRes.js";
 import axios from "axios";
+import chalk from "chalk";
 
 const reverso = new Reverso();
 
-export function getWord(body) {
-    // arg: dictionary.com html body from fetchDictionaryBodyResponse.
-    let $ = cheerio.load(body.data);
-    const word = $("#top-definitions-section").find("h1").text().trim();
-
-    return word;
-}
-
-export function getIPAs(body) {
-    // arg: dictionary.com html body from fetchDictionaryBodyResponse.
-    let $ = cheerio.load(body.data);
-    const ipaContainer = $(`data-type="pronunciation-text"`);
-    console.log(ipaContainer.text());
-    console.log("hello");
-    const ipa =
-        ipaContainer.length === 1
-            ? [
-                  ipaContainer
-                      .text()
-                      .replace(/[/()[\]]/g, "")
-                      .trim(),
-              ][0]
-            : [
-                  ...new Set(
-                      ipaContainer
-                          .map((i, el) =>
-                              $(el)
-                                  .text()
-                                  .replace(/[/()[\]]/g, "")
-                                  .trim()
-                          )
-                          .toArray()
-                  ),
-              ][0];
-
-    // console.log(ipa);
-    return ipa.split(", ")[0];
-}
-
-export function getPronunciation(body) {
-    let $ = cheerio.load(body.data);
-    const spellingContainer = $(
-        ".pron-spell-ipa-container .pron-spell-container"
-    ).find(".pron-spell-content");
-
-    let pronunciation =
-        spellingContainer.length === 1
-            ? [spellingContainer.text().replace(/\[|\]/g, "").trim()]
-            : [
-                  ...new Set(
-                      spellingContainer
-                          .toArray()
-                          .map((e) => $(e).text().replace(/\[|\]/g, "").trim())
-                  ),
-              ];
-    return pronunciation.length > 0 ? pronunciation[0].split(", ")[0] : ""; //;
-}
-
-export function getTypes(word, body) {
-    let $ = cheerio.load(body.data);
-    const types = isPhrasalVerb(word)
-        ? "phrasal verb"
-        : $("section.serp-nav-button")
-              .next()
-              .find("span.luna-pos")
-              .toArray()
-              .map((e) =>
-                  $(e)
-                      .text()
-                      // avoid a case like "reedy" in which we have this "adjective, reed·i·er, reed·i·est."
-                      .replaceAll(",", "")
-                      .trim()
-                      .replace("adjective", "adj")
-              )
-              .toString()
-              .split(",")[0]
-              .split(" ")[0];
-    return types;
-}
-
-export async function getSynonyms() {
-    let res;
+export async function getLingueeData() {
     try {
-        res = await reverso.getSynonyms(this.word, "english");
-        this["synonyms"] = res.synonyms.map((e) => e.synonym);
+        let linguee_data = await axios.get(
+            `https://linguee-api.fly.dev/api/v2/translations`,
+            {
+                params: { query: this.word, src: "en", dst: "fr" },
+            }
+        );
+
+        let translations = [];
+
+        linguee_data.data
+            .filter((e) => e.featured)
+            .map((e) => {
+                e.translations
+                    .filter((e) => e.featured)
+                    .map((e) => {
+                        if (
+                            e.hasOwnProperty("examples") &&
+                            e.examples.length > 0
+                        ) {
+                            translations.push({
+                                type: e.pos.startsWith("noun")
+                                    ? "noun"
+                                    : e.pos.startsWith("adjective")
+                                    ? "adjv"
+                                    : e.pos,
+                                translation: e.text,
+                                examples: e.examples.map((e) => ({
+                                    en: e.src,
+                                    fr: e.dst,
+                                })),
+                            });
+                        }
+                    });
+            });
+
+        this["translations"] = translations;
         return this;
-    } catch (err) {
-        return this;
+    } catch (error) {
+        console.clear();
+        console.log(
+            chalk.red(
+                `no translations found for ${chalk.bold.underline(this.word)}`
+            )
+        );
     }
 }
 
@@ -161,25 +114,9 @@ export async function getDictionaryContent() {
         if (res.data[0].phonetic) {
             this.ipa = res.data[0].phonetic.replace(/[/()[\]]/g, "").trim();
         }
-        // const defArr = [];
-        // res.data[0].meanings
-        //     .filter((e) => e.definitions.length > 0)
-        //     .map((el) => ({
-        //         partOfSpeech: el.partOfSpeech,
-        //         definitions: el.definitions
-        //             .filter((e) => e.hasOwnProperty("example"))
-        //             .map((e) =>
-        //                 defArr.push({
-        //                     type: el.partOfSpeech,
-        //                     definition: e.definition,
-        //                     example: e.example,
-        //                 })
-        //             ),
-        //     }))
-        //     .filter((e) => e.definitions.length > 0);
-        // this.definitions = defArr;
         return this;
     } catch (error) {
         return this;
     }
 }
+//

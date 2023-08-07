@@ -14,6 +14,22 @@ export function getMatchingWord(wordList, sentence) {
     return null; // No matching word found
 }
 
+export function logLingueeData(data) {
+    console.log(`RESULTS for ${data.word}\n`);
+    data.translations.map((e) => {
+        console.log(
+            `\n${chalk.bgGray(
+                ` ${e.type.toUpperCase()} `
+            )}: ${chalk.magenta.underline(e.translation)}\n`
+        );
+        e.examples.map((e) => {
+            console.log(`\t${e.en} - ${e.fr}`);
+            return e;
+        });
+        return e;
+    });
+}
+
 export function logWordContent() {
     const log = console.log;
     const headLog = (str) => chalk.yellow.bold.underline(str);

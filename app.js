@@ -1,11 +1,6 @@
-import {
-    getExamples,
-    getTranslations,
-    getDictionaryContent,
-    getLingueeData,
-} from "./utility/api.js";
-import { logWordContent } from "./utility/log.js";
-import { chooseExample, chooseTranslation } from "./prompt.js";
+import { getLingueeData } from "./utility/api.js";
+import { logWordContent, logLingueeData } from "./utility/log.js";
+import { chooseLingueeTranslation, chooseLingueeExample } from "./prompt.js";
 
 import { addCard } from "./anki.js";
 
@@ -15,17 +10,21 @@ const usrInput = process.argv.slice(2).join(" ").toLowerCase().trim();
 
 console.log(`loading "${usrInput}"`);
 
-const ankiEngNote = { word: usrInput };
+let ankiEngNote = { word: usrInput };
 
-await getLingueeData.call(ankiEngNote);
+ankiEngNote = await getLingueeData.call(ankiEngNote);
 
-// console.clear();
-// logWordContent.call(ankiEngNote);
-
-// ankiEngNote.translations && (await chooseTranslation.call(ankiEngNote));
-// ankiEngNote.examples && (await chooseExample.call(ankiEngNote));
-
-// console.log(ankiEngNote);
+console.clear();
+if (ankiEngNote.translations.length > 0) {
+    logLingueeData(ankiEngNote);
+    ankiEngNote = await chooseLingueeTranslation.call(ankiEngNote);
+    console.clear();
+    console.log(ankiEngNote);
+    if (ankiEngNote.examples.length > 1) {
+        ankiEngNote = await chooseLingueeExample.call(ankiEngNote);
+    }
+    console.log(ankiEngNote);
+}
 
 // ADD ANKI CARD
 // await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
