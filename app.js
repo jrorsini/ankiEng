@@ -22,6 +22,13 @@ if (ankiEngNote.translations.length > 0) {
     console.log(ankiEngNote);
     if (ankiEngNote.examples.length > 1) {
         ankiEngNote = await chooseLingueeExample.call(ankiEngNote);
+    } else {
+        ankiEngNote = {
+            ...ankiEngNote,
+            example_en: ankiEngNote.examples[0].en,
+            example_fr: ankiEngNote.examples[0].fr,
+        };
+        delete ankiEngNote.examples;
     }
     console.log(ankiEngNote);
 }

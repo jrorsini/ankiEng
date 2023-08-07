@@ -11,7 +11,7 @@ const ankiUrl = "http://localhost:8765/";
 - example_en
 - example_fr
 - translation
-- synonyms
+- type
 */
 
 export async function addCard(deck, noteType) {
