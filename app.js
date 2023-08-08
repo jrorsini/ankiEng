@@ -42,8 +42,6 @@ if (ankiEngNote.translations.length > 0) {
             example_fr: fr_ex,
         };
     }
-    console.log(ankiEngNote);
 }
-
-// ADD ANKI CARD
-// await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
+!ankiEngNote.hasOwnProperty("translations") &&
+    (await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE"));
