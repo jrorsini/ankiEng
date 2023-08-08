@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import { typeColor } from "./global.js";
+import natural from "natural";
 
 export function getMatchingWord(wordList, sentence) {
     for (let i = 0; i < wordList.length; i++) {
@@ -14,13 +15,30 @@ export function getMatchingWord(wordList, sentence) {
     return null; // No matching word found
 }
 
+export function getClosestMatchingWord(wordToMatch, sentence) {
+    const wordsInSentence = sentence.split(" ");
+
+    let closestMatch = null;
+    let minDistance = Infinity;
+
+    wordsInSentence.forEach((word) => {
+        const distance = natural.LevenshteinDistance(wordToMatch, word);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestMatch = word;
+        }
+    });
+
+    return closestMatch;
+}
+
 export function logLingueeData(data) {
     console.log(`RESULTS for ${data.word}\n`);
     data.translations.map((e) => {
         console.log(
             `\n${chalk.bgGray(
                 ` ${e.type.toUpperCase()} `
-            )}: ${chalk.magenta.underline(e.translation)}\n`
+            )}: ${chalk.green.underline(e.translation)}\n`
         );
         e.examples.map((e) => {
             console.log(`\t${e.en} - ${e.fr}`);
