@@ -1,7 +1,7 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
 import { typeColor } from "./utility/global.js";
-import { getMatchingWord } from "./utility/log.js";
+import { getClosestMatchingWord, getMatchingWord } from "./utility/log.js";
 
 /**
  * Asks what word to search
@@ -83,14 +83,8 @@ export async function chooseLingueeExample() {
             choices: this.examples.map((e) => {
                 const en_match = getClosestMatchingWord(this.word, e.en);
                 const fr_match = getClosestMatchingWord(this.translation, e.fr);
-                const en_ex = e.en.replace(
-                    en_match,
-                    chalk.bold.underline.red(en_match)
-                );
-                const fr_ex = e.fr.replace(
-                    fr_match,
-                    chalk.bold.underline.red(fr_match)
-                );
+                const en_ex = e.en.replace(en_match, chalk.bold.red(en_match));
+                const fr_ex = e.fr.replace(fr_match, chalk.bold.red(fr_match));
                 return `${en_ex} | ${fr_ex}`;
             }),
         },
@@ -99,8 +93,12 @@ export async function chooseLingueeExample() {
     delete this.examples;
     return {
         ...this,
-        example_en: answers.example.split(" .-. ")[0],
-        example_fr: answers.example.split(" .-. ")[1],
+        example_en: JSON.stringify(answers.example.split(" | ")[0])
+            .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+            .slice(1, -1),
+        example_fr: JSON.stringify(answers.example.split(" | ")[1])
+            .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+            .slice(1, -1),
     };
 }
 
