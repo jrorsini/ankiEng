@@ -81,16 +81,17 @@ export async function chooseLingueeExample() {
             name: "example",
             message: `Which ${chalk.underline.bold.yellow("example")} ?`,
             choices: this.examples.map((e) => {
-                console.log(this);
-                const regex = new RegExp(`\\b${this.word}\\w*\\b`, "gi");
-                const match = e.en.match(regex);
-                console.log(match);
-                return `${e.en.replace(match, chalk.bold.red(match))} | ${e.fr
-                    .toLowerCase()
-                    .replace(
-                        this.translation,
-                        chalk.bold.red(this.translation)
-                    )}`;
+                const en_match = getClosestMatchingWord(this.word, e.en);
+                const fr_match = getClosestMatchingWord(this.translation, e.fr);
+                const en_ex = e.en.replace(
+                    en_match,
+                    chalk.bold.underline.red(en_match)
+                );
+                const fr_ex = e.fr.replace(
+                    fr_match,
+                    chalk.bold.underline.red(fr_match)
+                );
+                return `${en_ex} | ${fr_ex}`;
             }),
         },
     ]);
