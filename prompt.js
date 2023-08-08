@@ -80,7 +80,18 @@ export async function chooseLingueeExample() {
             type: "list",
             name: "example",
             message: `Which ${chalk.underline.bold.yellow("example")} ?`,
-            choices: this.examples.map((e) => `${e.en} .-. ${e.fr}`),
+            choices: this.examples.map((e) => {
+                console.log(this);
+                const regex = new RegExp(`\\b${this.word}\\w*\\b`, "gi");
+                const match = e.en.match(regex);
+                console.log(match);
+                return `${e.en.replace(match, chalk.bold.red(match))} | ${e.fr
+                    .toLowerCase()
+                    .replace(
+                        this.translation,
+                        chalk.bold.red(this.translation)
+                    )}`;
+            }),
         },
     ]);
 
