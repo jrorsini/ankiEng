@@ -38,10 +38,21 @@ export function logLingueeData(data) {
         console.log(
             `\n${chalk.bgGray(
                 ` ${e.type.toUpperCase()} `
-            )}: ${chalk.green.underline(e.translation)}\n`
+            )}: ${chalk.green.underline(e.translation)}`
         );
+        const translation = e.translation;
         e.examples.map((e) => {
-            console.log(`\t${e.en} - ${e.fr}`);
+            const en_match = getClosestMatchingWord(data.word, e.en);
+            const fr_match = getClosestMatchingWord(translation, e.fr);
+            const en_ex = e.en.replace(
+                en_match,
+                chalk.bold.underline.red(en_match)
+            );
+            const fr_ex = e.fr.replace(
+                fr_match,
+                chalk.bold.underline.cyan(fr_match)
+            );
+            console.log(`\n\t${en_ex}\n\t${fr_ex}`);
             return e;
         });
         return e;
