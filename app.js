@@ -18,8 +18,8 @@ let ankiEngNote = { word: usrInput };
 
 ankiEngNote = await getLingueeData.call(ankiEngNote);
 
-console.clear();
-if (ankiEngNote.translations.length > 0) {
+if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
+    console.clear();
     logLingueeData(ankiEngNote);
     ankiEngNote = await chooseLingueeTranslation.call(ankiEngNote);
     console.clear();
@@ -42,6 +42,7 @@ if (ankiEngNote.translations.length > 0) {
             example_fr: fr_ex,
         };
     }
+    await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
+} else {
+    console.clear();
 }
-!ankiEngNote.hasOwnProperty("translations") &&
-    (await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE"));
