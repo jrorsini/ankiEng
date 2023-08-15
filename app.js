@@ -1,48 +1,44 @@
 import { getLingueeData } from "./utility/api.js";
-import {
-    logWordContent,
-    logLingueeData,
-    getClosestMatchingWord,
-} from "./utility/log.js";
+import { logLingueeData } from "./utility/log.js";
 import { chooseLingueeTranslation, chooseLingueeExample } from "./prompt.js";
 
 import { addCard } from "./anki.js";
 
+// clear log.
 console.clear();
 
+// retrieve user input
 const usrInput = process.argv.slice(2).join(" ").toLowerCase().trim();
 
+// log user input loading
 console.log(`loading "${usrInput}"`);
 
+// create Anki note object.
 let ankiEngNote = { word: usrInput };
 
+// get linguee's data
 ankiEngNote = await getLingueeData.call(ankiEngNote);
 
+// checks if linguee's api response isn't undefined.
 if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
+    // clear log.
     console.clear();
+
+    // clear linguee's data.
     logLingueeData(ankiEngNote);
+
+    // choose translation.
     ankiEngNote = await chooseLingueeTranslation.call(ankiEngNote);
+
+    // clear log.
     console.clear();
-    if (ankiEngNote.examples.length > 1) {
-        ankiEngNote = await chooseLingueeExample.call(ankiEngNote);
-    } else {
-        const en = ankiEngNote.examples[0].en;
-        const fr = ankiEngNote.examples[0].fr;
 
-        delete ankiEngNote.examples;
+    // get example.
+    ankiEngNote = await chooseLingueeExample.call(ankiEngNote);
 
-        const en_match = getClosestMatchingWord(ankiEngNote.word, en);
-        const fr_match = getClosestMatchingWord(ankiEngNote.translation, fr);
-        const en_ex = en.replace(en_match, `|${en_match}|`);
-        const fr_ex = fr.replace(fr_match, `|${fr_match}|`);
-
-        ankiEngNote = {
-            ...ankiEngNote,
-            example_en: en_ex,
-            example_fr: fr_ex,
-        };
-    }
+    // save card in Anki.
     await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
 } else {
+    // clear log.
     console.clear();
 }
