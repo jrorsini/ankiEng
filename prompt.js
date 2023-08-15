@@ -75,31 +75,58 @@ export async function chooseLingueeTranslation() {
 }
 
 export async function chooseLingueeExample() {
-    const answers = await inquirer.prompt([
-        {
-            type: "list",
-            name: "example",
-            message: `Which ${chalk.underline.bold.yellow("example")} ?`,
-            choices: this.examples.map((e) => {
-                const en_match = getClosestMatchingWord(this.word, e.en);
-                const fr_match = getClosestMatchingWord(this.translation, e.fr);
-                const en_ex = e.en.replace(en_match, chalk.bold.red(en_match));
-                const fr_ex = e.fr.replace(fr_match, chalk.bold.red(fr_match));
-                return `${en_ex} | ${fr_ex}`;
-            }),
-        },
-    ]);
+    if (this.examples.length > 1) {
+        const answers = await inquirer.prompt([
+            {
+                type: "list",
+                name: "example",
+                message: `Which ${chalk.underline.bold.yellow("example")} ?`,
+                choices: this.examples.map((e) => {
+                    const en_match = getClosestMatchingWord(this.word, e.en);
+                    const fr_match = getClosestMatchingWord(
+                        this.translation,
+                        e.fr
+                    );
+                    const en_ex = e.en.replace(
+                        en_match,
+                        chalk.bold.red(en_match)
+                    );
+                    const fr_ex = e.fr.replace(
+                        fr_match,
+                        chalk.bold.red(fr_match)
+                    );
+                    return `${en_ex} | ${fr_ex}`;
+                }),
+            },
+        ]);
 
-    delete this.examples;
-    return {
-        ...this,
-        example_en: JSON.stringify(answers.example.split(" | ")[0])
-            .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
-            .slice(1, -1),
-        example_fr: JSON.stringify(answers.example.split(" | ")[1])
-            .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
-            .slice(1, -1),
-    };
+        delete this.examples;
+        return {
+            ...this,
+            example_en: JSON.stringify(answers.example.split(" | ")[0])
+                .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+                .slice(1, -1),
+            example_fr: JSON.stringify(answers.example.split(" | ")[1])
+                .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+                .slice(1, -1),
+        };
+    } else {
+        const en = this.examples[0].en;
+        const fr = this.examples[0].fr;
+
+        delete this.examples;
+
+        const en_match = getClosestMatchingWord(this.word, en);
+        const fr_match = getClosestMatchingWord(this.translation, fr);
+        const en_ex = en.replace(en_match, `|${en_match}|`);
+        const fr_ex = fr.replace(fr_match, `|${fr_match}|`);
+
+        return {
+            ...this,
+            example_en: en_ex,
+            example_fr: fr_ex,
+        };
+    }
 }
 
 /**
