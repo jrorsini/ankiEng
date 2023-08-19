@@ -1,6 +1,7 @@
 import Reverso from "reverso-api";
 import axios from "axios";
 import chalk from "chalk";
+import { getClosestMatchingWord } from "./log.js";
 
 const reverso = new Reverso();
 
@@ -53,70 +54,42 @@ export async function getLingueeData() {
     }
 }
 
-export async function getTranslations() {
+export async function getReversoTranslations(input) {
     try {
-        let res = await reverso.getTranslation(this.word, "english", "french");
-        let translations = res.translations.filter(
-            (e) => e.toLowerCase() !== this.word
-        );
-        let examples = [];
+        let res = await reverso.getTranslation(input, "english", "french");
+        return { ...this, translations: [...new Set(res.translations)] };
+    } catch (err) {
+        return false;
+    }
+}
 
-        let linguee_translations_res = await axios.get(
-            `https://linguee-api.fly.dev/api/v2/translations`,
-            {
-                params: { query: this.word, src: "en", dst: "fr" },
-            }
-        );
+function lengthDifference(word1, word2) {
+    return Math.abs(word1.length - word2.length);
+}
 
-        linguee_translations_res.data.map((e) => ({
-            text: e.text,
-            pos: e.pos,
-            translations: e.translations
-                .filter((e) => e.featured)
-                .map((tr) => {
-                    translations.push(`${tr.text}`);
-                    return {
-                        text: tr.text,
-                        pos: tr.pos,
-                        examples: tr.examples.map((ex) => {
-                            examples.push({ en: ex.src, fr: ex.dst });
-                            return ex;
-                        }),
-                    };
-                }),
+export async function getReversoExamples(input) {
+    try {
+        let res = await reverso.getContext(input, "english", "french");
+        let examples = res.examples.map((e) => ({
+            en: e.source,
+            fr: e.target,
         }));
-        this["examples"] = examples;
-        this["translations"] = [...new Set(translations)];
-        return this;
-    } catch (err) {
-        return this;
-    }
-}
+        let data = { translations: [] };
+        this.translations.map((e) => {
+            let translation = {
+                translation: e,
+            };
 
-export async function getExamples() {
-    try {
-        let res = await reverso.getContext(this.word, "english", "french");
-        const examples = res.examples
-            .sort((a, b) => a.source.length - b.source.length)
-            .map((e) => ({ en: e.source, fr: e.target }));
-        this["examples"] = this["examples"].concat(examples);
-        return this;
+            let matchingExamples = examples.filter((ex) => {
+                return getClosestMatchingWord(e, ex.fr) === e;
+            });
+            if (matchingExamples.length > 0) {
+                translation.examples = matchingExamples;
+                data.translations.push(translation);
+            }
+        });
+        return data;
     } catch (err) {
-        return this;
+        return false;
     }
 }
-
-export async function getDictionaryContent() {
-    try {
-        const res = await axios.get(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
-        );
-        if (res.data[0].phonetic) {
-            this.ipa = res.data[0].phonetic.replace(/[/()[\]]/g, "").trim();
-        }
-        return this;
-    } catch (error) {
-        return this;
-    }
-}
-//
