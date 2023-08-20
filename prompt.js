@@ -56,7 +56,7 @@ export async function whichDefinition(definitions) {
     return { typ, def };
 }
 
-export async function chooseLingueeTranslation() {
+export async function chooseTranslation() {
     const translationsArr = this.translations.map((e) => e.translation);
     const answers = await inquirer.prompt([
         {
@@ -74,7 +74,7 @@ export async function chooseLingueeTranslation() {
     return { ...this, ...translation };
 }
 
-export async function chooseLingueeExample() {
+export async function chooseExample() {
     if (this.examples.length > 1) {
         const answers = await inquirer.prompt([
             {
@@ -127,44 +127,4 @@ export async function chooseLingueeExample() {
             example_fr: fr_ex,
         };
     }
-}
-
-/**
- * Asks which Example to choose
- * @param {Array} examples - Examples to choose from
- * @returns {String} the choosen Example
- */
-export async function chooseExample() {
-    const answers = await inquirer.prompt([
-        {
-            type: "list",
-            name: "example",
-            message: `Which ${chalk.underline.bold.yellow("example")} ?`,
-            choices: this.examples.map((e) => {
-                const trslt2Rep = getMatchingWord(
-                    this.translations,
-                    e.fr.toLowerCase()
-                );
-                return `${e.en.replace(
-                    this.word,
-                    chalk.bold.red(this.word)
-                )} | ${e.fr
-                    .toLowerCase()
-                    .replace(trslt2Rep, chalk.bold.red(trslt2Rep))}`;
-            }),
-        },
-    ]);
-
-    this.example_en = JSON.stringify(answers.example.split(" | ")[0])
-        .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
-        .slice(1, -1);
-
-    this.example_fr = JSON.stringify(answers.example.split(" | ")[1])
-        .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
-        .slice(1, -1);
-
-    delete this.examples;
-    delete this.translations;
-
-    return this;
 }

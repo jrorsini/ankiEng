@@ -63,10 +63,6 @@ export async function getReversoTranslations(input) {
     }
 }
 
-function lengthDifference(word1, word2) {
-    return Math.abs(word1.length - word2.length);
-}
-
 export async function getReversoExamples(input) {
     try {
         let res = await reverso.getContext(input, "english", "french");
@@ -93,3 +89,20 @@ export async function getReversoExamples(input) {
         return false;
     }
 }
+
+export function fuseReversoAndLinguee(ankiEngNote, reverso_data) {
+    reverso_data.translations.map((e) => {
+        if (
+            ankiEngNote.translations.find(
+                (tr) => tr.translation === e.translation
+            ) === undefined
+        ) {
+            ankiEngNote.translations.push({ type: "", ...e });
+        }
+        return e;
+    });
+
+    return ankiEngNote;
+}
+
+// export function matchReversoExs2Trs(params) {}

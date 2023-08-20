@@ -84,6 +84,33 @@ export function logReversoData(data) {
     });
 }
 
+export function logData(data) {
+    console.log(`Results for ${data.word}\n`);
+    data.translations.map((e) => {
+        const translation = e.translation;
+        console.log(
+            `\n${chalk.bgGray(
+                ` ${e.type.toUpperCase()} `
+            )}: ${chalk.green.underline(translation)}`
+        );
+        e.examples.map((e) => {
+            const en_match = getClosestMatchingWord(data.word, e.en);
+            const fr_match = getClosestMatchingWord(translation, e.fr);
+            const en_ex = e.en.replace(
+                en_match,
+                chalk.bold.underline.red(en_match)
+            );
+            const fr_ex = e.fr.replace(
+                fr_match,
+                chalk.bold.underline.cyan(fr_match)
+            );
+            console.log(`\n\t${en_ex}\n\t${fr_ex}`);
+            return e;
+        });
+        return e;
+    });
+}
+
 export function logWordContent() {
     const log = console.log;
     const headLog = (str) => chalk.yellow.bold.underline(str);
