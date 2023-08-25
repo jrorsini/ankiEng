@@ -93,20 +93,22 @@ export function logData(data) {
                 ` ${e.type.toUpperCase()} `
             )}: ${chalk.green.underline(translation)}`
         );
-        e.examples.map((e) => {
-            const en_match = getClosestMatchingWord(data.word, e.en);
-            const fr_match = getClosestMatchingWord(translation, e.fr);
-            const en_ex = e.en.replace(
-                en_match,
-                chalk.bold.underline.red(en_match)
-            );
-            const fr_ex = e.fr.replace(
-                fr_match,
-                chalk.bold.underline.cyan(fr_match)
-            );
-            console.log(`\n\t${en_ex}\n\t${fr_ex}`);
-            return e;
-        });
+        e.examples
+            .sort((a, b) => a.en.length - b.en.length)
+            .map((e) => {
+                const en_match = getClosestMatchingWord(data.word, e.en);
+                const fr_match = getClosestMatchingWord(translation, e.fr);
+                const en_ex = e.en.replace(
+                    en_match,
+                    chalk.bold.underline.red(en_match)
+                );
+                const fr_ex = e.fr.replace(
+                    fr_match,
+                    chalk.bold.underline.cyan(fr_match)
+                );
+                console.log(`\n\t${en_ex}\n\t${fr_ex}`);
+                return e;
+            });
         return e;
     });
 }
