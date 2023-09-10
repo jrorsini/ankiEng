@@ -5,6 +5,55 @@ import { getClosestMatchingWord } from "./log.js";
 
 const reverso = new Reverso();
 
+export async function getDictionary() {
+    try {
+        let dictionaryData = await axios.get(
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
+        );
+
+        console.log(
+            dictionaryData.data.map((e) =>
+                e.phonetic ? e.phonetic.replaceAll("/", "") : ""
+            )
+        );
+
+        this["ipa"] = [
+            ...new Set(
+                dictionaryData.data.map((e) =>
+                    e.phonetic ? e.phonetic.replaceAll("/", "") : ""
+                )
+            ),
+        ][0];
+
+        const nestedArray = dictionaryData.data.map((d) =>
+            d.meanings.map((m) => {
+                return m.definitions
+                    .map(
+                        (e) =>
+                            `${m.partOfSpeech.toUpperCase()} - ${e.definition}`
+                    )
+                    .sort((a, b) => a.length - b.length);
+            })
+        );
+
+        this["definitions"] = []
+            .concat(
+                ...nestedArray.map((subArrays) =>
+                    [].concat(
+                        ...subArrays.map((innerArray) =>
+                            [].concat(...innerArray)
+                        )
+                    )
+                )
+            )
+            .sort((a, b) => a[0].localeCompare(b[0]));
+
+        return this;
+    } catch (err) {
+        return this;
+    }
+}
+
 export async function getLingueeData() {
     try {
         let linguee_data = await axios.get(
@@ -46,11 +95,7 @@ export async function getLingueeData() {
         return this;
     } catch (error) {
         console.clear();
-        console.log(
-            chalk.red(
-                `no translations found for ${chalk.bold.underline(this.word)}`
-            )
-        );
+        return { ...this, translations: [] };
     }
 }
 
@@ -59,7 +104,7 @@ export async function getReversoTranslations(input) {
         let res = await reverso.getTranslation(input, "english", "french");
         return { ...this, translations: [...new Set(res.translations)] };
     } catch (err) {
-        return false;
+        return this;
     }
 }
 
@@ -86,7 +131,7 @@ export async function getReversoExamples(input) {
         });
         return data;
     } catch (err) {
-        return false;
+        return this;
     }
 }
 
@@ -104,5 +149,3 @@ export function fuseReversoAndLinguee(ankiEngNote, reverso_data) {
 
     return ankiEngNote;
 }
-
-// export function matchReversoExs2Trs(params) {}

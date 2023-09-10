@@ -23,37 +23,21 @@ export async function askWhatWordToEnter() {
  * @param {Array} definitions - Definitions to choose from
  * @returns {String} the choosen Definition
  */
-export async function whichDefinition(definitions) {
-    const choices = [];
-
-    definitions.map((e) => {
-        const type = e.split(" | ")[0].replace(" ", "_");
-        choices.push(
-            chalk.hex(typeColor[type]).inverse(` ${type.toUpperCase()} `) +
-                " | " +
-                e.split(" | ")[1]
-        );
-        return e;
-    });
-
+export async function whichDefinition() {
     const answers = await inquirer.prompt([
         {
             type: "list",
             name: "definition",
             message: "Which " + chalk.underline.bold.yellow("definition") + "?",
-            choices,
+            choices: this.definitions,
         },
     ]);
 
-    const typ = definitions
-        .filter(
-            (e) => e.split(" | ")[1] == answers.definition.split(" | ")[1]
-        )[0]
-        .split(" | ")[0];
+    const definition = this.definitions.find(
+        (e) => e["definition"] === answers.definition
+    );
 
-    const def = answers.definition.split(" | ")[1];
-
-    return { typ, def };
+    return { ...this, ...definition };
 }
 
 export async function chooseTranslation() {
@@ -72,6 +56,21 @@ export async function chooseTranslation() {
 
     delete this.translations;
     return { ...this, ...translation };
+}
+
+export async function chooseDefinition() {
+    const definitionsArr = this.definitions.map((e) => e.split(" - ")[1]);
+    const answers = await inquirer.prompt([
+        {
+            type: "checkbox",
+            name: "definition",
+            message: `Which ${chalk.underline.bold.yellow("definitions")} ?`,
+            choices: definitionsArr,
+        },
+    ]);
+
+    delete this.definitions;
+    return { ...this, definition: answers.definition[0] };
 }
 
 export async function chooseExample() {

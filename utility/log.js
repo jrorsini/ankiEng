@@ -85,32 +85,60 @@ export function logReversoData(data) {
 }
 
 export function logData(data) {
-    console.log(`Results for ${data.word}\n`);
-    data.translations.map((e) => {
-        const translation = e.translation;
-        console.log(
-            `\n${chalk.bgGray(
-                ` ${e.type.toUpperCase()} `
-            )}: ${chalk.green.underline(translation)}`
-        );
-        e.examples
-            .sort((a, b) => a.en.length - b.en.length)
-            .map((e) => {
-                const en_match = getClosestMatchingWord(data.word, e.en);
-                const fr_match = getClosestMatchingWord(translation, e.fr);
-                const en_ex = e.en.replace(
-                    en_match,
-                    chalk.bold.underline.red(en_match)
-                );
-                const fr_ex = e.fr.replace(
-                    fr_match,
-                    chalk.bold.underline.cyan(fr_match)
-                );
-                console.log(`\n\t${en_ex}\n\t${fr_ex}`);
-                return e;
-            });
-        return e;
-    });
+    console.clear();
+
+    console.log(
+        `RESULTS FOR ${chalk.yellow.underline.bold(data.word.toUpperCase())}\n`
+    );
+
+    if (data.ipa) {
+        console.log(`\n\t ${chalk.bgRed.bold(" IPA ")}`);
+
+        console.log(data.ipa);
+    }
+
+    // DEFINITION
+    if (data.definitions) {
+        console.log(`\n\t ${chalk.bgRed.bold(" DEFINITIONS ")}`);
+
+        data.definitions.map((e) => {
+            const typ = e.split(" - ")[0];
+            const def = e.split(" - ")[1];
+            console.log(`\n${chalk.bgGray(` ${typ.toUpperCase()} `)} : ${def}`);
+        });
+    }
+
+    // TRANSLATION
+    if (data.translations) {
+        console.log(`\n\t ${chalk.bgRed.bold(" TRANSLATIONS ")}`);
+
+        data.translations.map((e) => {
+            const translation = e.translation;
+            console.log(
+                `\n${
+                    e.type && `${chalk.bgGray(` ${e.type.toUpperCase()} `)}:`
+                } ${chalk.green.underline.bold(translation)}`
+            );
+            e.examples
+                .sort((a, b) => a.en.length - b.en.length)
+                .map((e) => {
+                    const en_match = getClosestMatchingWord(data.word, e.en);
+                    const fr_match = getClosestMatchingWord(translation, e.fr);
+                    const en_ex = e.en.replace(
+                        en_match,
+                        chalk.bold.underline.red(en_match)
+                    );
+                    const fr_ex = e.fr.replace(
+                        fr_match,
+                        chalk.bold.underline.cyan(fr_match)
+                    );
+                    console.log(`\n\t${en_ex}\n\t${fr_ex}`);
+                    return e;
+                })
+                .slice(0, 5);
+            return e;
+        });
+    }
 }
 
 export function logWordContent() {

@@ -1,5 +1,8 @@
+// to implement -> https://dictionaryapi.dev
+
 import {
     fuseReversoAndLinguee,
+    getDictionary,
     getLingueeData,
     getReversoExamples,
     getReversoTranslations,
@@ -10,7 +13,11 @@ import {
     logLingueeData,
     logReversoData,
 } from "./utility/log.js";
-import { chooseTranslation, chooseExample } from "./prompt.js";
+import {
+    chooseTranslation,
+    chooseExample,
+    chooseDefinition,
+} from "./prompt.js";
 import Reverso from "reverso-api";
 
 import { addCard } from "./anki.js";
@@ -42,37 +49,47 @@ reverso_data = await getReversoTranslations.call(
 // added examples from Reverso
 reverso_data = await getReversoExamples.call(reverso_data, ankiEngNote.word);
 
-console.log(reverso_data);
-
 // get linguee's data
 ankiEngNote = await getLingueeData.call(ankiEngNote);
 
 // fuse Reverso and Linguee's definitions and examples.
 ankiEngNote = fuseReversoAndLinguee(ankiEngNote, reverso_data);
 
-console.log(ankiEngNote);
+// get dictionary.com's data
+ankiEngNote = await getDictionary.call(ankiEngNote);
 
-// checks if linguee's api response isn't undefined.
 if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
-    // clear log.
-    console.clear();
-
-    // log linguee's data.
     logData(ankiEngNote);
 
+    // log line separator
     console.log(`\n-----------------------\n`);
 
-    // choose translation.
-    ankiEngNote = await chooseTranslation.call(ankiEngNote);
+    // choose definition.
+    if (ankiEngNote.definitions) {
+        ankiEngNote = await chooseDefinition.call(ankiEngNote);
 
-    // clear log.
-    console.clear();
+        // clear log.
+        console.clear();
+    }
+
+    // choose translation.
+    if (ankiEngNote.translations) {
+        ankiEngNote = await chooseTranslation.call(ankiEngNote);
+
+        // clear log.
+        console.clear();
+    }
 
     // get example.
-    ankiEngNote = await chooseExample.call(ankiEngNote);
+    if (ankiEngNote.examples) {
+        ankiEngNote = await chooseExample.call(ankiEngNote);
+
+        // clear log.
+        console.clear();
+    }
 
     // save card in Anki.
-    await addCard.call(ankiEngNote, "ankiEng", "ANKIENG_NOTE");
+    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", "ANKIENG_NOTE");
 } else {
     // clear log.
     console.clear();
