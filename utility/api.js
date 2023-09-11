@@ -2,7 +2,6 @@
 
 import Reverso from "reverso-api";
 import axios from "axios";
-import chalk from "chalk";
 import { getClosestMatchingWord } from "./log.js";
 import wr from "wordreference-api";
 
