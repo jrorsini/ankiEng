@@ -86,7 +86,8 @@
         "cheerio": "^1.0.0-rc.12",
         "esm": "^3.2.25",
         "inquirer": "^9.2.0",
-        "natural": "^6.5.0"
+        "natural": "^6.5.0",
+        "wordreference-api": "^1.1.0"
     },
     "scripts": {
         "start": "node app.js",

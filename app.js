@@ -1,5 +1,6 @@
 // to implement -> https://dictionaryapi.dev
 // https://github.com/fega/wordreference-api
+// https://dictionaryapi.com/products/index
 
 import {
     fuseReversoAndLinguee,
@@ -59,6 +60,9 @@ ankiEngNote = fuseReversoAndLinguee(ankiEngNote, reverso_data);
 // get dictionary.com's data
 ankiEngNote = await getDictionary.call(ankiEngNote);
 
+console.log(ankiEngNote);
+/**
+
 if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
     logData(ankiEngNote);
 
@@ -95,3 +99,5 @@ if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
     // clear log.
     console.clear();
 }
+
+ */

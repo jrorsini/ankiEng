@@ -1,9 +1,36 @@
+// https://www.wordreference.com/english/abbreviationsWRD.aspx?dict=enfr&abbr=vi&src=WR
+
 import Reverso from "reverso-api";
 import axios from "axios";
 import chalk from "chalk";
 import { getClosestMatchingWord } from "./log.js";
+import wr from "wordreference-api";
 
 const reverso = new Reverso();
+
+export async function getWordReference() {
+    try {
+        let wrData = await wr("break in", "en", "fr");
+        const arr = wrData.translations.map((e) => e.translations);
+        let translations = [].concat(
+            ...arr.map((inArr) => [].concat(...inArr))
+        );
+        translations = translations
+            .filter((e) => e.fromType !== "adj")
+            // .filter((e) => e.example.from.length > 0 && e.example.to.length > 0)
+            .map((e) => ({
+                ...e,
+                to: e.to.trim(),
+                example:
+                    e.example.from.length == 0 && e.example.to.length == 0
+                        ? ``
+                        : `${e.example.from} | ${e.example.to}`,
+            }));
+        console.log(translations);
+    } catch (err) {
+        return this;
+    }
+}
 
 export async function getDictionary() {
     try {
