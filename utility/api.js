@@ -136,6 +136,7 @@ export async function getReversoExamples(input) {
 }
 
 export function fuseReversoAndLinguee(ankiEngNote, reverso_data) {
+    console.log(reverso_data);
     reverso_data.translations.map((e) => {
         if (
             ankiEngNote.translations.find(

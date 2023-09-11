@@ -1,4 +1,5 @@
 // to implement -> https://dictionaryapi.dev
+// https://github.com/fega/wordreference-api
 
 import {
     fuseReversoAndLinguee,

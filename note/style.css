@@ -77,9 +77,13 @@ span.char-fade_bold {
     font-size: 40px;
 }
 
+.definition {
+    color: rgba(255, 255, 255, 0.8);
+}
+
 #ipa_field_hint {
     position: absolute;
-    top: -50px;
+    bottom: -50px;
     left: -100%;
     font-weight: bold;
     margin-left: 50%;
