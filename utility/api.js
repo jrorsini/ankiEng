@@ -9,38 +9,61 @@ const reverso = new Reverso();
 
 export async function getWordReference() {
     try {
-        let wrData = await wr("break in", "en", "fr");
+        let wrData = await wr(this.word, "en", "fr");
         const arr = wrData.translations.map((e) => e.translations);
         let translations = [].concat(
             ...arr.map((inArr) => [].concat(...inArr))
         );
         translations = translations
-            .filter((e) => e.fromType !== "adj")
             // .filter((e) => e.example.from.length > 0 && e.example.to.length > 0)
             .map((e) => ({
                 ...e,
+                // from: e.from.replaceAll("⇒", ""),
                 to: e.to.trim(),
-                example:
-                    e.example.from.length == 0 && e.example.to.length == 0
-                        ? ``
-                        : `${e.example.from} | ${e.example.to}`,
+                // example:
+                //     e.example.from.length == 0 && e.example.to.length == 0
+                //         ? ``
+                //         : `${e.example.from} | ${e.example.to}`,
             }));
-        console.log(translations);
+
+        console.log(`=============`);
+        console.log(getTranslationsTypeList(translations));
+        // console.log({ ...this, translations });
+        return { ...this, translations };
     } catch (err) {
         return this;
     }
+}
+
+// create function that get all type forms from translations.
+function getTranslationsTypeList(translations) {
+    // declare allTypes var.
+    const types = {
+        verb: ["'v expr", "vi", "vtr", "vtr + adj"],
+        noun: ["n", "npl"],
+        adjective: ["adj"],
+    };
+
+    // declare translations type list.
+    let translationsTypeList = [];
+
+    // look through each translations.
+    translations.map((e) => {
+        for (const key in types) {
+            // if abbr matches
+            types[key].indexOf(e.fromType) !== -1 &&
+                translationsTypeList.push(key);
+        }
+        return e;
+    });
+
+    return [...new Set(translationsTypeList)];
 }
 
 export async function getDictionary() {
     try {
         let dictionaryData = await axios.get(
             `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
-        );
-
-        console.log(
-            dictionaryData.data.map((e) =>
-                e.phonetic ? e.phonetic.replaceAll("/", "") : ""
-            )
         );
 
         this["ipa"] = [
@@ -162,7 +185,6 @@ export async function getReversoExamples(input) {
 }
 
 export function fuseReversoAndLinguee(ankiEngNote, reverso_data) {
-    console.log(reverso_data);
     reverso_data.translations.map((e) => {
         if (
             ankiEngNote.translations.find(
