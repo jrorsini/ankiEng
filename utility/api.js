@@ -35,7 +35,18 @@ export async function getWordReference() {
     }
 }
 
-// create function that get all type forms from translations.
+// tr is the translations
+// typ is the desired typ
+function isTranslationType(tr, typ) {
+    const types = {
+        verb: ["'v expr", "vi", "vtr", "vtr + adj"],
+        noun: ["n", "npl"],
+        adjective: ["adj"],
+    };
+
+    types[typ].indexOf(tr.fromType) !== -1;
+}
+
 function getTranslationsTypeList(translations) {
     // declare allTypes var.
     const types = {
@@ -51,8 +62,9 @@ function getTranslationsTypeList(translations) {
     translations.map((e) => {
         for (const key in types) {
             // if abbr matches
-            types[key].indexOf(e.fromType) !== -1 &&
-                translationsTypeList.push(key);
+            types[key].indexOf(e.fromType) !== -1
+                ? translationsTypeList.push(key)
+                : "other";
         }
         return e;
     });
