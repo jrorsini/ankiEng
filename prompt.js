@@ -2,6 +2,10 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import { typeColor } from "./utility/global.js";
 import { getClosestMatchingWord, getMatchingWord } from "./utility/log.js";
+import {
+    filterByTranslationType,
+    filterByDefinitionType,
+} from "./utility/translationTypes.js";
 
 /**
  * Asks what word to search
@@ -18,26 +22,28 @@ export async function askWhatWordToEnter() {
     return answers.word.trim();
 }
 
-/**
- * Asks which Definition to choose
- * @param {Array} definitions - Definitions to choose from
- * @returns {String} the choosen Definition
- */
-export async function whichDefinition() {
+export async function chooseTranslationType() {
     const answers = await inquirer.prompt([
         {
             type: "list",
-            name: "definition",
-            message: "Which " + chalk.underline.bold.yellow("definition") + "?",
-            choices: this.definitions,
+            name: "type",
+            message: `Which ${chalk.underline.bold.yellow(
+                "translation type"
+            )}?`,
+            choices: this.fromTypes,
         },
     ]);
 
-    const definition = this.definitions.find(
-        (e) => e["definition"] === answers.definition
-    );
-
-    return { ...this, ...definition };
+    delete this.fromTypes;
+    return {
+        ...this,
+        translations: this.translations.filter((e) =>
+            filterByTranslationType(e, answers.type)
+        ),
+        definitions: this.definitions.filter((e) =>
+            filterByDefinitionType(e, answers.type)
+        ),
+    };
 }
 
 export async function chooseTranslation() {
