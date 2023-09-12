@@ -15,6 +15,35 @@ export function getMatchingWord(wordList, sentence) {
     return null; // No matching word found
 }
 
+export function logWRefTranslations(ankiEngNote) {
+    ankiEngNote.translations.map((e) => {
+        console.log(
+            `\n${chalk.bgRed.bold.white(` ${e.fromType.toUpperCase()} `)} ${
+                e.from
+            }  ~  ${chalk.bgCyan.bold.white(` ${e.toType.toUpperCase()} `)} ${
+                e.to
+            }`
+        );
+
+        if (e.example.from) {
+            const en_match = getClosestMatchingWord(e.from, e.example.from);
+            const en_ex = e.example.from.replace(
+                en_match,
+                chalk.bold.underline.red(en_match)
+            );
+            console.log(`\n\t${en_ex}`);
+        }
+        if (e.example.to) {
+            const fr_match = getClosestMatchingWord(e.to, e.example.to);
+            const fr_ex = e.example.to.replace(
+                fr_match,
+                chalk.bold.underline.cyan(fr_match)
+            );
+            console.log(`\t${fr_ex}`);
+        }
+    });
+}
+
 export function getClosestMatchingWord(wordToMatch, sentence) {
     const wordsInSentence = sentence.split(" ");
 

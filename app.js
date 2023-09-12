@@ -2,24 +2,19 @@
 // https://github.com/fega/wordreference-api
 // https://dictionaryapi.com/products/index
 
-import {
-    fuseReversoAndLinguee,
-    getDictionary,
-    getLingueeData,
-    getReversoExamples,
-    getReversoTranslations,
-    getWordReference,
-} from "./utility/api.js";
+import { getDictData, getWRefData } from "./utility/api.js";
 import {
     getClosestMatchingWord,
     logData,
     logLingueeData,
     logReversoData,
+    logWRefTranslations,
 } from "./utility/log.js";
 import {
     chooseTranslation,
     chooseExample,
     chooseDefinition,
+    chooseTranslationType,
 } from "./prompt.js";
 import Reverso from "reverso-api";
 
@@ -40,37 +35,28 @@ console.log(`loading "${usrInput}"`);
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
-// get wordreference.com's data
-ankiEngNote = await getWordReference.call(ankiEngNote);
+console.time("Time");
+// get wordreference.com & dictionary.com's data
+ankiEngNote = await getWRefData.call(ankiEngNote);
+ankiEngNote = await getDictData.call(ankiEngNote);
+console.timeEnd("Time");
 
-/**
-// instanciate reverso object.
-let reverso_data = {};
+if (ankiEngNote.translations.length > 0) {
+    // clear log.
+    // console.clear();
 
-// added translations from Reverso
-reverso_data = await getReversoTranslations.call(
-    reverso_data,
-    ankiEngNote.word
-);
+    ankiEngNote.fromTypes.length > 1
+        ? (ankiEngNote = await chooseTranslationType.call(ankiEngNote))
+        : delete ankiEngNote.fromTypes;
 
-// added examples from Reverso
-reverso_data = await getReversoExamples.call(reverso_data, ankiEngNote.word);
+    // console.log(ankiEngNote);
+    // logging translations
+    logWRefTranslations(ankiEngNote);
 
-// get linguee's data
-ankiEngNote = await getLingueeData.call(ankiEngNote);
+    ankiEngNote = await chooseTranslation.call(ankiEngNote);
 
-// fuse Reverso and Linguee's definitions and examples.
-ankiEngNote = fuseReversoAndLinguee(ankiEngNote, reverso_data);
-
-// get dictionary.com's data
-ankiEngNote = await getDictionary.call(ankiEngNote);
-
-
-if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
-    logData(ankiEngNote);
-
-    // log line separator
-    console.log(`\n-----------------------\n`);
+    // clear log.
+    console.clear();
 
     // choose definition.
     if (ankiEngNote.definitions) {
@@ -80,27 +66,23 @@ if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
         console.clear();
     }
 
-    // choose translation.
-    if (ankiEngNote.translations) {
-        ankiEngNote = await chooseTranslation.call(ankiEngNote);
-
-        // clear log.
-        console.clear();
-    }
-
-    // get example.
-    if (ankiEngNote.examples) {
-        ankiEngNote = await chooseExample.call(ankiEngNote);
-
-        // clear log.
-        console.clear();
-    }
-
-    // save card in Anki.
-    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", "ANKIENG_NOTE");
+    console.log(ankiEngNote);
 } else {
     // clear log.
     console.clear();
+}
+/**
+
+if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
+    logData(ankiEngNote);
+
+    // log line separator
+    console.log(`\n-----------------------\n`);
+
+
+
+    // save card in Anki.
+    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", "ANKIENG_NOTE");
 }
 
  */

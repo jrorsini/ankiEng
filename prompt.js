@@ -20,19 +20,24 @@ export async function chooseTranslationType() {
     ]);
 
     delete this.fromTypes;
-    return {
-        ...this,
-        translations: this.translations.filter((e) =>
-            filterByTranslationType(e, answers.type)
-        ),
-        definitions: this.definitions.filter((e) =>
+
+    this["translations"] = this.translations.filter((e) =>
+        filterByTranslationType(e, answers.type)
+    );
+
+    if (this.definitions) {
+        this["definitions"] = this.definitions.filter((e) =>
             filterByDefinitionType(e, answers.type)
-        ),
-    };
+        );
+    }
+
+    return this;
 }
 
 export async function chooseTranslation() {
-    const translationsArr = this.translations.map((e) => e.translation);
+    const translationsArr = this.translations.map(
+        (e) => `${e.to}${e.example.from && ` | ${e.example.from}`}`
+    );
     const answers = await inquirer.prompt([
         {
             type: "list",
@@ -41,10 +46,12 @@ export async function chooseTranslation() {
             choices: translationsArr,
         },
     ]);
-    const translation = this.translations.find(
-        (e) => e["translation"] === answers.translation
-    );
 
+    const translation = this.translations.find(
+        (tr) =>
+            tr.to == answers.translation.split(" | ")[0] &&
+            tr.example.from == answers.translation.split(" | ")[1]
+    );
     delete this.translations;
     return { ...this, ...translation };
 }

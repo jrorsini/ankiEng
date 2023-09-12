@@ -8,16 +8,19 @@ import { getTranslationsTypeList } from "./translationTypes.js";
 
 const reverso = new Reverso();
 
-export async function getWordReferenceData() {
+export async function getWRefData() {
     try {
         let wrData = await wr(this.word, "en", "fr");
+        console.log(wrData);
         const arr = wrData.translations.map((e) => e.translations);
         let translations = [].concat(
             ...arr.map((inArr) => [].concat(...inArr))
         );
         this["translations"] = translations.map((e) => ({
             ...e,
-            to: e.to.trim(),
+            from: e.from.trim().replaceAll("⇒", ""),
+            to: e.to.trim().replaceAll("⇒", ""),
+            example: { from: e.example.from[0], to: e.example.to[0] },
         }));
 
         return {
@@ -29,7 +32,7 @@ export async function getWordReferenceData() {
     }
 }
 
-export async function getDictionaryData() {
+export async function getDictData() {
     try {
         let dictionaryData = await axios.get(
             `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
