@@ -8,6 +8,7 @@ import {
     getLingueeData,
     getReversoExamples,
     getReversoTranslations,
+    getWordReference,
 } from "./utility/api.js";
 import {
     getClosestMatchingWord,
@@ -39,6 +40,10 @@ console.log(`loading "${usrInput}"`);
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
+// get wordreference.com's data
+ankiEngNote = await getWordReference.call(ankiEngNote);
+
+/**
 // instanciate reverso object.
 let reverso_data = {};
 
@@ -60,8 +65,6 @@ ankiEngNote = fuseReversoAndLinguee(ankiEngNote, reverso_data);
 // get dictionary.com's data
 ankiEngNote = await getDictionary.call(ankiEngNote);
 
-console.log(ankiEngNote);
-/**
 
 if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
     logData(ankiEngNote);
