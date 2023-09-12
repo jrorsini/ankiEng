@@ -7,21 +7,6 @@ import {
     filterByDefinitionType,
 } from "./utility/translationTypes.js";
 
-/**
- * Asks what word to search
- * @returns {String} the word search body response scraped from thesaurus.com
- */
-export async function askWhatWordToEnter() {
-    const answers = await inquirer.prompt([
-        {
-            type: "input",
-            name: "word",
-            message: "Enter a word to search (or press Enter to quit):",
-        },
-    ]);
-    return answers.word.trim();
-}
-
 export async function chooseTranslationType() {
     const answers = await inquirer.prompt([
         {
