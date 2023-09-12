@@ -4,75 +4,32 @@ import Reverso from "reverso-api";
 import axios from "axios";
 import { getClosestMatchingWord } from "./log.js";
 import wr from "wordreference-api";
+import { getTranslationsTypeList } from "./translationTypes.js";
 
 const reverso = new Reverso();
 
-export async function getWordReference() {
+export async function getWordReferenceData() {
     try {
         let wrData = await wr(this.word, "en", "fr");
         const arr = wrData.translations.map((e) => e.translations);
         let translations = [].concat(
             ...arr.map((inArr) => [].concat(...inArr))
         );
-        translations = translations
-            // .filter((e) => e.example.from.length > 0 && e.example.to.length > 0)
-            .map((e) => ({
-                ...e,
-                // from: e.from.replaceAll("⇒", ""),
-                to: e.to.trim(),
-                // example:
-                //     e.example.from.length == 0 && e.example.to.length == 0
-                //         ? ``
-                //         : `${e.example.from} | ${e.example.to}`,
-            }));
+        this["translations"] = translations.map((e) => ({
+            ...e,
+            to: e.to.trim(),
+        }));
 
-        console.log(`=============`);
-        console.log(getTranslationsTypeList(translations));
-        // console.log({ ...this, translations });
-        return { ...this, translations };
+        return {
+            ...this,
+            fromTypes: getTranslationsTypeList(translations),
+        };
     } catch (err) {
         return this;
     }
 }
 
-// tr is the translations
-// typ is the desired typ
-function isTranslationType(tr, typ) {
-    const types = {
-        verb: ["'v expr", "vi", "vtr", "vtr + adj"],
-        noun: ["n", "npl"],
-        adjective: ["adj"],
-    };
-
-    types[typ].indexOf(tr.fromType) !== -1;
-}
-
-function getTranslationsTypeList(translations) {
-    // declare allTypes var.
-    const types = {
-        verb: ["'v expr", "vi", "vtr", "vtr + adj"],
-        noun: ["n", "npl"],
-        adjective: ["adj"],
-    };
-
-    // declare translations type list.
-    let translationsTypeList = [];
-
-    // look through each translations.
-    translations.map((e) => {
-        for (const key in types) {
-            // if abbr matches
-            types[key].indexOf(e.fromType) !== -1
-                ? translationsTypeList.push(key)
-                : "other";
-        }
-        return e;
-    });
-
-    return [...new Set(translationsTypeList)];
-}
-
-export async function getDictionary() {
+export async function getDictionaryData() {
     try {
         let dictionaryData = await axios.get(
             `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
