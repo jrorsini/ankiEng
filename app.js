@@ -5,10 +5,9 @@
 import { getDictData, getWRefData } from "./utility/api.js";
 import {
     getClosestMatchingWord,
-    logData,
     logLingueeData,
     logReversoData,
-    logWRefTranslations,
+    logSearchResults,
 } from "./utility/log.js";
 import {
     chooseTranslation,
@@ -43,46 +42,50 @@ console.timeEnd("Time");
 
 if (ankiEngNote.translations.length > 0) {
     // clear log.
-    // console.clear();
+    console.clear();
 
     ankiEngNote.fromTypes.length > 1
         ? (ankiEngNote = await chooseTranslationType.call(ankiEngNote))
         : delete ankiEngNote.fromTypes;
 
-    // console.log(ankiEngNote);
-    // logging translations
-    logWRefTranslations(ankiEngNote);
+    // logging search results
+    logSearchResults.call(ankiEngNote);
 
+    console.log(`\n`);
+
+    // choose which translation to keep
     ankiEngNote = await chooseTranslation.call(ankiEngNote);
 
     // clear log.
     console.clear();
 
-    // choose definition.
+    // choose a definition to keep
     if (ankiEngNote.definitions) {
         ankiEngNote = await chooseDefinition.call(ankiEngNote);
-
-        // clear log.
-        console.clear();
+    } else {
+        ankiEngNote["definition"] = "";
+        delete ankiEngNote.definitions;
     }
 
-    console.log(ankiEngNote);
+    ankiEngNote["word"] = ankiEngNote.from;
+
+    ankiEngNote["translation"] = ankiEngNote.to;
+
+    ankiEngNote["example_en"] = ankiEngNote.example.from
+        ? ankiEngNote.example.from
+        : "";
+
+    ankiEngNote["example_fr"] = ankiEngNote.example.to
+        ? ankiEngNote.example.to
+        : "";
+
+    delete ankiEngNote.from;
+    delete ankiEngNote.example;
+    delete ankiEngNote.to;
+
+    // save card in Anki.
+    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", "ANKIENG_NOTE");
 } else {
     // clear log.
     console.clear();
 }
-/**
-
-if (ankiEngNote !== undefined && ankiEngNote.translations.length > 0) {
-    logData(ankiEngNote);
-
-    // log line separator
-    console.log(`\n-----------------------\n`);
-
-
-
-    // save card in Anki.
-    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", "ANKIENG_NOTE");
-}
-
- */

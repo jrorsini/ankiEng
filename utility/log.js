@@ -15,9 +15,31 @@ export function getMatchingWord(wordList, sentence) {
     return null; // No matching word found
 }
 
-export function logWRefTranslations(ankiEngNote) {
-    ankiEngNote.translations.map((e) => {
-        console.log(
+const log = console.log;
+
+export function logSearchResults() {
+    // clear log
+    console.clear();
+
+    // declare search header
+    const searchHeader = `RESULTS FOR ${chalk.yellow.underline.bold(
+        this.word.toUpperCase()
+    )}`;
+
+    // log search header
+    log(searchHeader);
+
+    // add underline based on search header's lenght
+    log(`-`.repeat(searchHeader.length - 28));
+
+    // log translations
+    logTranslations(this.translations);
+}
+
+export function logTranslations(translations) {
+    log(`\n\t${chalk.bgGray(` DEFINITIONS & EXAMPLES `)}`);
+    translations.map((e) => {
+        log(
             `\n${chalk.bgRed.bold.white(` ${e.fromType.toUpperCase()} `)} ${
                 e.from
             }  ~  ${chalk.bgCyan.bold.white(` ${e.toType.toUpperCase()} `)} ${
@@ -31,7 +53,7 @@ export function logWRefTranslations(ankiEngNote) {
                 en_match,
                 chalk.bold.underline.red(en_match)
             );
-            console.log(`\n\t${en_ex}`);
+            log(`\n\t${en_ex}`);
         }
         if (e.example.to) {
             const fr_match = getClosestMatchingWord(e.to, e.example.to);
@@ -39,7 +61,7 @@ export function logWRefTranslations(ankiEngNote) {
                 fr_match,
                 chalk.bold.underline.cyan(fr_match)
             );
-            console.log(`\t${fr_ex}`);
+            log(`\t${fr_ex}`);
         }
     });
 }
@@ -113,7 +135,7 @@ export function logReversoData(data) {
     });
 }
 
-export function logData(data) {
+export function logDataObsolete(data) {
     console.clear();
 
     console.log(

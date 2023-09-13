@@ -1,6 +1,5 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
-import { typeColor } from "./utility/global.js";
 import { getClosestMatchingWord, getMatchingWord } from "./utility/log.js";
 import {
     filterByTranslationType,
@@ -46,12 +45,14 @@ export async function chooseTranslation() {
             choices: translationsArr,
         },
     ]);
+    console.log(answers.translation);
 
     const translation = this.translations.find(
         (tr) =>
             tr.to == answers.translation.split(" | ")[0] &&
             tr.example.from == answers.translation.split(" | ")[1]
     );
+
     delete this.translations;
     return { ...this, ...translation };
 }
@@ -68,7 +69,11 @@ export async function chooseDefinition() {
     ]);
 
     delete this.definitions;
-    return { ...this, definition: answers.definition[0] };
+
+    return {
+        ...this,
+        definition: answers.definition.length > 0 ? answers.definition[0] : "",
+    };
 }
 
 export async function chooseExample() {
