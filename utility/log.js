@@ -40,11 +40,11 @@ export function logTranslations(translations) {
     log(`\n\t${chalk.bgGray(` DEFINITIONS & EXAMPLES `)}`);
     translations.map((e) => {
         log(
-            `\n${chalk.bgRed.bold.white(` ${e.fromType.toUpperCase()} `)} ${
-                e.from
-            }  ~  ${chalk.bgCyan.bold.white(` ${e.toType.toUpperCase()} `)} ${
-                e.to
-            }`
+            `\n${chalk.bgRed.bold.white(
+                ` ${e.fromType.toUpperCase()} `
+            )} ${chalk.bold.red(e.from)}  ~  ${chalk.bgCyan.bold.white(
+                ` ${e.toType.toUpperCase()} `
+            )} ${chalk.bold.cyan(e.to)}`
         );
 
         if (e.example.from) {
