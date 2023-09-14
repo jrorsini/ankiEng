@@ -2,6 +2,12 @@
 // https://github.com/fega/wordreference-api
 // https://dictionaryapi.com/products/index
 
+/**
+ * TO TEST
+ * wunderking
+ * oxpecker (undefined example)
+ */
+
 import { getDictData, getWRefData } from "./utility/api.js";
 import {
     getClosestMatchingWord,
