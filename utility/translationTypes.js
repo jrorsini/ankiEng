@@ -13,7 +13,7 @@ const types = {
  * @returns {String} the choosen Definition
  */
 export function filterByTranslationType(tr, typ) {
-    return types[typ].indexOf(tr.fromType) !== -1;
+    return typ === "other" ? true : types[typ].indexOf(tr.fromType) !== -1;
 }
 
 export function filterByDefinitionType(d, typ) {
@@ -26,12 +26,18 @@ export function getTranslationsTypeList(translations) {
 
     // look through each translations.
     translations.map((e) => {
+        let foundType = false;
+
         for (const key in types) {
             // if abbr matches
-            types[key].indexOf(e.fromType) !== -1
-                ? translationsTypeList.push(key)
-                : "other";
+            if (types[key].indexOf(e.fromType) !== -1) {
+                translationsTypeList.push(key);
+                foundType = true;
+                break;
+            }
         }
+        !foundType && translationsTypeList.push("other");
+
         return e;
     });
 
