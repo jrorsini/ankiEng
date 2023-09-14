@@ -1,6 +1,15 @@
 const types = {
-    verb: ["v expr", "vi", "vtr", "vtr + adj", "vi + prép"],
-    noun: ["n", "npl"],
+    verb: [
+        "v expr",
+        "vi",
+        "vtr",
+        "vtr + adj",
+        "vi + prép",
+        "vi + prep",
+        "vi phrasal",
+        "vi phrasal + prep",
+    ],
+    noun: ["n", "npl", "n as adj"],
     adjective: ["adj"],
 };
 // tr is the translations
@@ -13,7 +22,15 @@ const types = {
  * @returns {String} the choosen Definition
  */
 export function filterByTranslationType(tr, typ) {
-    return typ === "other" ? true : types[typ].indexOf(tr.fromType) !== -1;
+    if (typ === "other") {
+        return (
+            [...types.verb, ...types.noun, ...types.adjective].indexOf(
+                tr.fromType
+            ) === -1
+        );
+    } else {
+        return types[typ].indexOf(tr.fromType) !== -1;
+    }
 }
 
 export function filterByDefinitionType(d, typ) {
