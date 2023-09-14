@@ -19,7 +19,10 @@ export async function getWRefData() {
             ...e,
             from: e.from.trim().replaceAll("⇒", ""),
             to: e.to.trim().replaceAll("⇒", ""),
-            example: { from: e.example.from[0], to: e.example.to[0] },
+            example: {
+                from: e.example.from.length > 0 ? e.example.from[0] : "",
+                to: e.example.to.length > 0 ? e.example.to[0] : "",
+            },
         }));
 
         return {
