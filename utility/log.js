@@ -34,10 +34,13 @@ export function logSearchResults() {
 
     // log translations
     logTranslations(this.translations);
+
+    // log definitions
+    logDefinitions(this.definitions);
 }
 
 export function logTranslations(translations) {
-    log(`\n\t${chalk.bgGray(` DEFINITIONS & EXAMPLES `)}`);
+    log(`\n\t${chalk.bgWhiteBright.black.bold(` TRANSLATIONS & EXAMPLES `)}`);
     translations.map((e) => {
         log(
             `\n${chalk.bgRed.bold.white(
@@ -64,6 +67,18 @@ export function logTranslations(translations) {
             log(`\t${fr_ex}`);
         }
     });
+}
+
+export function logDefinitions(definitions) {
+    if (definitions) {
+        log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
+
+        definitions.map((e) => {
+            const typ = e.split(" - ")[0];
+            const def = e.split(" - ")[1];
+            console.log(`\n${chalk.bgGray(` ${typ.toUpperCase()} `)} : ${def}`);
+        });
+    }
 }
 
 export function getClosestMatchingWord(wordToMatch, sentence) {

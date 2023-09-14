@@ -2,9 +2,12 @@ const types = {
     verb: [
         "v expr",
         "vi",
+        "vi + adv",
+        "vi + adj",
         "vi + prép",
         "vi + prep",
         "vi phrasal",
+        "vi phrasal + adv",
         "vi phrasal + prep",
         "vtr",
         "vtr + adj",
