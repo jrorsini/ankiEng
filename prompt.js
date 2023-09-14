@@ -53,6 +53,27 @@ export async function chooseTranslation() {
             tr.example.from == answers.translation.split(" | ")[1]
     );
 
+    if (translation.example.from) {
+        const en_match = getClosestMatchingWord(
+            translation.from,
+            translation.example.from
+        );
+        const en_ex = translation.example.from.replace(
+            en_match,
+            `|${en_match}|`
+        );
+        translation["example"]["from"] = en_ex;
+    }
+    if (translation.example.to) {
+        const fr_match = getClosestMatchingWord(
+            translation.to,
+            translation.example.to
+        );
+
+        const fr_ex = translation.example.to.replace(fr_match, `|${fr_match}|`);
+        translation["example"]["to"] = fr_ex;
+    }
+
     delete this.translations;
     return { ...this, ...translation };
 }
