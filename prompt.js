@@ -45,13 +45,17 @@ export async function chooseTranslation() {
             choices: translationsArr,
         },
     ]);
-    console.log(answers.translation);
 
-    const translation = this.translations.find(
-        (tr) =>
-            tr.to == answers.translation.split(" | ")[0] &&
-            tr.example.from == answers.translation.split(" | ")[1]
-    );
+    const translation = this.translations.find((tr) => {
+        if (answers.translation.indexOf(" | ") === -1) {
+            return tr.to == answers.translation;
+        } else {
+            return (
+                tr.to == answers.translation.split(" | ")[0] &&
+                tr.example.from == answers.translation.split(" | ")[1]
+            );
+        }
+    });
 
     if (translation.example.from) {
         const en_match = getClosestMatchingWord(
