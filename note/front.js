@@ -1,6 +1,6 @@
 /*
 <span id="ipa_field_hint">{{ipa}}</span>
-<p id="example_en">{{example_en}}</p>
+<p id="revealing_text">{{revealing_text}}</p>
 {{type::translation}}
 
 <link rel="stylesheet" href="ankiEng/style.css"/>
@@ -119,19 +119,19 @@ function colorizeIPA() {
 setTimeout(() => {
     // document.getElementById("ipa_field_hint").innerHTML = html;
 
-    // replace "|" by "b" tags for example_en.
-    const example_en = document.getElementById("example_en").innerHTML;
-    const example_en_match = example_en.match(/\|.+\|/gi);
+    // replace "|" by "b" tags for revealing_text.
+    const revealing_text = document.getElementById("revealing_text").innerHTML;
+    const revealing_text_match = revealing_text.match(/\|.+\|/gi);
 
-    // document.getElementById("example_en").innerHTML = example_en.replace(
+    // document.getElementById("revealing_text").innerHTML = revealing_text.replace(
     //     /\|.+\|/gi,
-    //     `<b id="example_en_b">${example_en_match[0].slice(1, -1)}</b>`
+    //     `<b id="revealing_text_b">${revealing_text_match[0].slice(1, -1)}</b>`
     // );
 
     /*
         // append #ipa_field_hint
         const node = document.getElementById("ipa_field_hint");
-        document.getElementById("example_en_b").appendChild(node);
+        document.getElementById("revealing_text_b").appendChild(node);
     */
 
     function fadeWords(sentenceElement) {
@@ -178,6 +178,13 @@ setTimeout(() => {
     }
 
     // Call the function with the target sentence element
-    const sentenceBreakDown = document.getElementById("example_en");
+    const sentenceBreakDown = document.getElementById("revealing_text");
     fadeWords(sentenceBreakDown);
+
+    let word_char_number =
+        document.getElementById("word_char_number").innerHTML;
+
+    document.getElementById("word_char_number").innerHTML =
+        word_char_number.slice(0, 1).toUpperCase() +
+        word_char_number.slice(1).replace(/[^-\s]/gi, "_");
 }, 100);

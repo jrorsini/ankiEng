@@ -1,3 +1,8 @@
+html,
+body.card {
+    background: black;
+}
+
 .card {
     font-family: arial;
     font-size: 20px;
@@ -32,13 +37,22 @@ img {
     font-style: italic;
 }
 
-#example_en {
+#revealing_text {
     font-size: 25px;
-    margin: 0 0 40px 0;
+    margin: 0 0 20px 0;
 }
 
-#example_en span {
+#answer input {
+    color: rgb(43, 208, 73);
+    font-weight: bold;
+}
+
+#revealing_text span {
     margin-right: 2px;
+}
+
+#word_char_number {
+    letter-spacing: 5px;
 }
 
 span.char-fade_bold {
@@ -53,7 +67,7 @@ span.char-fade_bold {
     font-size: 25px;
 }
 
-#example_en b,
+#revealing_text b,
 #example_fr b {
     position: relative;
     color: rgb(43, 208, 73);
@@ -78,6 +92,13 @@ typeColor #word_definition {
 
 .definition {
     color: rgba(255, 255, 255, 0.5);
+}
+
+p#translation {
+    margin: 0;
+    font-size: 50px;
+    font-weight: bold;
+    color: rgb(43, 208, 73);
 }
 
 #ipa_field_hint {
@@ -128,7 +149,7 @@ typeColor #word_definition {
     background-color: rgb(79, 255, 255);
 }
 
-/* #example_en .word-fade {
+/* #revealing_text .word-fade {
     opacity: 0;
     animation: fade-in 0.5s ease-in-out forwards !important;
 }
