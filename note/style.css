@@ -1,3 +1,5 @@
+/* GENERAL style */
+
 html,
 body.card {
     background: black;
@@ -11,17 +13,20 @@ body.card {
     background-color: white;
 }
 
-input {
-    border: none;
-    background: transparent;
-    text-align: center;
-    font-size: 40px !important;
+/* INPUT FIELD style */
+
+#answer input[type="text"] {
     height: 50px;
+    background: transparent;
+    border: none;
+    color: rgb(43, 208, 73);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 40px;
 }
 
-input[type="text"] {
-    border: none !important;
-}
+/* IMAGES style */
 
 img {
     height: 200px;
@@ -37,18 +42,24 @@ img {
     font-style: italic;
 }
 
+/* REVEALING TEXT style */
+
 #revealing_text {
+    opacity: 0;
     font-size: 25px;
     margin: 0 0 20px 0;
 }
 
-#answer input {
-    color: rgb(43, 208, 73);
-    font-weight: bold;
+#revealing_text span {
+    margin-right: 1px;
 }
 
-#revealing_text span {
-    margin-right: 2px;
+#revealing_text b,
+#example_fr b {
+    position: relative;
+    color: rgb(43, 208, 73);
+    font-size: 40px;
+    text-decoration: underline;
 }
 
 #word_char_number {
@@ -65,14 +76,6 @@ span.char-fade_bold {
 
 #example_fr {
     font-size: 25px;
-}
-
-#revealing_text b,
-#example_fr b {
-    position: relative;
-    color: rgb(43, 208, 73);
-    font-size: 40px;
-    text-decoration: underline;
 }
 
 .nightMode {

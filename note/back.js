@@ -16,6 +16,7 @@ setTimeout(() => {
     // document.getElementById("ipa_field_hint").innerHTML = html;
 
     // replace "|" by "b" tags for revealing_text.
+    document.getElementById("revealing_text").style.opacity = 1;
     const revealing_text = document.getElementById("revealing_text").innerHTML;
     const revealing_text_match = revealing_text.match(/\|.+\|/gi);
 
