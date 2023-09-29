@@ -43,6 +43,21 @@ function fadeWords(sentenceElement) {
     revealNextLetter();
 }
 
+// reveal function for the back card
+function revealText() {
+    const revealing_text = document.getElementById("revealing_text").innerHTML;
+    const revealing_text_match = revealing_text.match(/\|.+\|/gi);
+
+    document.getElementById("revealing_text").innerHTML =
+        revealing_text.replace(
+            /\|.+\|/gi,
+            `<b id="revealing_text_b">${revealing_text_match[0].slice(
+                1,
+                -1
+            )}</b>`
+        );
+}
+
 function colorizeIPA() {
     var div = document.getElementById("ipa_field_hint").innerText;
     var html = "";

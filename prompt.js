@@ -101,6 +101,20 @@ export async function chooseDefinition() {
     };
 }
 
+export async function chooseNoteType() {
+    const noteArr = ["ANKIENG_NOTE", "ANKIENG_NOTE_IMG2WORD"];
+    const answers = await inquirer.prompt([
+        {
+            type: "list",
+            name: "notetype",
+            message: `Which ${chalk.underline.bold.yellow("note type")}?`,
+            choices: noteArr,
+        },
+    ]);
+
+    return answers.notetype;
+}
+
 export async function chooseExample() {
     if (this.examples.length > 1) {
         const answers = await inquirer.prompt([

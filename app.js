@@ -20,6 +20,7 @@ import {
     chooseExample,
     chooseDefinition,
     chooseTranslationType,
+    chooseNoteType,
 } from "./prompt.js";
 import Reverso from "reverso-api";
 
@@ -89,8 +90,13 @@ if (ankiEngNote.translations.length > 0) {
     delete ankiEngNote.example;
     delete ankiEngNote.to;
 
+    console.clear();
+
+    // choose which note type to save card to.
+    const noteType = await chooseNoteType();
+
     // save card in Anki.
-    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", "ANKIENG_NOTE");
+    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", noteType);
 } else {
     // clear log.
     console.clear();

@@ -23,7 +23,7 @@ body.card {
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
-    font-size: 40px;
+    font-size: 40px !important;
 }
 
 /* IMAGES style */
