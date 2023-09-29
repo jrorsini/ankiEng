@@ -1,5 +1,6 @@
 setTimeout(() => {
-    console.log("hello front");
+    document.getElementById("revealing_text").classList.add(wordTypeClass);
+    document.getElementById("answer").classList.add(wordTypeClass);
 
     // replace "|" by "b" tags for revealing_text.
     document.getElementById("revealing_text").style.opacity = 1;

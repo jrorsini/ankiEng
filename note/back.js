@@ -1,4 +1,7 @@
 setTimeout(() => {
+    document.getElementById("revealing_text").classList.add(wordTypeClass);
+    document.getElementById("example_fr").classList.add(wordTypeClass);
+
     // replace "|" by "b" tags for revealing_text.
     document.getElementById("revealing_text").style.opacity = 1;
     const revealing_text = document.getElementById("revealing_text").innerHTML;

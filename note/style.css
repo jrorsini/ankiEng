@@ -19,7 +19,6 @@ body.card {
     height: 50px;
     background: transparent;
     border: none;
-    color: rgb(43, 208, 73);
     text-align: center;
     text-transform: uppercase;
     font-weight: bold;
@@ -42,6 +41,41 @@ img {
     font-style: italic;
 }
 
+/* WORD TYPE style */
+
+/* .noun_type_color {
+    color: red;
+}
+
+.verb_type_color {
+    color: rgb(43, 208, 73);
+}
+
+.adjv_type_color {
+    color: rgb(35, 134, 255);
+} */
+
+#answer.noun_type_color input[type="text"],
+#revealing_text.noun_type_color b,
+#example_fr.noun_type_color b,
+#revealing_text.noun_type_color span.char-fade_bold {
+    color: red !important;
+}
+
+#answer.verb_type_color input[type="text"],
+#revealing_text.verb_type_color b,
+#example_fr.verb_type_color b,
+#revealing_text.verb_type_color span.char-fade_bold {
+    color: rgb(43, 208, 73) !important;
+}
+
+#answer.adjv_type_color input[type="text"],
+#revealing_text.adjv_type_color b,
+#example_fr.adjv_type_color b,
+#revealing_text.adjv_type_color span.char-fade_bold {
+    color: rgb(255, 133, 106) !important;
+}
+
 /* REVEALING TEXT style */
 
 #revealing_text {
@@ -57,7 +91,7 @@ img {
 #revealing_text b,
 #example_fr b {
     position: relative;
-    color: rgb(43, 208, 73);
+    color: rgb(122, 0, 128);
     font-size: 40px;
     text-decoration: underline;
 }
@@ -69,7 +103,7 @@ img {
 span.char-fade_bold {
     position: relative;
     font-weight: bold;
-    color: rgb(43, 208, 73);
+    color: rgb(122, 0, 128);
     font-size: 40px;
     /* text-decoration: underline; */
 }
