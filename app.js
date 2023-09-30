@@ -96,7 +96,7 @@ if (ankiEngNote.translations.length > 0) {
     const noteType = await chooseNoteType();
 
     // save card in Anki.
-    await addCard.call(ankiEngNote, "lang - 🇺🇸 ankiEng", noteType);
+    await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng::${noteType}`, noteType);
 } else {
     // clear log.
     console.clear();

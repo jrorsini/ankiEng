@@ -1,4 +1,15 @@
 setTimeout(() => {
+    const wordTypeColor = {
+        n: "noun_type_color",
+        v: "verb_type_color",
+        a: "adjv_type_color",
+    };
+    // get word type
+    const wordTypeClass =
+        wordTypeColor[
+            document.getElementById("word_type").innerHTML.slice(0, 1)
+        ];
+
     document.getElementById("revealing_text").classList.add(wordTypeClass);
     document.getElementById("answer").classList.add(wordTypeClass);
 
@@ -10,10 +21,4 @@ setTimeout(() => {
     // Call the function with the target sentence element
     const sentenceBreakDown = document.getElementById("revealing_text");
     fadeWords(sentenceBreakDown);
-
-    // wcn for => word_char_number
-    let wcn = document.getElementById("word_char_number").innerHTML;
-
-    document.getElementById("word_char_number").innerHTML =
-        wcn.slice(0, 1).toUpperCase() + wcn.slice(1).replace(/[a-z]/gi, "_");
 }, 100);

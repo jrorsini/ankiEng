@@ -1,0 +1,201 @@
+/* GENERAL style */
+
+html,
+body.card {
+    background: black;
+}
+
+.card {
+    font-family: arial;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    background-color: white;
+}
+
+/* INPUT FIELD style */
+
+#answer input[type="text"] {
+    height: 50px;
+    background: transparent;
+    border: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 40px !important;
+}
+
+/* IMAGES style */
+
+img {
+    height: 200px;
+    filter: drop-shadow(2px 2px 8px #000);
+}
+
+.field_header {
+    font-size: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #999999;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+/* WORD TYPE style */
+
+/* .noun_type_color {
+    color: red;
+}
+
+.verb_type_color {
+    color: rgb(43, 208, 73);
+}
+
+.adjv_type_color {
+    color: rgb(35, 134, 255);
+} */
+
+#answer.noun_type_color input[type="text"],
+#revealing_text.noun_type_color b,
+#example_fr.noun_type_color b,
+#revealing_text.noun_type_color span.char-fade_bold {
+    color: red !important;
+}
+
+#answer.verb_type_color input[type="text"],
+#revealing_text.verb_type_color b,
+#example_fr.verb_type_color b,
+#revealing_text.verb_type_color span.char-fade_bold {
+    color: rgb(43, 208, 73) !important;
+}
+
+#answer.adjv_type_color input[type="text"],
+#revealing_text.adjv_type_color b,
+#example_fr.adjv_type_color b,
+#revealing_text.adjv_type_color span.char-fade_bold {
+    color: rgb(255, 133, 106) !important;
+}
+
+/* REVEALING TEXT style */
+
+#revealing_text {
+    opacity: 0;
+    font-size: 25px;
+    margin: 0 0 20px 0;
+}
+
+#revealing_text span {
+    margin-right: 1px;
+}
+
+#revealing_text b,
+#example_fr b {
+    position: relative;
+    color: rgb(122, 0, 128);
+    font-size: 40px;
+    text-decoration: underline;
+}
+
+#word_char_number {
+    letter-spacing: 5px;
+}
+
+span.char-fade_bold {
+    position: relative;
+    font-weight: bold;
+    color: rgb(122, 0, 128);
+    font-size: 40px;
+    /* text-decoration: underline; */
+}
+
+#example_fr {
+    font-size: 25px;
+}
+
+.nightMode {
+    color: red;
+}
+
+.vertical_seperator {
+    margin: 0 18px;
+}
+typeColor #word_definition {
+    font-size: 25px;
+}
+
+#word_translation {
+    font-size: 40px;
+}
+
+.definition {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+p#translation {
+    margin: 0;
+    font-size: 50px;
+    font-weight: bold;
+    color: rgb(43, 208, 73);
+}
+
+#ipa_field_hint {
+    position: absolute;
+    bottom: -50px;
+    left: -100%;
+    font-weight: bold;
+    margin-left: 50%;
+    display: inline-block;
+    width: 200%;
+    color: white;
+}
+
+.ipa_block {
+    display: inline-block;
+    padding: 0 10px;
+    vertical-align: center;
+    text-align: center;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.633);
+}
+
+.ipa_consonant {
+    background-color: rgb(114, 112, 255);
+    border-radius: 10%;
+    font-size: 30px;
+}
+
+.ipa_vowel {
+    background-color: rgb(127, 192, 127);
+    border-radius: 10%;
+    font-size: 40px;
+    margin: 0 5px;
+}
+
+.ipa_diphthong {
+    background-color: rgb(255, 82, 82);
+    border-radius: 10%;
+    font-size: 40px;
+    margin: 0 5px;
+}
+
+.ipa_consonant.nightMode {
+    background-color: yellow;
+    border-radius: 10%;
+}
+
+.ipa_diphthong.nightMode {
+    background-color: rgb(79, 255, 255);
+}
+
+/* #revealing_text .word-fade {
+    opacity: 0;
+    animation: fade-in 0.5s ease-in-out forwards !important;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+} */

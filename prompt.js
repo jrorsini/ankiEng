@@ -112,7 +112,8 @@ export async function chooseNoteType() {
         },
     ]);
 
-    return answers.notetype;
+    console.log(answers["notetype"]);
+    return answers["notetype"];
 }
 
 export async function chooseExample() {
