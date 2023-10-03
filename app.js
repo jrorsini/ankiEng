@@ -9,15 +9,9 @@
  */
 
 import { getDictData, getWRefData } from "./utility/api.js";
-import {
-    getClosestMatchingWord,
-    logLingueeData,
-    logReversoData,
-    logSearchResults,
-} from "./utility/log.js";
+import { logSearchResults } from "./utility/log.js";
 import {
     chooseTranslation,
-    chooseExample,
     chooseDefinition,
     chooseTranslationType,
     chooseNoteType,
@@ -41,11 +35,11 @@ console.log(`loading "${usrInput}"`);
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
-console.time("Time");
-// get wordreference.com & dictionary.com's data
+// get wordreference.com's data
 ankiEngNote = await getWRefData.call(ankiEngNote);
+
+// get dictionary.com's data
 ankiEngNote = await getDictData.call(ankiEngNote);
-console.timeEnd("Time");
 
 if (ankiEngNote.translations.length > 0) {
     // clear log.
@@ -59,6 +53,8 @@ if (ankiEngNote.translations.length > 0) {
     logSearchResults.call(ankiEngNote);
 
     console.log(`\n`);
+
+    console.log(ankiEngNote);
 
     // choose which translation to keep
     ankiEngNote = await chooseTranslation.call(ankiEngNote);
