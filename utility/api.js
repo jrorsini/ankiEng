@@ -43,6 +43,7 @@ export async function getDictData() {
             `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
         );
 
+        // assign IPA
         this["ipa"] = [
             ...new Set(
                 dictionaryData.data.map((e) =>
@@ -51,9 +52,11 @@ export async function getDictData() {
             ),
         ][0];
 
-        this["audio"] = [
-            ...new Set(dictionaryData.data[0].phonetics.map((e) => e.audio)),
-        ].filter((e) => e !== "")[0];
+        // assign audio
+        this["audio"] =
+            [...new Set(dictionaryData.data[0].phonetics.map((e) => e.audio))]
+                .filter((e) => e !== "")
+                .find((e) => e.indexOf("-us.mp3") !== -1) || "";
 
         const nestedArray = dictionaryData.data.map((d) =>
             d.meanings.map((m) => {
@@ -66,6 +69,7 @@ export async function getDictData() {
             })
         );
 
+        // assign definitions
         this["definitions"] = []
             .concat(
                 ...nestedArray.map((subArrays) =>

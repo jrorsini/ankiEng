@@ -45,6 +45,8 @@ if (ankiEngNote.translations.length > 0) {
     // clear log.
     console.clear();
 
+    console.log(ankiEngNote);
+
     ankiEngNote.fromTypes.length > 1
         ? (ankiEngNote = await chooseTranslationType.call(ankiEngNote))
         : delete ankiEngNote.fromTypes;
