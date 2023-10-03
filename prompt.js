@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import chalk from "chalk";
-import { getClosestMatchingWord, getMatchingWord } from "./utility/log.js";
+import { getClosestMatchingWord } from "./utility/log.js";
 import {
     filterByTranslationType,
     filterByDefinitionType,
