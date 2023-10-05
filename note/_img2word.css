@@ -43,18 +43,6 @@ img {
 
 /* WORD TYPE style */
 
-/* .noun_type_color {
-    color: red;
-}
-
-.verb_type_color {
-    color: rgb(43, 208, 73);
-}
-
-.adjv_type_color {
-    color: rgb(35, 134, 255);
-} */
-
 #answer.noun_type_color input[type="text"],
 #revealing_text.noun_type_color b,
 #example_fr.noun_type_color b,

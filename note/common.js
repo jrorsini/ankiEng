@@ -48,13 +48,18 @@ function revealText() {
     const revealing_text = document.getElementById("revealing_text").innerHTML;
     const revealing_text_match = revealing_text.match(/\|.+\|/gi);
 
+    const word_ipa = document.getElementById("word_ipa").innerHTML;
     document.getElementById("revealing_text").innerHTML =
         revealing_text.replace(
             /\|.+\|/gi,
-            `<b id="revealing_text_b">${revealing_text_match[0].slice(
-                1,
-                -1
-            )}</b>`
+            `<ruby>
+                <rb id="revealing_text_b">
+                    ${revealing_text_match[0].slice(1, -1)}
+                </rb>
+                <rt>
+                    ${word_ipa}
+                <rt>
+            </ruby>`
         );
 }
 

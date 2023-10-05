@@ -56,21 +56,21 @@ img {
 } */
 
 #answer.noun_type_color input[type="text"],
-#revealing_text.noun_type_color b,
+#revealing_text.noun_type_color ruby,
 #example_fr.noun_type_color b,
 #revealing_text.noun_type_color span.char-fade_bold {
     color: red !important;
 }
 
 #answer.verb_type_color input[type="text"],
-#revealing_text.verb_type_color b,
+#revealing_text.verb_type_color ruby,
 #example_fr.verb_type_color b,
 #revealing_text.verb_type_color span.char-fade_bold {
     color: rgb(43, 208, 73) !important;
 }
 
 #answer.adjv_type_color input[type="text"],
-#revealing_text.adjv_type_color b,
+#revealing_text.adjv_type_color ruby,
 #example_fr.adjv_type_color b,
 #revealing_text.adjv_type_color span.char-fade_bold {
     color: rgb(255, 133, 106) !important;
@@ -79,7 +79,6 @@ img {
 /* REVEALING TEXT style */
 
 #revealing_text {
-    opacity: 0;
     font-size: 25px;
     margin: 0 0 20px 0;
 }
@@ -88,12 +87,13 @@ img {
     margin-right: 1px;
 }
 
-#revealing_text b,
+#revealing_text ruby,
 #example_fr b {
+    font-weight: bold;
     position: relative;
     color: rgb(122, 0, 128);
-    font-size: 40px;
-    text-decoration: underline;
+    font-size: 50px;
+    /* text-decoration: underline; */
 }
 
 #word_char_number {

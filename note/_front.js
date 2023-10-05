@@ -13,12 +13,6 @@ setTimeout(() => {
     document.getElementById("revealing_text").classList.add(wordTypeClass);
     document.getElementById("answer").classList.add(wordTypeClass);
 
-    // replace "|" by "b" tags for revealing_text.
-    document.getElementById("revealing_text").style.opacity = 1;
-    const revealing_text = document.getElementById("revealing_text").innerHTML;
-    const revealing_text_match = revealing_text.match(/\|.+\|/gi);
-
     // Call the function with the target sentence element
-    const sentenceBreakDown = document.getElementById("revealing_text");
-    fadeWords(sentenceBreakDown);
+    revealText();
 }, 100);
