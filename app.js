@@ -87,10 +87,12 @@ if (ankiEngNote.translations.length > 0) {
     console.clear();
 
     // choose which note type to save card to.
-    const noteType = await chooseNoteType();
+    const noteTypes = await chooseNoteType();
 
     // save card in Anki.
-    await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng::${noteType}`, noteType);
+    for (let i = 0; i < noteTypes.length; i++) {
+        await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng`, noteTypes[i]);
+    }
 } else {
     // clear log.
     console.clear();

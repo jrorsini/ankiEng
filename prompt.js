@@ -102,10 +102,15 @@ export async function chooseDefinition() {
 }
 
 export async function chooseNoteType() {
-    const noteArr = ["ANKIENG_NOTE", "ANKIENG_NOTE_IMG2WORD"];
+    const noteArr = [
+        "ANKIENG_NOTE | default card type.",
+        "ANKIENG_NOTE_IMG2WORD | usually for nouns, when needing to guess from a picture.",
+        "ANKIENG_NOTE_DEF2WORD | for subtle words with no direct translation.",
+        "ANKIENG_NOTE_TRNS2WORD | for french words I'm not familiar with the english translation.",
+    ];
     const answers = await inquirer.prompt([
         {
-            type: "list",
+            type: "checkbox",
             name: "notetype",
             message: `Which ${chalk.underline.bold.yellow("note type")}?`,
             choices: noteArr,
@@ -113,7 +118,7 @@ export async function chooseNoteType() {
     ]);
 
     console.log(answers["notetype"]);
-    return answers["notetype"];
+    return answers["notetype"].map((n) => n.split(" | ")[0]);
 }
 
 export async function chooseExample() {
