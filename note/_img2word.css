@@ -25,6 +25,12 @@ body.card {
     font-size: 40px !important;
 }
 
+#answer {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 40px;
+}
+
 /* IMAGES style */
 
 img {
@@ -86,6 +92,8 @@ img {
 
 #word_char_number {
     letter-spacing: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
 }
 
 span.char-fade_bold {

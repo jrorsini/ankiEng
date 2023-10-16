@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios from 'axios';
 
 // https://foosoft.net/projects/anki-connect/index.html#deck-actions
 
 // Define the AnkiConnect API URL
-const ankiUrl = "http://localhost:8765/";
+const ankiUrl = 'http://localhost:8765/';
 
 /*
 - word
@@ -25,7 +25,7 @@ export async function addCard(deck, noteType) {
     };
     try {
         const res = await axios.post(ankiUrl, {
-            action: "addNote",
+            action: 'addNote',
             version: 6,
             params: {
                 note,

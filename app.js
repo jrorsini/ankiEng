@@ -8,17 +8,17 @@
  * oxpecker (undefined example)
  */
 
-import { getDictData, getWRefData } from "./utility/api.js";
-import { logSearchResults } from "./utility/log.js";
+import { getDictData, getWRefData } from './utility/api.js';
+import { logSearchResults } from './utility/log.js';
 import {
     chooseTranslation,
     chooseDefinition,
     chooseTranslationType,
     chooseNoteType,
-} from "./prompt.js";
-import Reverso from "reverso-api";
+} from './prompt.js';
+import Reverso from 'reverso-api';
 
-import { addCard } from "./anki.js";
+import { addCard } from './anki.js';
 
 // clear log.
 console.clear();
@@ -27,7 +27,7 @@ console.clear();
 const reverso = new Reverso();
 
 // retrieve user input
-const usrInput = process.argv.slice(2).join(" ").toLowerCase().trim();
+const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
 // log user input loading
 console.log(`loading "${usrInput}"`);
@@ -64,21 +64,21 @@ if (ankiEngNote.translations.length > 0) {
     if (ankiEngNote.definitions) {
         ankiEngNote = await chooseDefinition.call(ankiEngNote);
     } else {
-        ankiEngNote["definition"] = "";
+        ankiEngNote['definition'] = '';
         delete ankiEngNote.definitions;
     }
 
-    ankiEngNote["word"] = ankiEngNote.from;
+    ankiEngNote['word'] = ankiEngNote.from;
 
-    ankiEngNote["translation"] = ankiEngNote.to;
+    ankiEngNote['translation'] = ankiEngNote.to;
 
-    ankiEngNote["example_en"] = ankiEngNote.example.from
+    ankiEngNote['example_en'] = ankiEngNote.example.from
         ? ankiEngNote.example.from
-        : "";
+        : '';
 
-    ankiEngNote["example_fr"] = ankiEngNote.example.to
+    ankiEngNote['example_fr'] = ankiEngNote.example.to
         ? ankiEngNote.example.to
-        : "";
+        : '';
 
     delete ankiEngNote.from;
     delete ankiEngNote.example;
