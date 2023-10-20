@@ -91,7 +91,8 @@ if (ankiEngNote.translations.length > 0) {
 
     // save card in Anki.
     // for (let i = 0; i < noteTypes.length; i++) {
-    await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng`);
+    const addCardRes = await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng`);
+    console.log(addCardRes);
     // }
 } else {
     // clear log.
