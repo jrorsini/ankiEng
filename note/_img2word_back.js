@@ -13,6 +13,6 @@ setTimeout(() => {
             /\|+[\w\s]+\|/gi,
             (m) => `<b class="example_en_b">${m.slice(1, -1)}</b>`
         );
-    console.log(example_en);
+
     document.getElementById('example_en').innerHTML = example_en;
 }, 100);

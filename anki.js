@@ -3,7 +3,7 @@ import axios from 'axios';
 // https://foosoft.net/projects/anki-connect/index.html#deck-actions
 
 // Define the AnkiConnect API URL
-const ankiUrl = 'http://localhost:8765/';
+const ankiUrl = 'http://127.0.0.1:8765';
 
 /*
 - word
@@ -14,10 +14,10 @@ const ankiUrl = 'http://localhost:8765/';
 - type
 */
 
-export async function addCard(deck, noteType) {
+export async function addCard(deck) {
     let note = {
         deckName: deck,
-        modelName: noteType,
+        modelName: 'ANKIENG_NOTE',
         fields: this,
         options: {
             allowDuplicate: false,
