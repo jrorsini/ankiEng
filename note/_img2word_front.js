@@ -4,5 +4,5 @@ setTimeout(() => {
 
     document.getElementById('word_char_number').innerHTML =
         wcn.slice(0, 1).toUpperCase() +
-        wcn.slice(1).replace(/[^\[\s\]]/gi, '_');
+        wcn.slice(1).replace(/[^\[\s\-\]]/gi, '_');
 }, 100);
