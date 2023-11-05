@@ -1,6 +1,14 @@
-// to implement -> https://dictionaryapi.dev
-// https://github.com/fega/wordreference-api
-// https://dictionaryapi.com/products/index
+// "astute" is a hard for me to guess. Maybe it'd be best if I had to go from french "perspicace"
+// "tétine" is a word that I should study both ways
+// "rougeurs", "driveway" needs a picture
+// "guetteur, homme de guet" is not a word easy to guess for lookout, should probably content with getting the english word, even from sentence example.
+// would be more convenient to have "remarquable" as a word to guess in english. More useful to use "standout" in english than guessing it.
+
+/**
+ * TO-DO-LIST
+ * create initializing card template functions according to flag id
+ *
+ */
 
 /**
  * TO TEST
