@@ -1,4 +1,16 @@
-var flagList = ['flag0', 'flag1', 'flag2', 'flag3', 'flag4', 'flag5'];
+function revealText(elementId) {
+    const revealing_text = document.getElementById(elementId).innerHTML;
+    const revealing_text_match = revealing_text.match(/\|.+\|/gi);
+
+    document.getElementById('revealing_text').innerHTML =
+        revealing_text.replace(
+            /\|.+\|/gi,
+            `<b id="revealing_text_b">${revealing_text_match[0].slice(
+                1,
+                -1
+            )}</b>`
+        );
+}
 
 var wordTypeColor = {
     n: 'noun_type_color',
@@ -6,49 +18,14 @@ var wordTypeColor = {
     a: 'adjv_type_color',
 };
 
-setTimeout(() => {
-    // turn card's container's opacity to 1
-    document.getElementById('card_container').style.opacity = 1;
+// get word type
+var wordTypeClass =
+    wordTypeColor[document.getElementById('word_type').innerHTML.slice(0, 1)];
 
-    // retrieve card flag's number
-    const flagNumber = document.getElementById('cardflag').innerText;
+document.getElementById('revealing_text').classList.add(wordTypeClass);
+document.getElementById('answer').classList.add(wordTypeClass);
 
-    // retrieve non selected flags
-    flagList = flagList.filter((f) => f !== flagNumber);
-
-    // remove non selected flag's elements
-
-    var elementToMove = document.getElementById(flagNumber);
-    var parentElement = elementToMove.parentNode;
-    parentElement.insertBefore(elementToMove, parentElement.firstChild);
-
-    flagList.map((f) => {
-        document.getElementById(f) && document.getElementById(f).remove();
-    });
-
-    // get word type
-    const wordTypeClass =
-        wordTypeColor[
-            document.getElementById('word_type').innerHTML.slice(0, 1)
-        ];
-
-    // get word type
-    switch (flagNumber) {
-        case 'flag1':
-            document.getElementById('example_fr').classList.add(wordTypeClass);
-            document.getElementById('answer').classList.add(wordTypeClass);
-            revealTextFrench();
-            break;
-
-        default:
-            document
-                .getElementById('revealing_text')
-                .classList.add(wordTypeClass);
-            document.getElementById('answer').classList.add(wordTypeClass);
-            revealText();
-            break;
-    }
-}, 100);
+revealText('revealing_text');
 
 // --------------------------------------------------------------------------
 // FLAG0 is DEFAULT | guess TRANSLATION from EXAMPLE_EN
@@ -92,5 +69,13 @@ setTimeout(() => {
         <p>flag4</p>
     </div>
 </div>
+
+{{#display_ex-fr}}
+    <span class="field_header">French Sentence</span>
+    <p id="revealing_text">{{example_fr}}</p>
+
+    <span class="field_header">English Word</span>
+    <div id="answer">{{type:word}}</div>
+{{/display_ex-fr}}
 
 */

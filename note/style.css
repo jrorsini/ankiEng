@@ -69,6 +69,10 @@ img {
     color: rgb(43, 208, 73) !important;
 }
 
+#revealing_text.verb_type_color b#revealing_text_b {
+    color: rgb(43, 208, 73) !important;
+}
+
 #answer.adjv_type_color input[type='text'],
 #revealing_text.adjv_type_color ruby,
 #example_fr.adjv_type_color b,

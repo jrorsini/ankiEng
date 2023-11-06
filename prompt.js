@@ -9,7 +9,7 @@ import {
 // Turns "|shrug.|" into "|shrug|."
 function properPiping(stc) {
     return stc.replace(
-        /\|\w+[\.\,]\|/gi,
+        /\|\w+[\.\,\;]\|/gi,
         (e) => `${e.slice(0, e.length - 2)}|${e.slice(-2, -1)}`
     );
 }
