@@ -1,18 +1,26 @@
-import inquirer from "inquirer";
-import chalk from "chalk";
-import { getClosestMatchingWord } from "./utility/log.js";
+import inquirer from 'inquirer';
+import chalk from 'chalk';
+import { getClosestMatchingWord } from './utility/log.js';
 import {
     filterByTranslationType,
     filterByDefinitionType,
-} from "./utility/translationTypes.js";
+} from './utility/translationTypes.js';
+
+// Turns "|shrug.|" into "|shrug|."
+function properPiping(stc) {
+    return stc.replace(
+        /\|\w+[\.\,]\|/gi,
+        (e) => `${e.slice(0, e.length - 2)}|${e.slice(-2, -1)}`
+    );
+}
 
 export async function chooseTranslationType() {
     const answers = await inquirer.prompt([
         {
-            type: "list",
-            name: "type",
+            type: 'list',
+            name: 'type',
             message: `Which ${chalk.underline.bold.yellow(
-                "translation type"
+                'translation type'
             )}?`,
             choices: this.fromTypes,
         },
@@ -20,12 +28,14 @@ export async function chooseTranslationType() {
 
     delete this.fromTypes;
 
-    this["translations"] = this.translations.filter((e) =>
+    // set selected translation
+    this['translations'] = this.translations.filter((e) =>
         filterByTranslationType(e, answers.type)
     );
 
+    // set selected definition
     if (this.definitions) {
-        this["definitions"] = this.definitions.filter((e) =>
+        this['definitions'] = this.definitions.filter((e) =>
             filterByDefinitionType(e, answers.type)
         );
     }
@@ -39,20 +49,20 @@ export async function chooseTranslation() {
     );
     const answers = await inquirer.prompt([
         {
-            type: "list",
-            name: "translation",
-            message: `Which ${chalk.underline.bold.yellow("translation")} ?`,
+            type: 'list',
+            name: 'translation',
+            message: `Which ${chalk.underline.bold.yellow('translation')} ?`,
             choices: translationsArr,
         },
     ]);
 
     const translation = this.translations.find((tr) => {
-        if (answers.translation.indexOf(" | ") === -1) {
+        if (answers.translation.indexOf(' | ') === -1) {
             return tr.to == answers.translation;
         } else {
             return (
-                tr.to == answers.translation.split(" | ")[0] &&
-                tr.example.from == answers.translation.split(" | ")[1]
+                tr.to == answers.translation.split(' | ')[0] &&
+                tr.example.from == answers.translation.split(' | ')[1]
             );
         }
     });
@@ -66,7 +76,7 @@ export async function chooseTranslation() {
             en_match,
             `|${en_match}|`
         );
-        translation["example"]["from"] = en_ex;
+        translation['example']['from'] = properPiping(en_ex);
     }
     if (translation.example.to) {
         const fr_match = getClosestMatchingWord(
@@ -75,7 +85,7 @@ export async function chooseTranslation() {
         );
 
         const fr_ex = translation.example.to.replace(fr_match, `|${fr_match}|`);
-        translation["example"]["to"] = fr_ex;
+        translation['example']['to'] = properPiping(fr_ex);
     }
 
     delete this.translations;
@@ -83,12 +93,12 @@ export async function chooseTranslation() {
 }
 
 export async function chooseDefinition() {
-    const definitionsArr = this.definitions.map((e) => e.split(" - ")[1]);
+    const definitionsArr = this.definitions.map((e) => e.split(' - ')[1]);
     const answers = await inquirer.prompt([
         {
-            type: "checkbox",
-            name: "definition",
-            message: `Which ${chalk.underline.bold.yellow("definitions")} ?`,
+            type: 'checkbox',
+            name: 'definition',
+            message: `Which ${chalk.underline.bold.yellow('definitions')} ?`,
             choices: definitionsArr,
         },
     ]);
@@ -97,37 +107,17 @@ export async function chooseDefinition() {
 
     return {
         ...this,
-        definition: answers.definition.length > 0 ? answers.definition[0] : "",
+        definition: answers.definition.length > 0 ? answers.definition[0] : '',
     };
-}
-
-export async function chooseNoteType() {
-    const noteArr = [
-        "ANKIENG_NOTE | default card type.",
-        "ANKIENG_NOTE_IMG2WORD | usually for nouns, when needing to guess from a picture.",
-        "ANKIENG_NOTE_DEF2WORD | for subtle words with no direct translation.",
-        "ANKIENG_NOTE_TRNS2WORD | for french words I'm not familiar with the english translation.",
-    ];
-    const answers = await inquirer.prompt([
-        {
-            type: "checkbox",
-            name: "notetype",
-            message: `Which ${chalk.underline.bold.yellow("note type")}?`,
-            choices: noteArr,
-        },
-    ]);
-
-    console.log(answers["notetype"]);
-    return answers["notetype"].map((n) => n.split(" | ")[0]);
 }
 
 export async function chooseExample() {
     if (this.examples.length > 1) {
         const answers = await inquirer.prompt([
             {
-                type: "list",
-                name: "example",
-                message: `Which ${chalk.underline.bold.yellow("example")} ?`,
+                type: 'list',
+                name: 'example',
+                message: `Which ${chalk.underline.bold.yellow('example')} ?`,
                 choices: this.examples.map((e) => {
                     const en_match = getClosestMatchingWord(this.word, e.en);
                     const fr_match = getClosestMatchingWord(
@@ -150,11 +140,11 @@ export async function chooseExample() {
         delete this.examples;
         return {
             ...this,
-            example_en: JSON.stringify(answers.example.split(" | ")[0])
-                .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+            example_en: JSON.stringify(answers.example.split(' | ')[0])
+                .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, '|')
                 .slice(1, -1),
-            example_fr: JSON.stringify(answers.example.split(" | ")[1])
-                .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, "|")
+            example_fr: JSON.stringify(answers.example.split(' | ')[1])
+                .replace(/\\\w+\d+\w+\[\d+\w+\\\w+\d+\w+\[\d+\w/gi, '|')
                 .slice(1, -1),
         };
     } else {

@@ -44,6 +44,21 @@ function fadeWords(sentenceElement) {
 }
 
 // reveal function for the back card
+function revealTextFrench() {
+    const revealing_text = document.getElementById('example_fr').innerHTML;
+    const revealing_text_match = revealing_text.match(/\|.+\|/gi);
+
+    document.getElementById('revealing_text').innerHTML =
+        revealing_text.replace(
+            /\|.+\|/gi,
+            `
+                <b id="revealing_text_b">
+                    ${revealing_text_match[0].slice(1, -1)}
+                </b>
+            `
+        );
+}
+// reveal function for the back card
 function revealText() {
     const revealing_text = document.getElementById('revealing_text').innerHTML;
     const revealing_text_match = revealing_text.match(/\|.+\|/gi);

@@ -1,10 +1,10 @@
 // https://www.wordreference.com/english/abbreviationsWRD.aspx?dict=enfr&abbr=vi&src=WR
 
-import Reverso from "reverso-api";
-import axios from "axios";
-import { getClosestMatchingWord } from "./log.js";
-import wr from "wordreference-api";
-import { getTranslationsTypeList } from "./translationTypes.js";
+import Reverso from 'reverso-api';
+import axios from 'axios';
+import { getClosestMatchingWord } from './log.js';
+import wr from 'wordreference-api';
+import { getTranslationsTypeList } from './translationTypes.js';
 
 const reverso = new Reverso();
 
@@ -12,19 +12,19 @@ export async function name(params) {}
 
 export async function getWRefData() {
     try {
-        let wrData = await wr(this.word, "en", "fr");
+        let wrData = await wr(this.word, 'en', 'fr');
         console.log(wrData);
         const arr = wrData.translations.map((e) => e.translations);
         let translations = [].concat(
             ...arr.map((inArr) => [].concat(...inArr))
         );
-        this["translations"] = translations.map((e) => ({
+        this['translations'] = translations.map((e) => ({
             ...e,
-            from: e.from.trim().replaceAll("⇒", ""),
-            to: e.to.trim().replaceAll("⇒", ""),
+            from: e.from.trim().replaceAll('⇒', ''),
+            to: e.to.trim().replaceAll('⇒', ''),
             example: {
-                from: e.example.from.length > 0 ? e.example.from[0] : "",
-                to: e.example.to.length > 0 ? e.example.to[0] : "",
+                from: e.example.from.length > 0 ? e.example.from[0] : '',
+                to: e.example.to.length > 0 ? e.example.to[0] : '',
             },
         }));
 
@@ -44,19 +44,19 @@ export async function getDictData() {
         );
 
         // assign IPA
-        this["ipa"] = [
+        this['ipa'] = [
             ...new Set(
                 dictionaryData.data.map((e) =>
-                    e.phonetic ? e.phonetic.replaceAll("/", "") : ""
+                    e.phonetic ? e.phonetic.replaceAll('/', '') : ''
                 )
             ),
         ][0];
 
         // assign audio
-        this["audio"] =
+        this['audio'] =
             [...new Set(dictionaryData.data[0].phonetics.map((e) => e.audio))]
-                .filter((e) => e !== "")
-                .find((e) => e.indexOf("-us.mp3") !== -1) || "";
+                .filter((e) => e !== '')
+                .find((e) => e.indexOf('-us.mp3') !== -1) || '';
 
         const nestedArray = dictionaryData.data.map((d) =>
             d.meanings.map((m) => {
@@ -70,7 +70,7 @@ export async function getDictData() {
         );
 
         // assign definitions
-        this["definitions"] = []
+        this['definitions'] = []
             .concat(
                 ...nestedArray.map((subArrays) =>
                     [].concat(
@@ -93,7 +93,7 @@ export async function getLingueeData() {
         let linguee_data = await axios.get(
             `https://linguee-api.fly.dev/api/v2/translations`,
             {
-                params: { query: this.word, src: "en", dst: "fr" },
+                params: { query: this.word, src: 'en', dst: 'fr' },
             }
         );
 
@@ -106,14 +106,14 @@ export async function getLingueeData() {
                     .filter((e) => e.featured)
                     .map((e) => {
                         if (
-                            e.hasOwnProperty("examples") &&
+                            e.hasOwnProperty('examples') &&
                             e.examples.length > 0
                         ) {
                             translations.push({
-                                type: e.pos.startsWith("noun")
-                                    ? "noun"
-                                    : e.pos.startsWith("adjective")
-                                    ? "adjv"
+                                type: e.pos.startsWith('noun')
+                                    ? 'noun'
+                                    : e.pos.startsWith('adjective')
+                                    ? 'adjv'
                                     : e.pos,
                                 translation: e.text,
                                 examples: e.examples.map((e) => ({
@@ -125,7 +125,7 @@ export async function getLingueeData() {
                     });
             });
 
-        this["translations"] = translations;
+        this['translations'] = translations;
         return this;
     } catch (error) {
         console.clear();
@@ -135,7 +135,7 @@ export async function getLingueeData() {
 
 export async function getReversoTranslations(input) {
     try {
-        let res = await reverso.getTranslation(input, "english", "french");
+        let res = await reverso.getTranslation(input, 'english', 'french');
         return { ...this, translations: [...new Set(res.translations)] };
     } catch (err) {
         return this;
@@ -144,7 +144,7 @@ export async function getReversoTranslations(input) {
 
 export async function getReversoExamples(input) {
     try {
-        let res = await reverso.getContext(input, "english", "french");
+        let res = await reverso.getContext(input, 'english', 'french');
         let examples = res.examples.map((e) => ({
             en: e.source,
             fr: e.target,
@@ -176,7 +176,7 @@ export function fuseReversoAndLinguee(ankiEngNote, reverso_data) {
                 (tr) => tr.translation === e.translation
             ) === undefined
         ) {
-            ankiEngNote.translations.push({ type: "", ...e });
+            ankiEngNote.translations.push({ type: '', ...e });
         }
         return e;
     });

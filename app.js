@@ -22,17 +22,12 @@ import {
     chooseTranslation,
     chooseDefinition,
     chooseTranslationType,
-    chooseNoteType,
 } from './prompt.js';
-import Reverso from 'reverso-api';
 
 import { addCard } from './anki.js';
 
 // clear log.
 console.clear();
-
-// instanciate Reverso
-const reverso = new Reverso();
 
 // retrieve user input
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
@@ -43,21 +38,23 @@ console.log(`loading "${usrInput}"`);
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
-// get wordreference.com's data
-ankiEngNote = await getWRefData.call(ankiEngNote);
+// DATA FETCH
 
-// get dictionary.com's data
+// get wordreference.com's & dictionary.com's data
+ankiEngNote = await getWRefData.call(ankiEngNote);
 ankiEngNote = await getDictData.call(ankiEngNote);
 
+// PROMPT
+
+// checks if translations were found then proceed to prompt or error log
 if (ankiEngNote.translations.length > 0) {
-    // clear log.
-    console.clear();
+    console.clear(); // clear log.
 
     ankiEngNote.fromTypes.length > 1
         ? (ankiEngNote = await chooseTranslationType.call(ankiEngNote))
         : delete ankiEngNote.fromTypes;
 
-    // logging search results
+    // logs search results
     logSearchResults.call(ankiEngNote);
 
     console.log(`\n`);
@@ -65,8 +62,7 @@ if (ankiEngNote.translations.length > 0) {
     // choose which translation to keep
     ankiEngNote = await chooseTranslation.call(ankiEngNote);
 
-    // clear log.
-    console.clear();
+    console.clear(); // clear log.
 
     // choose a definition to keep
     if (ankiEngNote.definitions) {
@@ -91,15 +87,12 @@ if (ankiEngNote.translations.length > 0) {
     delete ankiEngNote.from;
     delete ankiEngNote.example;
     delete ankiEngNote.to;
+    ankiEngNote.display_default = '1';
 
-    console.clear();
-
-    // choose which note type to save card to.
-    // const noteTypes = await chooseNoteType();
+    console.clear(); // clear log.
 
     // save card in Anki.
-    // for (let i = 0; i < noteTypes.length; i++) {
-    const addCardRes = await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng`);
+    const addCardRes = await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng NEW`);
     console.log(addCardRes);
     // }
 } else {

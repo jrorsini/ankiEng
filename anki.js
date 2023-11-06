@@ -17,7 +17,7 @@ const ankiUrl = 'http://127.0.0.1:8765';
 export async function addCard(deck) {
     let note = {
         deckName: deck,
-        modelName: 'ANKIENG_NOTE',
+        modelName: 'ANKIENG_NOTE_NEW',
         fields: this,
         options: {
             allowDuplicate: false,
