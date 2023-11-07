@@ -1,0 +1,70 @@
+/* GENERAL style */
+
+html,
+body.card {
+    background: black;
+}
+
+.card {
+    font-family: arial;
+    font-size: 20px;
+    text-align: center;
+    color: black;
+    background-color: white;
+}
+
+/* INPUT FIELD style */
+
+#answer input[type='text'] {
+    height: 50px;
+    background: transparent;
+    border: none;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 40px !important;
+}
+
+/* IMAGES style */
+
+img {
+    height: 200px;
+    filter: drop-shadow(2px 2px 8px #000);
+    border-radius: 5px;
+}
+
+.field_header {
+    font-size: 15px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    color: #999999;
+    text-decoration: underline;
+    font-style: italic;
+}
+
+p {
+    margin-top: 5px;
+}
+
+p#revealing_blank b {
+    letter-spacing: 5px;
+}
+
+.verb_type_color b,
+#answer.verb_type_color input[type='text'] {
+    color: rgb(43, 208, 73) !important;
+}
+.noun_type_color b,
+#answer.noun_type_color input[type='text'] {
+    color: red !important;
+}
+.adjv_type_color b,
+#answer.adjv_type_color input[type='text'] {
+    color: rgb(255, 133, 106) !important;
+}
+
+p#translation {
+    margin: 0;
+    font-size: 50px;
+    font-weight: bold;
+}
