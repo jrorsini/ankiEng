@@ -87,7 +87,7 @@ if (ankiEngNote.translations.length > 0) {
     delete ankiEngNote.from;
     delete ankiEngNote.example;
     delete ankiEngNote.to;
-    ankiEngNote.display_default = '1';
+    ankiEngNote['display_ex-en'] = '1';
 
     console.clear(); // clear log.
 
