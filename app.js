@@ -92,7 +92,10 @@ if (ankiEngNote.translations.length > 0) {
     console.clear(); // clear log.
 
     // save card in Anki.
-    const addCardRes = await addCard.call(ankiEngNote, `lang - 🇺🇸 ankiEng NEW`);
+    const addCardRes = await addCard.call(
+        ankiEngNote,
+        `0 - 🗣️ linguistics::🇺🇸 ankiEng`
+    );
     console.log(addCardRes);
     // }
 } else {
