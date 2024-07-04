@@ -16,13 +16,15 @@
  * oxpecker (undefined example)
  */
 
-import { getDictData, getWRefData } from './utility/api.js';
-import { logSearchResults } from './utility/log.js';
+import { getDictData, getWRefData } from './utils/api.js';
+import { logSearchResults } from './utils/log.js';
 import {
     chooseTranslation,
     chooseDefinition,
     chooseTranslationType,
 } from './prompt.js';
+
+import { startSpinner } from './utils/cli-loader.js';
 
 import { addCard } from './anki.js';
 
@@ -36,7 +38,7 @@ const deckName = `0 - 🗣️ linguistics::🇺🇸 ankiEng`;
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
 // log user input loading
-console.log(`loading "${usrInput}"`);
+const stopSpinner = startSpinner(`fetching data for ${usrInput}`);
 
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
@@ -46,7 +48,7 @@ let ankiEngNote = { word: usrInput };
 // get wordreference.com's & dictionary.com's data
 ankiEngNote = await getWRefData.call(ankiEngNote);
 ankiEngNote = await getDictData.call(ankiEngNote);
-
+stopSpinner();
 // PROMPT
 
 // checks if translations were found then proceed to prompt or error log

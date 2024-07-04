@@ -1,10 +1,10 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import { getClosestMatchingWord } from './utility/log.js';
+import { getClosestMatchingWord } from './utils/log.js';
 import {
     filterByTranslationType,
     filterByDefinitionType,
-} from './utility/translationTypes.js';
+} from './utils/translationTypes.js';
 
 // Turns "|shrug.|" into "|shrug|."
 function properPiping(stc) {
