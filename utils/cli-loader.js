@@ -20,7 +20,7 @@ export function startSpinner(loadingMsg) {
             `\r${chalk.cyan(characters[i++])} - ${chalk.yellow(loadingMsg)}`
         );
         i = i >= characters.length ? 0 : i;
-    }, 150);
+    }, 20);
 
     return () => {
         clearInterval(timer);

@@ -13,7 +13,6 @@ export async function name(params) {}
 export async function getWRefData() {
     try {
         let wrData = await wr(this.word, 'en', 'fr');
-        console.log(wrData);
         const arr = wrData.translations.map((e) => e.translations);
         let translations = [].concat(
             ...arr.map((inArr) => [].concat(...inArr))
