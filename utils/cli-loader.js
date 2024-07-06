@@ -17,7 +17,7 @@ export function startSpinner(loadingMsg) {
     let i = 0;
     const timer = setInterval(function () {
         stdout.write(
-            `\r${chalk.cyan(
+            `\r${chalk.yellow.bold(
                 characters[i++]
             )} FETCHING RESULTS FOR ${chalk.yellow.bold.underline(
                 `${loadingMsg.toUpperCase()}`

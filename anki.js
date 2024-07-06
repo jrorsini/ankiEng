@@ -35,9 +35,9 @@ export async function addCard(deck) {
         });
         if (!res.data.error) {
             console.log(
-                `${chalk.underline.yellow(
+                `${chalk.underline.bold.yellow(
                     this.word.toUpperCase()
-                )} has been added`
+                )} HAS BEEN ADDED`
             );
         } else {
             console.log(`${chalk.bgRed.white(res.data.error.toUpperCase())}`);
