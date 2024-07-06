@@ -19,7 +19,7 @@ export function startSpinner(loadingMsg) {
         stdout.write(
             `\r${chalk.cyan(
                 characters[i++]
-            )} FETCHING RESULTS FOR ${chalk.bgYellow.black(
+            )} FETCHING RESULTS FOR ${chalk.yellow.bold.underline(
                 ` ${loadingMsg.toUpperCase()} `
             )}`
         );

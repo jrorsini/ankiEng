@@ -1,4 +1,5 @@
 import axios from 'axios';
+import chalk from 'chalk';
 
 // https://foosoft.net/projects/anki-connect/index.html#deck-actions
 
@@ -23,6 +24,7 @@ export async function addCard(deck) {
             allowDuplicate: false,
         },
     };
+    console.log();
     try {
         const res = await axios.post(ankiUrl, {
             action: 'addNote',
@@ -31,7 +33,16 @@ export async function addCard(deck) {
                 note,
             },
         });
-        return res.data;
+        if (!res.data.error) {
+            console.log(
+                `${chalk.underline.yellow(
+                    this.word.toUpperCase()
+                )} has been added`
+            );
+        } else {
+            console.log(`${chalk.bgRed.white(res.data.error.toUpperCase())}`);
+        }
+        return;
     } catch (err) {
         console.log(err);
     }

@@ -97,10 +97,7 @@ if (ankiEngNote.translations.length > 0) {
     console.clear(); // clear log.
 
     // save card in Anki.
-    const addCardRes = await addCard.call(ankiEngNote, deckName);
-    console.log(addCardRes);
-    // }
+    await addCard.call(ankiEngNote, deckName);
 } else {
-    // clear log.
     console.clear();
 }
