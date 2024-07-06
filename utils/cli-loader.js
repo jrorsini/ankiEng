@@ -17,7 +17,11 @@ export function startSpinner(loadingMsg) {
     let i = 0;
     const timer = setInterval(function () {
         stdout.write(
-            `\r${chalk.cyan(characters[i++])} - ${chalk.yellow(loadingMsg)}`
+            `\r${chalk.cyan(
+                characters[i++]
+            )} FETCHING RESULTS FOR ${chalk.bgYellow.black(
+                ` ${loadingMsg.toUpperCase()} `
+            )}`
         );
         i = i >= characters.length ? 0 : i;
     }, 20);

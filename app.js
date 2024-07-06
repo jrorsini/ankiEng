@@ -38,7 +38,7 @@ const deckName = `0 - 🗣️ linguistics::🇺🇸 ankiEng`;
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
 // log user input loading
-const stopSpinner = startSpinner(`fetching data for ${usrInput}`);
+const stopSpinner = startSpinner(usrInput);
 
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
