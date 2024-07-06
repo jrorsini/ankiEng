@@ -24,7 +24,6 @@ export async function addCard(deck) {
             allowDuplicate: false,
         },
     };
-    console.log();
     try {
         const res = await axios.post(ankiUrl, {
             action: 'addNote',
