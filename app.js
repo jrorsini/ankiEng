@@ -31,9 +31,6 @@ import { addCard } from './anki.js';
 // clear log.
 console.clear();
 
-// deck's name
-const deckName = `0 - 🗣️ linguistics::🇺🇸 ankiEng`;
-
 // retrieve user input
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
@@ -97,7 +94,7 @@ if (ankiEngNote.translations.length > 0) {
     console.clear(); // clear log.
 
     // save card in Anki.
-    await addCard.call(ankiEngNote, deckName);
+    await addCard.call(ankiEngNote);
 } else {
     console.clear();
 }

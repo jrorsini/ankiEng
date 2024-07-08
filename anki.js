@@ -5,7 +5,8 @@ import chalk from 'chalk';
 
 // Define the AnkiConnect API URL
 const ankiUrl = 'http://127.0.0.1:8765';
-
+// deck's name
+const deckName = `🇺🇸 ENGLISH`;
 /*
 - word
 - ipa
@@ -15,9 +16,9 @@ const ankiUrl = 'http://127.0.0.1:8765';
 - type
 */
 
-export async function addCard(deck) {
+export async function addCard() {
     let note = {
-        deckName: deck,
+        deckName,
         modelName: 'CUSTOM_NOTE_ANKIENG',
         fields: this,
         options: {
