@@ -8,8 +8,6 @@ import { getTranslationsTypeList } from './translationTypes.js';
 
 const reverso = new Reverso();
 
-export async function name(params) {}
-
 export async function getWRefData() {
     try {
         let wrData = await wr(this.word, 'en', 'fr');
@@ -87,6 +85,9 @@ export async function getDictData() {
     }
 }
 
+// USELESS CODE (LINGUEE & REVERSO API HANDLER)
+
+/**
 export async function getLingueeData() {
     try {
         let linguee_data = await axios.get(
@@ -131,7 +132,7 @@ export async function getLingueeData() {
         return { ...this, translations: [] };
     }
 }
-
+    
 export async function getReversoTranslations(input) {
     try {
         let res = await reverso.getTranslation(input, 'english', 'french');
@@ -140,7 +141,7 @@ export async function getReversoTranslations(input) {
         return this;
     }
 }
-
+    
 export async function getReversoExamples(input) {
     try {
         let res = await reverso.getContext(input, 'english', 'french');
@@ -167,7 +168,7 @@ export async function getReversoExamples(input) {
         return this;
     }
 }
-
+    
 export function fuseReversoAndLinguee(ankiEngNote, reverso_data) {
     reverso_data.translations.map((e) => {
         if (
@@ -181,4 +182,5 @@ export function fuseReversoAndLinguee(ankiEngNote, reverso_data) {
     });
 
     return ankiEngNote;
-}
+} 
+*/
