@@ -56,11 +56,11 @@ p#revealing_blank b {
 }
 .noun_type_color b,
 #answer.noun_type_color input[type='text'] {
-    color: red !important;
+    color: rgb(255, 133, 99) !important;
 }
 .adjv_type_color b,
 #answer.adjv_type_color input[type='text'] {
-    color: rgb(255, 133, 106) !important;
+    color: rgb(208, 106, 255) !important;
 }
 
 p#translation {
