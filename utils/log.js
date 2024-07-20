@@ -1,11 +1,11 @@
-import chalk from "chalk";
-import { typeColor } from "./global.js";
-import natural from "natural";
+import chalk from 'chalk';
+import { typeColor } from './global.js';
+import natural from 'natural';
 
 export function getMatchingWord(wordList, sentence) {
     for (let i = 0; i < wordList.length; i++) {
         const word = wordList[i];
-        const regex = new RegExp(`/${word}/`, "i");
+        const regex = new RegExp(`/${word}/`, 'i');
 
         if (sentence.match(word)) {
             return word; // Return the matching word
@@ -74,15 +74,15 @@ export function logDefinitions(definitions) {
         log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
 
         definitions.map((e) => {
-            const typ = e.split(" - ")[0];
-            const def = e.split(" - ")[1];
+            const typ = e.split(' - ')[0];
+            const def = e.split(' - ')[1];
             console.log(`\n${chalk.bgGray(` ${typ.toUpperCase()} `)} : ${def}`);
         });
     }
 }
 
 export function getClosestMatchingWord(wordToMatch, sentence) {
-    const wordsInSentence = sentence.split(" ");
+    const wordsInSentence = sentence.split(' ');
 
     let closestMatch = null;
     let minDistance = Infinity;
@@ -158,25 +158,25 @@ export function logDataObsolete(data) {
     );
 
     if (data.ipa) {
-        console.log(`\n\t ${chalk.bgRed.bold(" IPA ")}`);
+        console.log(`\n\t ${chalk.bgRed.bold(' IPA ')}`);
 
         console.log(data.ipa);
     }
 
     // DEFINITION
     if (data.definitions) {
-        console.log(`\n\t ${chalk.bgRed.bold(" DEFINITIONS ")}`);
+        console.log(`\n\t ${chalk.bgRed.bold(' DEFINITIONS ')}`);
 
         data.definitions.map((e) => {
-            const typ = e.split(" - ")[0];
-            const def = e.split(" - ")[1];
+            const typ = e.split(' - ')[0];
+            const def = e.split(' - ')[1];
             console.log(`\n${chalk.bgGray(` ${typ.toUpperCase()} `)} : ${def}`);
         });
     }
 
     // TRANSLATION
     if (data.translations) {
-        console.log(`\n\t ${chalk.bgRed.bold(" TRANSLATIONS ")}`);
+        console.log(`\n\t ${chalk.bgRed.bold(' TRANSLATIONS ')}`);
 
         data.translations.map((e) => {
             const translation = e.translation;
@@ -222,7 +222,7 @@ export function logWordContent() {
         this.definitions.map((e) => {
             const wordType = e.type;
             log(
-                "\t" +
+                '\t' +
                     chalk
                         .hex(typeColor[wordType])
                         .inverse(` ${wordType.toUpperCase()} `) +
@@ -239,7 +239,7 @@ export function logWordContent() {
                     .map((line, index) =>
                         (index + 1) % 6 === 0 ? `${line}\n\t` : `${line} - `
                     )
-                    .join("")
+                    .join('')
                     .slice(0, -2)
             )}\n`
         );
@@ -254,7 +254,7 @@ export function logWordContent() {
                     .map((line, index) =>
                         (index + 1) % 6 === 0 ? `${line}\n\t` : `${line} - `
                     )
-                    .join("")
+                    .join('')
                     .slice(0, -2)
                     .trim()}`
             )}\n`
@@ -278,6 +278,6 @@ export function logWordContent() {
                     .replace(trslt2Rep, chalk.bold.underline.cyan(trslt2Rep))}`
             );
         });
-        log("\n");
+        log('\n');
     }
 }

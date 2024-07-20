@@ -16,8 +16,10 @@
  * oxpecker (undefined example)
  */
 
+// API's handlers.
 import { getDictData, getWRefData } from './utils/api.js';
 import { logSearchResults } from './utils/log.js';
+// prompt questions.
 import {
     chooseTranslation,
     chooseDefinition,
