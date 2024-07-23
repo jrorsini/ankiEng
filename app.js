@@ -18,7 +18,7 @@
 
 // API's handlers.
 import { getDictData, getWRefData } from './utils/api.js';
-import { logSearchResults } from './utils/log.js';
+import { logSearchResults } from './utils/searchResultslogs.js';
 // prompt questions.
 import {
     chooseTranslation,
@@ -59,7 +59,7 @@ if (ankiEngNote.translations.length > 0) {
         : delete ankiEngNote.fromTypes;
 
     // logs search results
-    logSearchResults.call(ankiEngNote);
+    logSearchResults(ankiEngNote);
 
     console.log(`\n`);
 

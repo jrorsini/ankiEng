@@ -16,14 +16,16 @@ export function getMatchingWord(wordList, sentence) {
     return null; // No matching word found
 }
 
-export function logSearchResults() {
+export function logSearchResults(ankiEngNote) {
+    const { word, translations, definitions } = ankiEngNote;
+
     // clear log
     console.clear();
 
     // declare search header
     const searchHeader = `${chalk.greenBright.bold(
         `✓`
-    )} RESULTS FOR ${chalk.yellow.underline.bold(this.word.toUpperCase())}`;
+    )} RESULTS FOR ${chalk.yellow.underline.bold(word.toUpperCase())}`;
 
     // log search header
     log(searchHeader);
@@ -32,10 +34,10 @@ export function logSearchResults() {
     log(`-`.repeat(searchHeader.length - 28));
 
     // log translations
-    logTranslations(this.translations);
+    logTranslations(translations);
 
     // log definitions
-    logDefinitions(this.definitions);
+    logDefinitions(definitions);
 }
 
 export function logTranslations(translations) {
