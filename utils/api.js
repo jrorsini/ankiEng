@@ -2,7 +2,7 @@
 
 import Reverso from 'reverso-api';
 import axios from 'axios';
-import { getClosestMatchingWord } from './log.js';
+import { getClosestMatchingWord } from './searchResultslogs.js';
 import wr from 'wordreference-api';
 import { getTranslationsTypeList } from './translationTypes.js';
 

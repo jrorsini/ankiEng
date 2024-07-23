@@ -6,8 +6,11 @@
 
 /**
  * TO-DO-LIST
- * create initializing card template functions according to flag id
  *
+ * Remove the definition field in Anki then also remove it from the app handlers.
+ * The dictionary.com resource should be used only for IPA.
+ * then change in the script to add a ruby row with the IPA in it.
+ * form now on, only guess from word or context.
  */
 
 /**
