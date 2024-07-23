@@ -22,9 +22,9 @@ export function logSearchResults() {
     console.clear();
 
     // declare search header
-    const searchHeader = `RESULTS FOR ${chalk.yellow.underline.bold(
-        this.word.toUpperCase()
-    )}`;
+    const searchHeader = `${chalk.greenBright.bold(
+        `✓`
+    )} RESULTS FOR ${chalk.yellow.underline.bold(this.word.toUpperCase())}`;
 
     // log search header
     log(searchHeader);
@@ -149,6 +149,9 @@ export function logReversoData(data) {
         return e;
     });
 }
+
+/*
+
 
 export function logDataObsolete(data) {
     console.clear();
@@ -281,3 +284,5 @@ export function logWordContent() {
         log('\n');
     }
 }
+
+*/
