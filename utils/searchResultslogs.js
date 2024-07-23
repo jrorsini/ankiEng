@@ -1,6 +1,7 @@
 import chalk from 'chalk';
-import { typeColor } from './global.js';
 import natural from 'natural';
+
+const log = console.log;
 
 export function getMatchingWord(wordList, sentence) {
     for (let i = 0; i < wordList.length; i++) {
@@ -14,8 +15,6 @@ export function getMatchingWord(wordList, sentence) {
 
     return null; // No matching word found
 }
-
-const log = console.log;
 
 export function logSearchResults() {
     // clear log
@@ -151,6 +150,8 @@ export function logReversoData(data) {
 }
 
 /*
+
+import { typeColor } from './global.js';
 
 
 export function logDataObsolete(data) {
