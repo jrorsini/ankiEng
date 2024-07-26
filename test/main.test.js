@@ -1,5 +1,4 @@
-import isPhrasalVerb from "../utility/isPhrasalVerb.js";
-import Reverso from "reverso-api";
+import Reverso from 'reverso-api';
 const reverso = new Reverso();
 import {
     getTranslations,
@@ -8,10 +7,9 @@ import {
     getTypes,
     getDefinitions,
     getWord,
-} from "../utility/api.js";
-import assert from "assert";
-import chalk from "chalk";
-import { logWordContent } from "../utility/log.js";
+} from '../utility/api.js';
+import assert from 'assert';
+import chalk from 'chalk';
 
 // set out
 // farmyard
@@ -20,12 +18,12 @@ import { logWordContent } from "../utility/log.js";
 // securities
 
 const wordList = [
-    "spun",
-    "sank",
-    "puffing",
-    "cobwebs",
-    "jawing",
-    "holler",
+    'spun',
+    'sank',
+    'puffing',
+    'cobwebs',
+    'jawing',
+    'holler',
     // "what's keeping him"
     // "stand out",
     // "Ox",
@@ -80,9 +78,9 @@ const wordList = [
 // console.log(await fetchThesaurusBodyResponse("test"));
 // await getDefinitions(, testTypes);
 
-describe("dictionary.com", function () {
+describe('dictionary.com', function () {
     wordList.map((e) => {
-        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
+        it(`${chalk.bold.green('result')} for "${chalk.bold.white(
             e
         )}"`, async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse(e);
@@ -91,9 +89,9 @@ describe("dictionary.com", function () {
     });
 });
 
-describe("thesaurus.com", function () {
+describe('thesaurus.com', function () {
     wordList.map((e) => {
-        it(`${chalk.bold.green("result")} for "${chalk.bold.white(
+        it(`${chalk.bold.green('result')} for "${chalk.bold.white(
             e
         )}"`, async function () {
             const thesaurusRes = await fetchThesaurusBodyResponse(e);
@@ -102,9 +100,9 @@ describe("thesaurus.com", function () {
     });
 });
 
-describe("dictionary.com word", function () {
+describe('dictionary.com word', function () {
     wordList.map((e) => {
-        it(`${chalk.bold.green("types")} for "${chalk.bold.white(
+        it(`${chalk.bold.green('types')} for "${chalk.bold.white(
             e
         )}"`, async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse(e);
@@ -116,16 +114,16 @@ describe("dictionary.com word", function () {
                 assert.equal(word, false);
                 console.log(
                     `\n\t${chalk.bold.underline.red(
-                        "no word"
+                        'no word'
                     )} for ${chalk.bold(e)}`
                 );
             }
         });
     });
 });
-describe("dictionary.com types", function () {
+describe('dictionary.com types', function () {
     wordList.map((e) => {
-        it(`${chalk.bold.green("types")} for "${chalk.bold.white(
+        it(`${chalk.bold.green('types')} for "${chalk.bold.white(
             e
         )}"`, async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse(e);
@@ -136,7 +134,7 @@ describe("dictionary.com types", function () {
                 assert.equal(types, false);
                 console.log(
                     `\n\t${chalk.bold.underline.red(
-                        "no types"
+                        'no types'
                     )} for ${chalk.bold(e)}`
                 );
             }
@@ -144,9 +142,9 @@ describe("dictionary.com types", function () {
     });
 });
 
-describe("thesaurus.com definition", function () {
+describe('thesaurus.com definition', function () {
     wordList.map((e) => {
-        it(`${chalk.bold.green("definition")} for "${chalk.bold.white(
+        it(`${chalk.bold.green('definition')} for "${chalk.bold.white(
             e
         )}"`, async function () {
             const dictionaryRes = await fetchDictionaryBodyResponse(e);
@@ -159,7 +157,7 @@ describe("thesaurus.com definition", function () {
                 assert.equal(def, false);
                 console.log(
                     `\n\t${chalk.bold.underline.red(
-                        "no definition"
+                        'no definition'
                     )} for ${chalk.bold(e)}`
                 );
             }
@@ -167,9 +165,9 @@ describe("thesaurus.com definition", function () {
     });
 });
 
-describe("getTranslations", function () {
+describe('getTranslations', function () {
     wordList.map((e) => {
-        it(`${chalk.bold.green("translations")} for "${chalk.bold.white(
+        it(`${chalk.bold.green('translations')} for "${chalk.bold.white(
             e
         )}"`, async function () {
             const translations = await getTranslations(e);
@@ -179,54 +177,13 @@ describe("getTranslations", function () {
                 assert.equal(translations, false);
                 console.log(
                     `\n\t${chalk.bold.underline.red(
-                        "no translations"
+                        'no translations'
                     )} for ${chalk.bold(e)}`
                 );
             }
         });
     });
 });
-/**
-
-describe("#isPhrasalVerb()", function () {
-    wordList
-        .filter((e) => !isPhrasalVerb(e))
-        .map((e) => {
-            it(`${chalk.underline.bold(e)} != phrasal verb `, function () {
-                assert.equal(isPhrasalVerb(e), false);
-            });
-        });
-
-    wordList
-        .filter((e) => isPhrasalVerb(e))
-        .map((e) => {
-            it(`${chalk.underline.bold(e)} = phrasal verb`, function () {
-                assert.equal(isPhrasalVerb(e), true);
-            });
-        });
-});
-
- */
-
-// describe("#fetchDictionaryBodyResponse", function () {
-//     it("should return false", async function () {
-//         const apis = await fetchDictionaryBodyResponse("seawall");
-//         assert.equal(apis, false);
-//     });
-// });
-
-// describe("#fetchThesaurusBodyResponse", function () {
-//     it("should return nothing for moose in thesaurus", async function () {
-//         const dictionaryRes = await fetchDictionaryBodyResponse("moose");
-//         const thesaurusRes = await fetchThesaurusBodyResponse("moose");
-//         const types = dictionaryRes ? getTypes("moose", dictionaryRes) : false;
-//         const definitions = thesaurusRes
-//             ? getDefinitions(thesaurusRes, types)
-//             : false;
-//         assert.equal(definitions, false);
-//     });
-// });
-
 // "stand out" error on reverso
 // "moose" doesn't return definition
 // "noticeably" logs adj adj adj after answering IPA
