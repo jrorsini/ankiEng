@@ -34,6 +34,24 @@ export async function getWRefData() {
     }
 }
 
+export async function getIPA(word) {
+    try {
+        let dictionaryapiJSON = await axios.get(
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+        );
+        return [
+            ...new Set(
+                dictionaryapiJSON.data.map((e) =>
+                    e.phonetic ? e.phonetic.replaceAll('/', '') : ''
+                )
+            ),
+        ][0];
+    } catch (error) {
+        console.error(error);
+        return;
+    }
+}
+
 export async function getDictData() {
     try {
         let dictionaryData = await axios.get(
@@ -49,6 +67,7 @@ export async function getDictData() {
             ),
         ][0];
 
+        /*
         // assign audio
         this['audio'] =
             [...new Set(dictionaryData.data[0].phonetics.map((e) => e.audio))]
@@ -78,7 +97,7 @@ export async function getDictData() {
                 )
             )
             .sort((a, b) => a[0].localeCompare(b[0]));
-
+        */
         return this;
     } catch (err) {
         return this;

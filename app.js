@@ -37,13 +37,15 @@ import { addCard } from './anki.js';
 console.clear();
 
 // retrieve user input
-const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
+const wordInputed = process.argv.slice(2).join(' ').toLowerCase().trim();
 
 // log user input loading
-const stopSpinner = startSpinner(usrInput);
+const stopSpinner = startSpinner(wordInputed);
 
 // create Anki note object.
-let ankiEngNote = { word: usrInput };
+let ankiEngNote = { word: wordInputed };
+
+const getWordData = async (params) => {};
 
 // DATA FETCH
 
