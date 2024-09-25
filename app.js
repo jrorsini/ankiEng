@@ -36,7 +36,7 @@ import { addCard } from './anki.js';
 // clear log.
 console.clear();
 
-// retrieve user input
+// retrieve user input from terminal
 const wordInputed = process.argv.slice(2).join(' ').toLowerCase().trim();
 
 // log user input loading

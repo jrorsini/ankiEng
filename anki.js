@@ -6,7 +6,7 @@ import chalk from 'chalk';
 // Define the AnkiConnect API URL
 const ankiUrl = 'http://127.0.0.1:8765';
 // deck's name
-const deckName = `🇺🇸 ENGLISH`;
+const deckName = `0 🇺🇸 English`;
 /*
 - word
 - ipa
