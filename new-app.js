@@ -39,10 +39,12 @@ console.clear();
 // retrieve user input from terminal
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
+console.log(usrInput);
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
 // DATA FETCH
 
 // get wordreference.com's & dictionary.com's data
-ankiEngNote = await getWRefData.call(ankiEngNote);
+ankiEngNote = await getWRefData(usrInput);
+console.log(ankiEngNote);

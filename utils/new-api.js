@@ -26,11 +26,11 @@ export async function getWRefData(word) {
         }));
 
         return {
-            ...this,
+            translations,
             fromTypes: getTranslationsTypeList(translations),
         };
     } catch (err) {
-        return this;
+        return err;
     }
 }
 

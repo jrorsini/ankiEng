@@ -90,7 +90,7 @@
         "wordreference-api": "^1.1.0"
     },
     "scripts": {
-        "start": "node app.js",
+        "start": "node new-app.js",
         "test": "mocha"
     },
     "author": "",
