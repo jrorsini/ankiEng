@@ -40,6 +40,7 @@ console.clear();
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
 console.log(usrInput);
+
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
@@ -47,4 +48,5 @@ let ankiEngNote = { word: usrInput };
 
 // get wordreference.com's & dictionary.com's data
 ankiEngNote = await getWRefData(usrInput);
-console.log(ankiEngNote);
+let temp = await getDictData(usrInput);
+console.log(temp);

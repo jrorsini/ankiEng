@@ -1,23 +1,23 @@
 const types = {
     verb: [
-        "v expr",
-        "vi",
-        "vi + adv",
-        "vi + adj",
-        "vi + prép",
-        "vi + prep",
-        "vi phrasal",
-        "vi phrasal + adv",
-        "vi phrasal + prep",
-        "vtr",
-        "vtr + adj",
-        "vtr + prep",
-        "vtr phrasal sep",
-        "vtr + adv",
-        "vtr phrasal insep",
+        'v expr',
+        'vi',
+        'vi + adv',
+        'vi + adj',
+        'vi + prép',
+        'vi + prep',
+        'vi phrasal',
+        'vi phrasal + adv',
+        'vi phrasal + prep',
+        'vtr',
+        'vtr + adj',
+        'vtr + prep',
+        'vtr phrasal sep',
+        'vtr + adv',
+        'vtr phrasal insep',
     ],
-    noun: ["n", "npl", "n as adj"],
-    adjective: ["adj"],
+    noun: ['n', 'npl', 'n as adj'],
+    adjective: ['adj'],
 };
 // tr is the translations
 // typ is the desired typ
@@ -29,7 +29,7 @@ const types = {
  * @returns {String} the choosen Definition
  */
 export function filterByTranslationType(tr, typ) {
-    if (typ === "other") {
+    if (typ === 'other') {
         return (
             [...types.verb, ...types.noun, ...types.adjective].indexOf(
                 tr.fromType
@@ -41,7 +41,7 @@ export function filterByTranslationType(tr, typ) {
 }
 
 export function filterByDefinitionType(d, typ) {
-    return d.split(" - ")[0].toLowerCase() === typ;
+    return d.split(' - ')[0].toLowerCase() === typ;
 }
 
 export function getTranslationsTypeList(translations) {
@@ -60,7 +60,7 @@ export function getTranslationsTypeList(translations) {
                 break;
             }
         }
-        !foundType && translationsTypeList.push("other");
+        !foundType && translationsTypeList.push('other');
 
         return e;
     });

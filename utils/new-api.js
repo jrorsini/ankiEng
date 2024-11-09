@@ -52,14 +52,14 @@ export async function getIPA(word) {
     }
 }
 
-export async function getDictData() {
+export async function getDictData(userInput) {
     try {
         let dictionaryData = await axios.get(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${this.word}`
+            `https://api.dictionaryapi.dev/api/v2/entries/en/${userInput}`
         );
 
         // assign IPA
-        this['ipa'] = [
+        let ipa = [
             ...new Set(
                 dictionaryData.data.map((e) =>
                     e.phonetic ? e.phonetic.replaceAll('/', '') : ''
@@ -67,8 +67,8 @@ export async function getDictData() {
             ),
         ][0];
 
-        return this;
+        return ipa;
     } catch (err) {
-        return this;
+        return err;
     }
 }
