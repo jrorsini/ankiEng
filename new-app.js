@@ -20,7 +20,7 @@
  */
 
 // API's handlers.
-import { getDictData, getWRefData } from './utils/new-api.js';
+import { getIPA, getWRefData } from './utils/new-api.js';
 import { logSearchResults } from './utils/searchResultslogs.js';
 // prompt questions.
 import {
@@ -39,8 +39,6 @@ console.clear();
 // retrieve user input from terminal
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
-console.log(usrInput);
-
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
@@ -48,5 +46,5 @@ let ankiEngNote = { word: usrInput };
 
 // get wordreference.com's & dictionary.com's data
 ankiEngNote = await getWRefData(usrInput);
-let temp = await getDictData(usrInput);
-console.log(temp);
+let wordIPA = await getIPA(usrInput);
+console.log(ankiEngNote);
