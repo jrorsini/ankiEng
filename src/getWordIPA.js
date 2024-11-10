@@ -5,7 +5,7 @@ import axios from 'axios';
  * @param {String} word list of jlpt's new words to add to Anki.
  * @return {Array} Array containing the IPA.
  */
-export default async function getWordAPI(word) {
+export default async function getWordIPA(word) {
     try {
         let dictionaryapiJSON = await axios.get(
             `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
@@ -13,12 +13,11 @@ export default async function getWordAPI(word) {
         return [
             ...new Set(
                 dictionaryapiJSON.data.map((e) =>
-                    e.phonetic ? e.phonetic : ''
+                    e.phonetic ? e.phonetic.replaceAll('/', '') : ''
                 )
             ),
         ][0];
-    } catch (error) {
-        console.error(error);
-        return;
+    } catch (err) {
+        return err;
     }
 }

@@ -20,7 +20,8 @@
  */
 
 // API's handlers.
-import { getIPA, getWRefData } from './utils/new-api.js';
+import { getWRefData } from './utils/new-api.js';
+import { getThesaurusSynonyms } from './src/getThesaurusSynonyms.js';
 import { logSearchResults } from './utils/searchResultslogs.js';
 // prompt questions.
 import {
@@ -32,6 +33,7 @@ import {
 import { startSpinner } from './utils/cli-loader.js';
 
 import { addCard } from './anki.js';
+import getWordIPA from './src/getWordIPA.js';
 
 // clear log.
 console.clear();
@@ -46,5 +48,10 @@ let ankiEngNote = { word: usrInput };
 
 // get wordreference.com's & dictionary.com's data
 ankiEngNote = await getWRefData(usrInput);
-let wordIPA = await getIPA(usrInput);
+let wordIPA = await getWordIPA(usrInput);
+let synonyms = await getThesaurusSynonyms(usrInput);
+let getWordAndSynonymNuanceDiff = '';
+
+console.log(wordIPA);
 console.log(ankiEngNote);
+console.log(synonyms);

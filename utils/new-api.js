@@ -33,20 +33,3 @@ export async function getWRefData(word) {
         return err;
     }
 }
-
-export async function getIPA(userInput) {
-    try {
-        let dictionaryapiJSON = await axios.get(
-            `https://api.dictionaryapi.dev/api/v2/entries/en/${userInput}`
-        );
-        return [
-            ...new Set(
-                dictionaryapiJSON.data.map((e) =>
-                    e.phonetic ? e.phonetic.replaceAll('/', '') : ''
-                )
-            ),
-        ][0];
-    } catch (err) {
-        return err;
-    }
-}
