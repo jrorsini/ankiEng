@@ -48,10 +48,10 @@ let ankiEngNote = { word: usrInput };
 
 // get wordreference.com's & dictionary.com's data
 ankiEngNote = await getWRefData(usrInput);
-let wordIPA = await getWordIPA(usrInput);
+let ipa = await getWordIPA(usrInput);
 let synonyms = await getThesaurusSynonyms(usrInput);
 let getWordAndSynonymNuanceDiff = '';
 
-console.log(wordIPA);
+console.log(ipa);
 console.log(ankiEngNote);
 console.log(synonyms);

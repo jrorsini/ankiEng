@@ -19,7 +19,7 @@ export async function getThesaurusSynonyms(userInput) {
                 const wordType = $(element)
                     .find('button')
                     .text()
-                    .replace(/\s\([0-9]\)/gi, ''); // For example, "adjective"
+                    .replace(/\s\([0-9]+\)/gi, ''); // For example, "adjective"
                 const meaningList = [];
 
                 // Find each synonym or meaning under this section
@@ -37,6 +37,7 @@ export async function getThesaurusSynonyms(userInput) {
 
         return meanings;
     } catch (error) {
-        console.error('Error fetching data : ', error);
+        // console.error('Error fetching data : ', error);
+        return '';
     }
 }
