@@ -34,6 +34,7 @@ import { startSpinner } from './utils/cli-loader.js';
 
 import { addCard } from './anki.js';
 import getWordIPA from './src/getWordIPA.js';
+import chalk from 'chalk';
 
 // clear log.
 console.clear();
@@ -52,6 +53,30 @@ let ipa = await getWordIPA(usrInput);
 let synonyms = await getThesaurusSynonyms(usrInput);
 let getWordAndSynonymNuanceDiff = '';
 
-console.log(ipa);
+console.log(
+    chalk.yellow(`
+        =====================================================================
+        ----- IPA -----------------------------------------------------------
+        =====================================================================
+    `)
+);
+
+console.log(`\t${ipa}`);
+
+console.log(
+    chalk.yellow(`
+        =====================================================================
+        ----- WORDREFERENCE -------------------------------------------------
+        =====================================================================
+    `)
+);
 console.log(ankiEngNote);
+
+console.log(
+    chalk.yellow(`
+        =====================================================================
+        ----- SYNONYMS ------------------------------------------------------
+        =====================================================================
+    `)
+);
 console.log(synonyms);
