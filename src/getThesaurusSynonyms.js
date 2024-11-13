@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-export async function getThesaurusSynonyms(userInput) {
+export default async function getThesaurusSynonyms(userInput) {
     try {
         // Load the thesaurus page for the word
         const { data } = await axios.get(

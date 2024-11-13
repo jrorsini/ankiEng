@@ -21,8 +21,9 @@
 
 // API's handlers.
 import { getWRefData } from './utils/new-api.js';
-import { getThesaurusSynonyms } from './src/getThesaurusSynonyms.js';
+import getThesaurusSynonyms from './src/getThesaurusSynonyms.js';
 import { logSearchResults } from './utils/searchResultslogs.js';
+import getWordReferenceSynonyms from './src/getWordReferenceSynonyms.js';
 // prompt questions.
 import {
     chooseTranslation,
@@ -50,7 +51,6 @@ let ankiEngNote = { word: usrInput };
 // get wordreference.com's & dictionary.com's data
 ankiEngNote = await getWRefData(usrInput);
 let ipa = await getWordIPA(usrInput);
-let synonyms = await getThesaurusSynonyms(usrInput);
 let getWordAndSynonymNuanceDiff = '';
 
 console.log(
@@ -79,4 +79,7 @@ console.log(
         =====================================================================
     `)
 );
-console.log(synonyms);
+
+let synonyms = await getWordReferenceSynonyms(usrInput);
+
+// console.log(synonyms);

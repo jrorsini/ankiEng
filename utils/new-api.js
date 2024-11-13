@@ -10,7 +10,7 @@ const reverso = new Reverso();
 
 export async function getWRefData(word) {
     try {
-        let wrData = await wr(word, 'en', 'fr');
+        let wrData = await wr(word, 'en', 'en');
         const arr = wrData.translations.map((e) => e.translations);
         let translations = [].concat(
             ...arr.map((inArr) => [].concat(...inArr))
