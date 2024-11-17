@@ -53,33 +53,25 @@ ankiEngNote = await getWRefData(usrInput);
 let ipa = await getWordIPA(usrInput);
 let getWordAndSynonymNuanceDiff = '';
 
-console.log(
-    chalk.yellow(`
-        =====================================================================
-        ----- IPA -----------------------------------------------------------
-        =====================================================================
-    `)
-);
-
-console.log(`\t${ipa}`);
-
-console.log(
-    chalk.yellow(`
-        =====================================================================
-        ----- WORDREFERENCE -------------------------------------------------
-        =====================================================================
-    `)
-);
-console.log(ankiEngNote);
-
-console.log(
-    chalk.yellow(`
-        =====================================================================
-        ----- SYNONYMS ------------------------------------------------------
-        =====================================================================
-    `)
-);
-
+// let synonyms = await getThesaurusSynonyms(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
 
-// console.log(synonyms);
+function terminalLog(word) {
+    console.log(`${word} - ${chalk.bold.green(ipa)}`);
+
+    console.log(
+        chalk.yellow(`
+        ----- WORDREFERENCE -------------------------------------------------
+    `)
+    );
+    console.log(ankiEngNote);
+
+    console.log(
+        chalk.yellow(`
+        ----- SYNONYMS ------------------------------------------------------
+    `)
+    );
+    console.log(synonyms);
+}
+
+terminalLog(usrInput);
