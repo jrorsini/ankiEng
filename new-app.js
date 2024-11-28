@@ -20,10 +20,10 @@
  */
 
 // API's handlers.
-import { getWRefData } from './utils/new-api.js';
-import getThesaurusSynonyms from './src/getThesaurusSynonyms.js';
-import { logSearchResults } from './utils/searchResultslogs.js';
-import getWordReferenceSynonyms from './src/getWordReferenceSynonyms.js';
+import {
+    getWordReferenceSynonyms,
+    getWordReferenceDefinitions,
+} from './src/getWordReferenceSynonyms.js';
 // prompt questions.
 import {
     chooseTranslation,
@@ -34,7 +34,6 @@ import {
 import { startSpinner } from './utils/cli-loader.js';
 
 import { addCard } from './anki.js';
-import getWordIPA from './src/getWordIPA.js';
 import chalk from 'chalk';
 
 // clear log.
@@ -49,12 +48,12 @@ let ankiEngNote = { word: usrInput };
 // DATA FETCH
 
 // get wordreference.com's & dictionary.com's data
-ankiEngNote = await getWRefData(usrInput);
-let ipa = await getWordIPA(usrInput);
-let getWordAndSynonymNuanceDiff = '';
 
 // let synonyms = await getThesaurusSynonyms(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
+let definitions = await getWordReferenceDefinitions(usrInput);
+
+// console.log(definitions);
 
 function terminalLog(word) {
     console.log(`${word} - ${chalk.bold.green(ipa)}`);
@@ -64,7 +63,6 @@ function terminalLog(word) {
         ----- WORDREFERENCE -------------------------------------------------
     `)
     );
-    console.log(ankiEngNote);
 
     console.log(
         chalk.yellow(`
@@ -74,4 +72,4 @@ function terminalLog(word) {
     console.log(synonyms);
 }
 
-terminalLog(usrInput);
+// terminalLog(usrInput);

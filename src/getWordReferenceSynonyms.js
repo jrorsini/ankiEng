@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import chalk from 'chalk';
 
 function formatWordReferenceSynonyms(content) {
     /*  
@@ -33,7 +34,43 @@ function formatWordReferenceSynonyms(content) {
     return res;
 }
 
-export default async function getWordReferenceSynonyms(userInput) {
+export async function getWordReferenceDefinitions(userInput) {
+    try {
+        const { data } = await axios.get(
+            `https://www.wordreference.com/definition/${userInput}`
+        );
+
+        const $ = cheerio.load(data);
+
+        let content = [];
+
+        const def = {};
+
+        $(
+            'div.entryRH > span.rh_pdef > span.rh_pos, div.entryRH > ol > li > span.rh_def'
+        ).each((i, e) => {
+            const $el = $(e);
+            if ($el.hasClass('rh_pos')) {
+                def['type'] = $el.text();
+            } else if ($el.hasClass('rh_def')) {
+                let filteredElements = $el.not('span.rh_lab, span.rh_cat');
+                console.log(filteredElements.text());
+                def['meaning'] = filteredElements.text();
+            }
+
+            // console.log(def);
+
+            content.push(def);
+        });
+
+        return content;
+    } catch (error) {
+        console.error('Error fetching data : ', error);
+        return '';
+    }
+}
+
+export async function getWordReferenceSynonyms(userInput) {
     try {
         const { data } = await axios.get(
             `https://www.wordreference.com/synonyms/${userInput}`
@@ -48,7 +85,7 @@ export default async function getWordReferenceSynonyms(userInput) {
 
         return formatWordReferenceSynonyms(content);
     } catch (error) {
-        // console.error('Error fetching data : ', error);
+        console.error('Error fetching data : ', error);
         return '';
     }
 }
