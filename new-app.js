@@ -85,30 +85,35 @@ function searchResultLogTranslations(translations) {
 
     ordredTranslations.map((e) => {
         console.log(
-            `${chalk.red.bold(`${e.fromType}`)} ${chalk.red(
+            `${chalk.red(`${e.fromType}`)} ${chalk.red.bold(
                 e.from
-            )}・${chalk.cyan.bold(`${e.toType}`)} ${chalk.cyan(e.to)}`
+            )}・${chalk.cyan(`${e.toType}`)} ${chalk.cyan.bold(e.to)}`
         );
 
-        e.example.map((s) => {
-            const en_match = getClosestMatchingWord(e.from, s.from);
-            const fr_match = getClosestMatchingWord(e.to, s.to);
+        if (e.example.from) {
+            const en_match = getClosestMatchingWord(e.from, e.example.from);
+
             console.log(
-                `\t${s.from.replace(
+                `\t${e.example.from.replace(
                     en_match,
-                    chalk.bold.underline.red(en_match)
-                )}\n\t${fr_ex}`
-            );
-            console.log(
-                `\t${e.fr.replace(
-                    fr_match,
-                    chalk.bold.underline.cyan(fr_match)
+                    chalk.bold.underline.italic.red(en_match)
                 )}`
             );
-            return s;
-        });
-        e.example.from && console.log(`${`\t${e.example.from}`}`);
-        e.example.to && console.log(`${`\t${e.example.to}`}`);
+        }
+
+        if (e.example.to) {
+            const fr_match = getClosestMatchingWord(e.to, e.example.to);
+
+            console.log(
+                `\t${e.example.to.replace(
+                    fr_match,
+                    chalk.bold.underline.italic.cyan(fr_match)
+                )}`
+            );
+        }
+
+        // e.example.from && console.log(`${`\t${e.example.from}`}`);
+        // e.example.to && console.log(`${`\t${e.example.to}`}`);
     });
 }
 
