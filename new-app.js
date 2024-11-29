@@ -53,7 +53,8 @@ let ankiEngNote = { word: usrInput };
 let synonyms = await getWordReferenceSynonyms(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
 
-// console.log(definitions);
+console.log(synonyms);
+console.log(definitions);
 
 function terminalLog(word) {
     console.log(`${word} - ${chalk.bold.green(ipa)}`);

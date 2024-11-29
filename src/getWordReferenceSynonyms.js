@@ -31,7 +31,7 @@ function formatWordReferenceSynonyms(content) {
     });
     // console.log(res);
 
-    return res;
+    return res.hasOwnProperty('') ? res[''][0]['synonyms'] : res;
 }
 
 export async function getWordReferenceDefinitions(userInput) {
@@ -44,26 +44,37 @@ export async function getWordReferenceDefinitions(userInput) {
 
         let content = [];
 
-        const def = {};
+        let def = {};
 
         $(
-            'div.entryRH > span.rh_pdef > span.rh_pos, div.entryRH > ol > li > span.rh_def'
+            'div.entryRH > span.rh_pdef > span.rh_pos, div.entryRH > span.rh_empos, div.entryRH > ol > li > span.rh_def'
         ).each((i, e) => {
             const $el = $(e);
-            if ($el.hasClass('rh_pos')) {
+            if ($el.hasClass('rh_pos') || $el.hasClass('rh_empos')) {
                 def['type'] = $el.text();
             } else if ($el.hasClass('rh_def')) {
-                let filteredElements = $el.not('span.rh_lab, span.rh_cat');
-                console.log(filteredElements.text());
-                def['meaning'] = filteredElements.text();
+                if (!def.hasOwnProperty('type')) {
+                    def['type'] = content[content.length - 1]['type'];
+                }
+                def['meaning'] = $el.text();
+                content.push(def);
+                def = {};
             }
-
-            // console.log(def);
-
-            content.push(def);
         });
 
-        return content;
+        let FormattedContent = {};
+
+        content.map((e) => {
+            let wordType = e['type'].replaceAll('.', '');
+
+            if (FormattedContent.hasOwnProperty(wordType)) {
+                FormattedContent[wordType].push(e['meaning']);
+            } else {
+                FormattedContent[wordType] = [e['meaning']];
+            }
+        });
+
+        return FormattedContent;
     } catch (error) {
         console.error('Error fetching data : ', error);
         return '';
