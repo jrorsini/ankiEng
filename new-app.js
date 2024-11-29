@@ -1,4 +1,4 @@
-// "astute" is a hard for me to guess. Maybe it'd be best if I had to go from french "perspicace"
+/// "astute" is a hard for me to guess. Maybe it'd be best if I had to go from french "perspicace"
 // "tétine" is a word that I should study both ways
 // "rougeurs", "driveway" needs a picture
 // "guetteur, homme de guet" is not a word easy to guess for lookout, should probably content with getting the english word, even from sentence example.
@@ -64,6 +64,6 @@ let synonyms = await getWordReferenceSynonyms(usrInput);
 stopSpinner();
 console.log(`${usrInput}`);
 
-console.log(definitions);
-console.log(translations);
+// console.log(definitions);
+// console.log(translations);
 console.log(synonyms);

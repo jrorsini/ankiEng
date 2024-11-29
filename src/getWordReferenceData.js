@@ -1,7 +1,12 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import wr from 'wordreference-api';
-import { formatWordReferenceTranslations } from './wordReferenceFormatters.js';
+import {
+    formatWordReferenceTranslations,
+    formatWordReferenceSynonyms,
+} from './wordReferenceFormatters.js';
+
+//////////////////////////////////// TRANSLATIONS
 
 export async function getWordReferenceTranslations(word) {
     try {
@@ -11,6 +16,8 @@ export async function getWordReferenceTranslations(word) {
         return err;
     }
 }
+
+//////////////////////////////////// DEFINITIONS
 
 export async function getWordReferenceDefinitions(userInput) {
     try {
@@ -59,6 +66,8 @@ export async function getWordReferenceDefinitions(userInput) {
     }
 }
 
+//////////////////////////////////// SYNONYMES
+
 export async function getWordReferenceSynonyms(userInput) {
     try {
         const { data } = await axios.get(
@@ -72,7 +81,7 @@ export async function getWordReferenceSynonyms(userInput) {
             content.push($(e).text());
         });
 
-        return content;
+        return formatWordReferenceSynonyms(content);
     } catch (error) {
         console.error('Error fetching data : ', error);
         return '';

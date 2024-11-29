@@ -18,6 +18,16 @@ function getClosestMatchingWord(wordToMatch, sentence) {
     return closestMatch;
 }
 
+export function searchResultLogSynonyms(res) {
+    res.hasOwnProperty('')
+        ? console.log(
+              `${chalk.underline.bold('Synonyms')} : ${chalk.green(
+                  res[''][0]['synonyms'].join(', ')
+              )}`
+          )
+        : console.log(res);
+}
+
 export function logSearchResults(word, translations, definitions, synonyms) {
     // clear log
     console.clear();
