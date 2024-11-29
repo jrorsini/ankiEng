@@ -26,14 +26,12 @@ import {
     getWordReferenceTranslations,
 } from './src/getWordReferenceData.js';
 
-import natural from 'natural';
-
 // prompt questions.
-import {
-    chooseTranslation,
-    chooseDefinition,
-    chooseTranslationType,
-} from './prompt.js';
+// import {
+//     chooseTranslation,
+//     chooseDefinition,
+//     chooseTranslationType,
+// } from './prompt.js';
 
 import { startSpinner } from './utils/cli-loader.js';
 
@@ -59,36 +57,9 @@ const stopSpinner = startSpinner(usrInput);
 
 // DATA FETCH
 
-function getClosestMatchingWord(wordToMatch, sentence) {
-    const wordsInSentence = sentence.split(' ');
-
-    let closestMatch = null;
-    let minDistance = Infinity;
-
-    wordsInSentence.forEach((word) => {
-        const distance = natural.LevenshteinDistance(wordToMatch, word);
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestMatch = word;
-        }
-    });
-
-    return closestMatch;
-}
-
-// let synonyms = await getThesaurusSynonyms(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
 let translations = await getWordReferenceTranslations(usrInput);
 
 stopSpinner();
-
-function searchResultLogDefinitions(definitions) {
-    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
-
-    for (let wordType in definitions) {
-        console.log(`${chalk.red.underline(wordType)}`);
-        definitions[wordType].map((d) => console.log(`・${d}`));
-    }
-}
 console.log(`${usrInput}`);

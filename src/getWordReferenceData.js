@@ -1,9 +1,10 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import chalk from 'chalk';
+import natural from 'natural';
 import wr from 'wordreference-api';
 
-export default async function getWordReferenceTranslations(word) {
+export async function getWordReferenceTranslations(word) {
     try {
         let WordReferenceRes = await wr(word, 'en', 'fr');
         return formatWordReferenceTranslations(WordReferenceRes);
@@ -72,7 +73,7 @@ export async function getWordReferenceSynonyms(userInput) {
             content.push($(e).text());
         });
 
-        return formatWordReferenceSynonyms(content);
+        return content;
     } catch (error) {
         console.error('Error fetching data : ', error);
         return '';

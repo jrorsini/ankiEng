@@ -40,6 +40,23 @@ export function logSearchResults(word, translations, definitions, synonyms) {
     logDefinitions(definitions);
 }
 
+function getClosestMatchingWord(wordToMatch, sentence) {
+    const wordsInSentence = sentence.split(' ');
+
+    let closestMatch = null;
+    let minDistance = Infinity;
+
+    wordsInSentence.forEach((word) => {
+        const distance = natural.LevenshteinDistance(wordToMatch, word);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestMatch = word;
+        }
+    });
+
+    return closestMatch;
+}
+
 function searchResultLogTranslations(translations) {
     console.log(`\n\t${chalk.bgWhiteBright.black.bold(` TRANSLATIONS `)}\n`);
 
@@ -76,6 +93,15 @@ function searchResultLogTranslations(translations) {
             );
         }
     });
+}
+
+function searchResultLogDefinitions(definitions) {
+    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
+
+    for (let wordType in definitions) {
+        console.log(`${chalk.red.underline(wordType)}`);
+        definitions[wordType].map((d) => console.log(`・${d}`));
+    }
 }
 
 /*
