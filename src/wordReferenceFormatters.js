@@ -42,7 +42,7 @@ export function formatWordReferenceSynonyms(content) {
  * @param {Array} WordReferenceRes the Word Reference's response.
  * @return {Array} Array with all the formatted translations listed.
  */
-function formatWordReferenceTranslations(WordReferenceRes) {
+export function formatWordReferenceTranslations(WordReferenceRes) {
     const arr = WordReferenceRes.translations.map((e) => e.translations);
     return [].concat(...arr.map((inArr) => [].concat(...inArr))).map((e) => ({
         ...e,
@@ -53,4 +53,20 @@ function formatWordReferenceTranslations(WordReferenceRes) {
             to: e.example.to.length > 0 ? e.example.to[0] : '',
         },
     }));
+}
+
+export function formatWordReferenceDefinitions(content) {
+    let FormattedContent = {};
+
+    content.map((e) => {
+        let wordType = e['type'].replaceAll('.', '');
+
+        if (FormattedContent.hasOwnProperty(wordType)) {
+            FormattedContent[wordType].push(e['meaning']);
+        } else {
+            FormattedContent[wordType] = [e['meaning']];
+        }
+    });
+
+    return FormattedContent;
 }

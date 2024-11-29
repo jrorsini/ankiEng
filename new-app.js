@@ -57,9 +57,13 @@ const stopSpinner = startSpinner(usrInput);
 
 // DATA FETCH
 
-let synonyms = await getWordReferenceSynonyms(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
 let translations = await getWordReferenceTranslations(usrInput);
+let synonyms = await getWordReferenceSynonyms(usrInput);
 
 stopSpinner();
 console.log(`${usrInput}`);
+
+console.log(definitions);
+console.log(translations);
+console.log(synonyms);
