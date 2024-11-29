@@ -26,6 +26,8 @@ import {
     getWordReferenceTranslations,
 } from './src/getWordReferenceData.js';
 
+import { logSearchResults } from './src/searchResultsLogs.js';
+
 // prompt questions.
 // import {
 //     chooseTranslation,
@@ -35,11 +37,7 @@ import {
 
 import { startSpinner } from './utils/cli-loader.js';
 
-import { addCard } from './anki.js';
-import chalk from 'chalk';
-
 // clear log.
-console.clear();
 
 // retrieve user input from terminal
 const usrInput = process.argv
@@ -53,15 +51,10 @@ const usrInput = process.argv
 const stopSpinner = startSpinner(usrInput);
 
 // DATA FETCH
-
 let definitions = await getWordReferenceDefinitions(usrInput);
 let translations = await getWordReferenceTranslations(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
 
 stopSpinner();
 
-console.log(`${usrInput}`);
-
-console.log(definitions);
-console.log(translations);
-console.log(synonyms);
+logSearchResults(usrInput, definitions, translations, synonyms);
