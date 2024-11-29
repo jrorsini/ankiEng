@@ -54,6 +54,9 @@ const usrInput = process.argv
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
 
+// starting spinner
+const stopSpinner = startSpinner(usrInput);
+
 // DATA FETCH
 
 function getClosestMatchingWord(wordToMatch, sentence) {
@@ -77,6 +80,8 @@ function getClosestMatchingWord(wordToMatch, sentence) {
 let synonyms = await getWordReferenceSynonyms(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
 let translations = await getWordReferenceTranslations(usrInput);
+
+stopSpinner();
 
 function searchResultLogDefinitions(definitions) {
     console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
