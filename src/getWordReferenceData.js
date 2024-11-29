@@ -1,41 +1,15 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import chalk from 'chalk';
+import wr from 'wordreference-api';
 
-function formatWordReferenceSynonyms(content) {
-    /*  
-        returned value schema.
-        {
-            wordType : {
-                meaning : '',
-                synonyms : []
-            }
-        }
-    */
-
-    let res = {};
-
-    content.map((e) => {
-        let split = e.split(/Synonyms:/gi);
-        let synonymHeader = split[0].slice(7).split(/\:\s/gi);
-        if (!synonymHeader) return false;
-        let wordType = synonymHeader[0];
-        let wordMeaning = synonymHeader[1];
-        let synonyms = split[1].split(/Antonyms:/gi)[0].split(', ');
-
-        if (res.hasOwnProperty(wordType)) {
-            res[wordType].push({ meaning: wordMeaning, synonyms });
-        } else {
-            res[wordType] = [{ meaning: wordMeaning, synonyms }];
-        }
-    });
-    // console.log(res);
-
-    return res.hasOwnProperty('')
-        ? `${chalk.underline.bold('Synonyms')} : ${chalk.green(
-              res[''][0]['synonyms'].join(', ')
-          )}`
-        : res;
+export default async function getWordReferenceTranslations(word) {
+    try {
+        let WordReferenceRes = await wr(word, 'en', 'fr');
+        return formatWordReferenceTranslations(WordReferenceRes);
+    } catch (err) {
+        return err;
+    }
 }
 
 export async function getWordReferenceDefinitions(userInput) {
