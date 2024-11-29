@@ -87,24 +87,3 @@ function searchResultLogDefinitions(definitions) {
     }
 }
 console.log(`${usrInput}`);
-searchResultLogTranslations(translations);
-searchResultLogDefinitions(definitions);
-
-console.log(synonyms);
-
-function terminalLog(word) {
-    console.log(
-        chalk.yellow(`
-        ----- WORDREFERENCE -------------------------------------------------
-    `)
-    );
-
-    console.log(
-        chalk.yellow(`
-        ----- SYNONYMS ------------------------------------------------------
-    `)
-    );
-    console.log(synonyms);
-}
-
-// terminalLog(usrInput);
