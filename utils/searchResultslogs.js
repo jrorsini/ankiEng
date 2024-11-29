@@ -30,16 +30,32 @@ export function logSearchResults(ankiEngNote) {
     )} RESULTS FOR ${chalk.yellow.underline.bold(word.toUpperCase())}`;
 
     // log search header
-    log(searchHeader);
+    console.log(searchHeader);
 
     // add underline based on search header's lenght
-    log(`-`.repeat(searchHeader.length - 28));
+    console.log(`-`.repeat(searchHeader.length - 28));
 
     // log translations
     logTranslations(translations);
 
     // log definitions
     logDefinitions(definitions);
+}
+
+/*
+
+const log = console.log;
+
+export function logDefinitions(definitions) {
+    if (definitions) {
+        log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
+
+        definitions.map((e) => {
+            const typ = e.split(' - ')[0];
+            const def = e.split(' - ')[1];
+            console.log(`\n${chalk.bgGray(` ${typ.toUpperCase()} `)} : ${def}`);
+        });
+    }
 }
 
 export function logTranslations(translations) {
@@ -71,22 +87,6 @@ export function logTranslations(translations) {
         }
     });
 }
-
-export function logDefinitions(definitions) {
-    if (definitions) {
-        log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
-
-        definitions.map((e) => {
-            const typ = e.split(' - ')[0];
-            const def = e.split(' - ')[1];
-            console.log(`\n${chalk.bgGray(` ${typ.toUpperCase()} `)} : ${def}`);
-        });
-    }
-}
-
-/*
-
-const log = console.log;
 
 export function getMatchingWord(wordList, sentence) {
     for (let i = 0; i < wordList.length; i++) {
