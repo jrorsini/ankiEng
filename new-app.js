@@ -23,11 +23,11 @@
 import {
     getWordReferenceSynonyms,
     getWordReferenceDefinitions,
-} from './src/getWordReferenceSynonyms.js';
+    getWordReferenceTranslations,
+} from './src/getWordReferenceData.js';
 
 import natural from 'natural';
 
-import getWRefData from './src/getWRefData.js';
 // prompt questions.
 import {
     chooseTranslation,
@@ -76,45 +76,7 @@ function getClosestMatchingWord(wordToMatch, sentence) {
 // let synonyms = await getThesaurusSynonyms(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
-let translations = await getWRefData(usrInput);
-
-function searchResultLogTranslations(translations) {
-    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` TRANSLATIONS `)}\n`);
-
-    let ordredTranslations = translations.sort((a, b) =>
-        a.fromType.localeCompare(b.fromType)
-    );
-
-    ordredTranslations.map((e) => {
-        console.log(
-            `${chalk.red(`${e.fromType}`)} ${chalk.red.bold(
-                e.from
-            )}・${chalk.cyan(`${e.toType}`)} ${chalk.cyan.bold(e.to)}`
-        );
-
-        if (e.example.from) {
-            const en_match = getClosestMatchingWord(e.from, e.example.from);
-
-            console.log(
-                `\t${e.example.from.replace(
-                    en_match,
-                    chalk.bold.underline.italic.red(en_match)
-                )}`
-            );
-        }
-
-        if (e.example.to) {
-            const fr_match = getClosestMatchingWord(e.to, e.example.to);
-
-            console.log(
-                `\t${e.example.to.replace(
-                    fr_match,
-                    chalk.bold.underline.italic.cyan(fr_match)
-                )}`
-            );
-        }
-    });
-}
+let translations = await getWordReferenceTranslations(usrInput);
 
 function searchResultLogDefinitions(definitions) {
     console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
