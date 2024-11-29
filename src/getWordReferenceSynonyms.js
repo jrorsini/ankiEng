@@ -31,7 +31,11 @@ function formatWordReferenceSynonyms(content) {
     });
     // console.log(res);
 
-    return res.hasOwnProperty('') ? res[''][0]['synonyms'] : res;
+    return res.hasOwnProperty('')
+        ? `${chalk.underline.bold('Synonyms')} : ${chalk.green(
+              res[''][0]['synonyms'].join(', ')
+          )}`
+        : res;
 }
 
 export async function getWordReferenceDefinitions(userInput) {

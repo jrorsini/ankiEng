@@ -24,6 +24,8 @@ import {
     getWordReferenceSynonyms,
     getWordReferenceDefinitions,
 } from './src/getWordReferenceSynonyms.js';
+
+import getWRefData from './src/getWRefData.js';
 // prompt questions.
 import {
     chooseTranslation,
@@ -40,7 +42,12 @@ import chalk from 'chalk';
 console.clear();
 
 // retrieve user input from terminal
-const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
+const usrInput = process.argv
+    .slice(2)
+    .join(' ')
+    .toLowerCase()
+    .trim()
+    .replaceAll(/[^a-z\-]/gi, '');
 
 // create Anki note object.
 let ankiEngNote = { word: usrInput };
@@ -52,9 +59,30 @@ let ankiEngNote = { word: usrInput };
 // let synonyms = await getThesaurusSynonyms(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
+let translations = await getWRefData(usrInput);
 
-console.log(synonyms);
-console.log(definitions);
+console.log(translations);
+
+function searchResultLogTranslations(translations) {
+    let ordredTranslations = translations.sort((a, b) =>
+        a.fromType.localeCompare(b.fromType)
+    );
+
+    ordredTranslations.map((e) => {
+        console.log(
+            `${chalk.red.bold(`${e.fromType}`)} ${chalk.red(
+                e.from
+            )}・${chalk.cyan.bold(`${e.toType}`)} ${chalk.cyan(e.to)} ${
+                e.example.from ? `\t${e.example.from} ⇒` : ''
+            }`
+        );
+    });
+}
+
+searchResultLogTranslations(translations);
+
+// console.log(synonyms);
+// console.log(definitions);
 
 function terminalLog(word) {
     console.log(`${word} - ${chalk.bold.green(ipa)}`);

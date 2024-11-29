@@ -23,6 +23,6 @@ export default async function getWRefData(word) {
         let WordReferenceRes = await wr(word, 'en', 'fr');
         return getFormattedTranslationsList(WordReferenceRes);
     } catch (err) {
-        return this;
+        return err;
     }
 }
