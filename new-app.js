@@ -61,8 +61,6 @@ let synonyms = await getWordReferenceSynonyms(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
 let translations = await getWRefData(usrInput);
 
-console.log(translations);
-
 function searchResultLogTranslations(translations) {
     let ordredTranslations = translations.sort((a, b) =>
         a.fromType.localeCompare(b.fromType)
@@ -72,10 +70,10 @@ function searchResultLogTranslations(translations) {
         console.log(
             `${chalk.red.bold(`${e.fromType}`)} ${chalk.red(
                 e.from
-            )}・${chalk.cyan.bold(`${e.toType}`)} ${chalk.cyan(e.to)} ${
-                e.example.from ? `\t${e.example.from} ⇒` : ''
-            }`
+            )}・${chalk.cyan.bold(`${e.toType}`)} ${chalk.cyan(e.to)}`
         );
+        e.example.from && console.log(`${`\t${e.example.from}`}`);
+        e.example.to && console.log(`${`\t${e.example.to}`}`);
     });
 }
 
