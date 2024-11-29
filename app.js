@@ -21,7 +21,7 @@
 
 // API's handlers.
 import { getDictData, getWRefData } from './utils/api.js';
-import { logSearchResults } from './utils/searchResultslogs.js';
+import { logSearchResults } from './utils/searchResultsLogs.js';
 // prompt questions.
 import {
     chooseTranslation,

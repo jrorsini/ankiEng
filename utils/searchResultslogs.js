@@ -1,19 +1,21 @@
 import chalk from 'chalk';
 import natural from 'natural';
 
-const log = console.log;
+export function getClosestMatchingWord(wordToMatch, sentence) {
+    const wordsInSentence = sentence.split(' ');
 
-export function getMatchingWord(wordList, sentence) {
-    for (let i = 0; i < wordList.length; i++) {
-        const word = wordList[i];
-        const regex = new RegExp(`/${word}/`, 'i');
+    let closestMatch = null;
+    let minDistance = Infinity;
 
-        if (sentence.match(word)) {
-            return word; // Return the matching word
+    wordsInSentence.forEach((word) => {
+        const distance = natural.LevenshteinDistance(wordToMatch, word);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestMatch = word;
         }
-    }
+    });
 
-    return null; // No matching word found
+    return closestMatch;
 }
 
 export function logSearchResults(ankiEngNote) {
@@ -82,21 +84,21 @@ export function logDefinitions(definitions) {
     }
 }
 
-export function getClosestMatchingWord(wordToMatch, sentence) {
-    const wordsInSentence = sentence.split(' ');
+/*
 
-    let closestMatch = null;
-    let minDistance = Infinity;
+const log = console.log;
 
-    wordsInSentence.forEach((word) => {
-        const distance = natural.LevenshteinDistance(wordToMatch, word);
-        if (distance < minDistance) {
-            minDistance = distance;
-            closestMatch = word;
+export function getMatchingWord(wordList, sentence) {
+    for (let i = 0; i < wordList.length; i++) {
+        const word = wordList[i];
+        const regex = new RegExp(`/${word}/`, 'i');
+
+        if (sentence.match(word)) {
+            return word; // Return the matching word
         }
-    });
+    }
 
-    return closestMatch;
+    return null; // No matching word found
 }
 
 export function logLingueeData(data) {
@@ -150,3 +152,5 @@ export function logReversoData(data) {
         return e;
     });
 }
+
+*/
