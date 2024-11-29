@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import wr from 'wordreference-api';
-import { formatWordReferenceTranslations } from './wordReferenceFormatters';
+import { formatWordReferenceTranslations } from './wordReferenceFormatters.js';
 
 export async function getWordReferenceTranslations(word) {
     try {
