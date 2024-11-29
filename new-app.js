@@ -49,9 +49,6 @@ const usrInput = process.argv
     .trim()
     .replaceAll(/[^a-z\-]/gi, '');
 
-// create Anki note object.
-let ankiEngNote = { word: usrInput };
-
 // starting spinner
 const stopSpinner = startSpinner(usrInput);
 
@@ -62,8 +59,9 @@ let translations = await getWordReferenceTranslations(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
 
 stopSpinner();
+
 console.log(`${usrInput}`);
 
-// console.log(definitions);
-// console.log(translations);
+console.log(definitions);
+console.log(translations);
 console.log(synonyms);
