@@ -125,9 +125,7 @@ function searchResultLogDefinitions(definitions) {
     }
 }
 console.log(`${usrInput}`);
-console.log('');
 searchResultLogTranslations(translations);
-console.log('');
 searchResultLogDefinitions(definitions);
 
 console.log(synonyms);
