@@ -79,6 +79,8 @@ let definitions = await getWordReferenceDefinitions(usrInput);
 let translations = await getWRefData(usrInput);
 
 function searchResultLogTranslations(translations) {
+    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` TRANSLATIONS `)}\n`);
+
     let ordredTranslations = translations.sort((a, b) =>
         a.fromType.localeCompare(b.fromType)
     );
@@ -115,6 +117,8 @@ function searchResultLogTranslations(translations) {
 }
 
 function searchResultLogDefinitions(definitions) {
+    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
+
     for (let wordType in definitions) {
         console.log(`${chalk.red.underline(wordType)}`);
         definitions[wordType].map((d) => console.log(`・${d}`));
