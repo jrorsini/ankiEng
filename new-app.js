@@ -25,6 +25,8 @@ import {
     getWordReferenceDefinitions,
 } from './src/getWordReferenceSynonyms.js';
 
+import natural from 'natural';
+
 import getWRefData from './src/getWRefData.js';
 // prompt questions.
 import {
@@ -54,7 +56,22 @@ let ankiEngNote = { word: usrInput };
 
 // DATA FETCH
 
-// get wordreference.com's & dictionary.com's data
+function getClosestMatchingWord(wordToMatch, sentence) {
+    const wordsInSentence = sentence.split(' ');
+
+    let closestMatch = null;
+    let minDistance = Infinity;
+
+    wordsInSentence.forEach((word) => {
+        const distance = natural.LevenshteinDistance(wordToMatch, word);
+        if (distance < minDistance) {
+            minDistance = distance;
+            closestMatch = word;
+        }
+    });
+
+    return closestMatch;
+}
 
 // let synonyms = await getThesaurusSynonyms(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
@@ -72,6 +89,24 @@ function searchResultLogTranslations(translations) {
                 e.from
             )}・${chalk.cyan.bold(`${e.toType}`)} ${chalk.cyan(e.to)}`
         );
+
+        e.example.map((s) => {
+            const en_match = getClosestMatchingWord(e.from, s.from);
+            const fr_match = getClosestMatchingWord(e.to, s.to);
+            console.log(
+                `\t${s.from.replace(
+                    en_match,
+                    chalk.bold.underline.red(en_match)
+                )}\n\t${fr_ex}`
+            );
+            console.log(
+                `\t${e.fr.replace(
+                    fr_match,
+                    chalk.bold.underline.cyan(fr_match)
+                )}`
+            );
+            return s;
+        });
         e.example.from && console.log(`${`\t${e.example.from}`}`);
         e.example.to && console.log(`${`\t${e.example.to}`}`);
     });
