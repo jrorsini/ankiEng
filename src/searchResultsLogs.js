@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import natural from 'natural';
 
-export function getClosestMatchingWord(wordToMatch, sentence) {
+function getClosestMatchingWord(wordToMatch, sentence) {
     const wordsInSentence = sentence.split(' ');
 
     let closestMatch = null;
@@ -18,9 +18,7 @@ export function getClosestMatchingWord(wordToMatch, sentence) {
     return closestMatch;
 }
 
-export function logSearchResults(ankiEngNote) {
-    const { word, translations, definitions } = ankiEngNote;
-
+export function logSearchResults(word, translations, definitions, synonyms) {
     // clear log
     console.clear();
 
