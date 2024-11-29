@@ -111,20 +111,24 @@ function searchResultLogTranslations(translations) {
                 )}`
             );
         }
-
-        // e.example.from && console.log(`${`\t${e.example.from}`}`);
-        // e.example.to && console.log(`${`\t${e.example.to}`}`);
     });
 }
 
+function searchResultLogDefinitions(definitions) {
+    for (let wordType in definitions) {
+        console.log(`${chalk.red.underline(wordType)}`);
+        definitions[wordType].map((d) => console.log(`・${d}`));
+    }
+}
+console.log(`${usrInput}`);
+console.log('');
 searchResultLogTranslations(translations);
+console.log('');
+searchResultLogDefinitions(definitions);
 
-// console.log(synonyms);
-// console.log(definitions);
+console.log(synonyms);
 
 function terminalLog(word) {
-    console.log(`${word} - ${chalk.bold.green(ipa)}`);
-
     console.log(
         chalk.yellow(`
         ----- WORDREFERENCE -------------------------------------------------
