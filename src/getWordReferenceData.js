@@ -78,7 +78,11 @@ export async function getWordReferenceSynonyms(userInput) {
 
         let content = [];
         $('div#otherDicts div.clickable > div').each((i, e) => {
-            content.push($(e).text());
+            content.push(
+                $(e)
+                    .text()
+                    .replace(/\sCollocations/gi, '')
+            );
         });
 
         return formatWordReferenceSynonyms(content);
