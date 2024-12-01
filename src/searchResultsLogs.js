@@ -18,16 +18,6 @@ function getClosestMatchingWord(wordToMatch, sentence) {
     return closestMatch;
 }
 
-export function searchResultLogSynonyms(res) {
-    res.hasOwnProperty('')
-        ? console.log(
-              `${chalk.underline.bold('Synonyms')} : ${chalk.green(
-                  res[''][0]['synonyms'].join(', ')
-              )}`
-          )
-        : console.log(res);
-}
-
 export function logSearchResults(word, definitions, translations, synonyms) {
     console.clear();
 
@@ -40,6 +30,19 @@ export function logSearchResults(word, definitions, translations, synonyms) {
     searchResultLogDefinitions(definitions);
 
     searchResultLogTranslations(translations);
+
+    searchResultLogSynonyms(synonyms);
+}
+
+function searchResultLogDefinitions(definitions) {
+    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
+
+    for (let wordType in definitions) {
+        console.log(`${chalk.red.underline(wordType)}`);
+        definitions[wordType].map((d) =>
+            console.log(`${chalk.red.bold('・')}${d}`)
+        );
+    }
 }
 
 function searchResultLogTranslations(translations) {
@@ -80,11 +83,14 @@ function searchResultLogTranslations(translations) {
     });
 }
 
-function searchResultLogDefinitions(definitions) {
-    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
+function searchResultLogSynonyms(res) {
+    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` SYNONYMS `)}\n`);
 
-    for (let wordType in definitions) {
-        console.log(`${chalk.red.underline(wordType)}`);
-        definitions[wordType].map((d) => console.log(`・${d}`));
-    }
+    res.hasOwnProperty('')
+        ? console.log(
+              `${chalk.underline.bold('Synonyms')} : ${res[''][0][
+                  'synonyms'
+              ].join(', ')}`
+          )
+        : console.log(res);
 }

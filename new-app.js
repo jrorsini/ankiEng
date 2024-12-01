@@ -26,6 +26,8 @@ import {
     getWordReferenceTranslations,
 } from './src/getWordReferenceData.js';
 
+import {} from './prompt.js';
+
 import { logSearchResults } from './src/searchResultsLogs.js';
 
 // prompt questions.
@@ -38,6 +40,7 @@ import { logSearchResults } from './src/searchResultsLogs.js';
 import { startSpinner } from './utils/cli-loader.js';
 
 // clear log.
+console.clear();
 
 // retrieve user input from terminal
 const usrInput = process.argv
@@ -45,7 +48,7 @@ const usrInput = process.argv
     .join(' ')
     .toLowerCase()
     .trim()
-    .replaceAll(/[^a-z\-]/gi, '');
+    .replaceAll(/[^a-z\-\s]/gi, '');
 
 // starting spinner
 const stopSpinner = startSpinner(usrInput);

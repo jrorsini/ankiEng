@@ -77,6 +77,7 @@ export async function getWordReferenceSynonyms(userInput) {
         const $ = cheerio.load(data);
 
         let content = [];
+
         $('div#otherDicts div.clickable > div').each((i, e) => {
             content.push(
                 $(e)
