@@ -84,17 +84,16 @@ function searchResultLogTranslations(translations) {
 }
 
 function searchResultLogSynonyms(res) {
-    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` SYNONYMS `)}\n`);
+    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` SYNONYMS `)}`);
 
     if (res.hasOwnProperty('')) {
-        if (res[''].hasOwnProperty('')) {
+        if (res[''][0]['meaning'] === '') {
             console.log(
-                `${chalk.underline.bold('Synonyms')} : ${res[''][0][
+                `${chalk.underline.red.bold('Synonyms')} : ${res[''][0][
                     'synonyms'
                 ].join(', ')}`
             );
         } else {
-            console.log(res);
             res[''].map((e) => {
                 console.log(
                     `${chalk.bold.underline.red(e['meaning'])} ${chalk.bold.red(
@@ -104,6 +103,16 @@ function searchResultLogSynonyms(res) {
             });
         }
     } else {
-        console.log(res);
+        for (const wordType in res) {
+            console.log(`\n${chalk.bold.red(wordType)}`);
+
+            res[wordType].map((e) => {
+                console.log(
+                    `  ${chalk.underline.red(e['meaning'])} : ${e[
+                        'synonyms'
+                    ].join(', ')} `
+                );
+            });
+        }
     }
 }
