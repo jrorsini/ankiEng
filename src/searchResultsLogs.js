@@ -94,6 +94,7 @@ function searchResultLogSynonyms(res) {
                 ].join(', ')}`
             );
         } else {
+            console.log(``);
             res[''].map((e) => {
                 console.log(
                     `${chalk.bold.underline.red(e['meaning'])} ${chalk.bold.red(
