@@ -86,11 +86,24 @@ function searchResultLogTranslations(translations) {
 function searchResultLogSynonyms(res) {
     console.log(`\n\t${chalk.bgWhiteBright.black.bold(` SYNONYMS `)}\n`);
 
-    res.hasOwnProperty('')
-        ? console.log(
-              `${chalk.underline.bold('Synonyms')} : ${res[''][0][
-                  'synonyms'
-              ].join(', ')}`
-          )
-        : console.log(res);
+    if (res.hasOwnProperty('')) {
+        if (res[''].hasOwnProperty('')) {
+            console.log(
+                `${chalk.underline.bold('Synonyms')} : ${res[''][0][
+                    'synonyms'
+                ].join(', ')}`
+            );
+        } else {
+            console.log(res);
+            res[''].map((e) => {
+                console.log(
+                    `${chalk.bold.underline.red(e['meaning'])} ${chalk.bold.red(
+                        ':'
+                    )}\n\t${e['synonyms'].join(', ')} `
+                );
+            });
+        }
+    } else {
+        console.log(res);
+    }
 }
