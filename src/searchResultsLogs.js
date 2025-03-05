@@ -18,24 +18,12 @@ function getClosestMatchingWord(wordToMatch, sentence) {
     return closestMatch;
 }
 
-export function logSearchResults(word, definitions, translations, synonyms) {
-    console.clear();
-
-    const searchHeader = `${chalk.greenBright.bold(
-        `✓`
-    )} RESULTS FOR ${chalk.yellow.underline.bold(word.toUpperCase())}`;
-
-    console.log(searchHeader);
-
-    searchResultLogDefinitions(definitions);
-
-    searchResultLogTranslations(translations);
-
-    searchResultLogSynonyms(synonyms);
+function loggingHeader(title) {
+    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` ${title} `)}`);
 }
 
 function searchResultLogDefinitions(definitions) {
-    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` DEFINITIONS `)}`);
+    loggingHeader('DEFINITIONS');
 
     for (let wordType in definitions) {
         console.log(`${chalk.red.underline(wordType)}`);
@@ -46,7 +34,7 @@ function searchResultLogDefinitions(definitions) {
 }
 
 function searchResultLogTranslations(translations) {
-    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` TRANSLATIONS `)}\n`);
+    loggingHeader('TRANSLATIONS');
 
     let orderedTranslations = translations.sort((a, b) =>
         a.fromType.localeCompare(b.fromType)
@@ -84,7 +72,7 @@ function searchResultLogTranslations(translations) {
 }
 
 function searchResultLogSynonyms(res) {
-    console.log(`\n\t${chalk.bgWhiteBright.black.bold(` SYNONYMS `)}`);
+    loggingHeader('SYNONYMS');
 
     if (res.hasOwnProperty('')) {
         if (res[''][0]['meaning'] === '') {
@@ -116,4 +104,26 @@ function searchResultLogSynonyms(res) {
             });
         }
     }
+}
+
+export function logSearchResults(
+    word,
+    definitions,
+    translations,
+    synonyms,
+    reversoTranslation
+) {
+    console.clear();
+
+    const searchHeader = `${chalk.greenBright.bold(
+        `✓`
+    )} RESULTS FOR ${chalk.yellow.underline.bold(word.toUpperCase())}`;
+
+    console.log(searchHeader);
+
+    searchResultLogDefinitions(definitions);
+
+    searchResultLogTranslations(translations);
+
+    searchResultLogSynonyms(synonyms);
 }

@@ -26,6 +26,8 @@ import {
     getWordReferenceTranslations,
 } from './src/getWordReferenceData.js';
 
+import { getTranslationFromReverso } from './src/reverso.js';
+
 import {} from './prompt.js';
 
 import { logSearchResults } from './src/searchResultsLogs.js';
@@ -57,7 +59,12 @@ const stopSpinner = startSpinner(usrInput);
 let definitions = await getWordReferenceDefinitions(usrInput);
 let translations = await getWordReferenceTranslations(usrInput);
 let synonyms = await getWordReferenceSynonyms(usrInput);
+let reversoTranslation = await getTranslationFromReverso(usrInput);
 
 stopSpinner();
 
 logSearchResults(usrInput, definitions, translations, synonyms);
+
+console.log('\n+++++++++++++++++++\n');
+
+console.log(reversoTranslation);
