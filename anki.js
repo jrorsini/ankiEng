@@ -7,13 +7,22 @@ import chalk from 'chalk';
 const ankiUrl = 'http://127.0.0.1:8765';
 // deck's name
 const deckName = `0 🇺🇸 English`;
+
 /*
-- word
+- english
 - ipa
+- nuance
+- context
+- meaning
+- translations
+- visual
+- extra
+- type_from
+- type_to
 - example_en
 - example_fr
-- translation
-- type
+- source_link
+- source_thumbnail
 */
 
 export async function addCard() {
