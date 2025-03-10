@@ -13,33 +13,39 @@ function properPiping(stc) {
     );
 }
 
-export async function chooseTranslationType() {
+export async function chooseTranslationType(fetchedTranslations) {
+    const list_translations = fetchedTranslations.map(
+        (e) => `(${e.fromType}) ${e.from} | ${e.to}`
+    );
+
     const answers = await inquirer.prompt([
         {
             type: 'list',
-            name: 'type',
+            name: 'translation',
             message: `Which ${chalk.underline.bold.yellow(
                 'translation type'
             )}?`,
-            choices: this.fromTypes,
+            choices: list_translations, //`(${fetchedTranslations.fromType}) ${fetchedTranslations.from} | ${fetchedTranslations.to}`,
         },
     ]);
 
+    console.log(answers.translation);
+
     delete this.fromTypes;
 
-    // set selected translation
-    this['translations'] = this.translations.filter((e) =>
-        filterByTranslationType(e, answers.type)
-    );
+    // // set selected translation
+    // this['translations'] = this.translations.filter((e) =>
+    //     filterByTranslationType(e, answers.type)
+    // );
 
-    // set selected definition
-    if (this.definitions) {
-        this['definitions'] = this.definitions.filter((e) =>
-            filterByDefinitionType(e, answers.type)
-        );
-    }
+    // // set selected definition
+    // if (this.definitions) {
+    //     this['definitions'] = this.definitions.filter((e) =>
+    //         filterByDefinitionType(e, answers.type)
+    //     );
+    // }
 
-    return this;
+    // return this;
 }
 
 export async function chooseTranslation() {

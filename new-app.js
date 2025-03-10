@@ -28,7 +28,7 @@ import {
 
 import { getTranslationFromReverso } from './src/reverso.js';
 
-import {} from './prompt.js';
+import { chooseTranslationType } from './prompt.js';
 
 import { logSearchResults } from './src/searchResultsLogs.js';
 
@@ -56,15 +56,27 @@ const usrInput = process.argv
 const stopSpinner = startSpinner(usrInput);
 
 // DATA FETCH
-let definitions = await getWordReferenceDefinitions(usrInput);
-let translations = await getWordReferenceTranslations(usrInput);
-let synonyms = await getWordReferenceSynonyms(usrInput);
-let reversoTranslation = await getTranslationFromReverso(usrInput);
+let fetchedDefinitions = await getWordReferenceDefinitions(usrInput);
+let fetchedTranslations = await getWordReferenceTranslations(usrInput);
+let FetchedSynonyms = await getWordReferenceSynonyms(usrInput);
+let fetchedReversoTranslation = await getTranslationFromReverso(usrInput);
 
 stopSpinner();
 
-logSearchResults(usrInput, definitions, translations, synonyms);
+// logSearchResults(
+//     usrInput,
+//     fetchedDefinitions,
+//     fetchedTranslations,
+//     FetchedSynonyms,
+//     fetchedReversoTranslation
+// );
 
 console.log('\n+++++++++++++++++++\n');
+// console.log(fetchedDefinitions);
+// console.log('\n+++++++++++++++++++\n');
 
-console.log(reversoTranslation);
+await chooseTranslationType(fetchedTranslations);
+// console.log('\n+++++++++++++++++++\n');
+// console.log(FetchedSynonyms);
+// console.log('\n+++++++++++++++++++\n');
+// console.log(fetchedReversoTranslation);
