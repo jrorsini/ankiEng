@@ -14,9 +14,39 @@ function properPiping(stc) {
 }
 
 export async function chooseTranslationType(fetchedTranslations) {
-    const list_translations = fetchedTranslations.map(
-        (e) => `(${e.fromType}) ${e.from} | ${e.to}`
-    );
+    const list_translation_types = [
+        ...new Set(fetchedTranslations.map((e) => e.fromType)),
+    ].filter((e) => e !== '');
+
+    const answers = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'translation',
+            message: `Which ${chalk.underline.bold.yellow(
+                'translation type'
+            )}?`,
+            choices: list_translation_types,
+        },
+    ]);
+
+    return answers.translation;
+}
+
+export async function chooseReversoTranslation(fetchedReversoTranslation) {
+    const answers = await inquirer.prompt([
+        {
+            type: 'checkbox',
+            name: 'reversoTranslation',
+            message: `Which ${chalk.underline.bold.yellow('definitions')} ?`,
+            choices: fetchedReversoTranslation,
+        },
+    ]);
+
+    return answers.reversoTranslation.join(', ');
+}
+
+export async function chooseTranslation(fetchedTranslations) {
+    const list_translations = fetchedTranslations.map((e) => `${e.to}`);
 
     const answers = await inquirer.prompt([
         {
@@ -29,9 +59,9 @@ export async function chooseTranslationType(fetchedTranslations) {
         },
     ]);
 
-    console.log(answers.translation);
+    return fetchedTranslations.filter((e) => e.to === answers.translation)[0];
 
-    delete this.fromTypes;
+    // delete this.fromTypes;
 
     // // set selected translation
     // this['translations'] = this.translations.filter((e) =>
@@ -48,7 +78,7 @@ export async function chooseTranslationType(fetchedTranslations) {
     // return this;
 }
 
-export async function chooseTranslation() {
+export async function chooseTranslationOld() {
     const translationsArr = this.translations.map(
         (e) => `${e.to}${e.example.from && ` | ${e.example.from}`}`
     );

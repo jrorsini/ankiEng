@@ -33,7 +33,7 @@ function searchResultLogDefinitions(definitions) {
     }
 }
 
-function searchResultLogTranslations(translations) {
+export function searchResultLogTranslations(translations) {
     loggingHeader('TRANSLATIONS');
 
     let orderedTranslations = translations.sort((a, b) =>
@@ -121,9 +121,9 @@ export function logSearchResults(
 
     console.log(searchHeader);
 
-    searchResultLogDefinitions(definitions);
+    // searchResultLogDefinitions(definitions);
 
     searchResultLogTranslations(translations);
 
-    searchResultLogSynonyms(synonyms);
+    // searchResultLogSynonyms(synonyms);
 }

@@ -31,7 +31,7 @@ import {
 
 import { startSpinner } from './utils/cli-loader.js';
 
-import { addCard } from './anki.js';
+import { addCard } from './ankieng-card-handler.js';
 
 // clear log.
 console.clear();

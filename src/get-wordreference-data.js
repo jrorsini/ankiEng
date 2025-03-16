@@ -4,7 +4,7 @@ import wr from 'wordreference-api';
 import {
     formatWordReferenceTranslations,
     formatWordReferenceSynonyms,
-} from './wordReferenceFormatters.js';
+} from './wordreference-formatters.js';
 
 //////////////////////////////////// TRANSLATIONS
 

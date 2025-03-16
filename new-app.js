@@ -1,82 +1,90 @@
-/// "astute" is a hard for me to guess. Maybe it'd be best if I had to go from french "perspicace"
-// "tétine" is a word that I should study both ways
-// "rougeurs", "driveway" needs a picture
-// "guetteur, homme de guet" is not a word easy to guess for lookout, should probably content with getting the english word, even from sentence example.
-// would be more convenient to have "remarquable" as a word to guess in english. More useful to use "standout" in english than guessing it.
-
-/**
- * TO-DO-LIST
- *
- * Remove the definition field in Anki then also remove it from the app handlers.
- * The dictionary.com resource should be used only for IPA.
- * then change in the script to add a ruby row with the IPA in it.
- * form now on, only guess from word or context.
- */
-
-/**
- * TO TEST
- * wunderking
- * oxpecker (undefined example)
- */
-
 // API's handlers.
-import {
-    getWordReferenceSynonyms,
-    getWordReferenceDefinitions,
-    getWordReferenceTranslations,
-} from './src/getWordReferenceData.js';
+import { getWordReferenceTranslations } from './src/get-wordreference-data.js';
 
 import { getTranslationFromReverso } from './src/reverso.js';
 
-import { chooseTranslationType } from './prompt.js';
+import { addAnkiEngCard } from './ankieng-card-handler.js';
 
-import { logSearchResults } from './src/searchResultsLogs.js';
+import {
+    chooseTranslationType,
+    chooseTranslation,
+    chooseReversoTranslation,
+} from './prompt.js';
 
-// prompt questions.
-// import {
-//     chooseTranslation,
-//     chooseDefinition,
-//     chooseTranslationType,
-// } from './prompt.js';
+import { searchResultLogTranslations } from './src/search-results-logs.js';
 
 import { startSpinner } from './utils/cli-loader.js';
+import { ankiJap } from './ankiJap.js';
+
+function isEnglish(text) {
+    // Checks if the string contains any Roman characters (A-Z, a-z)
+    return /[A-Za-z]/.test(text);
+}
 
 // clear log.
 console.clear();
 
 // retrieve user input from terminal
-const usrInput = process.argv
-    .slice(2)
-    .join(' ')
-    .toLowerCase()
-    .trim()
-    .replaceAll(/[^a-z\-\s]/gi, '');
+const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim(); // .replaceAll(/[^a-z\-\s]/gi, '');
 
-// starting spinner
-const stopSpinner = startSpinner(usrInput);
+// check if input is english
 
-// DATA FETCH
-let fetchedDefinitions = await getWordReferenceDefinitions(usrInput);
-let fetchedTranslations = await getWordReferenceTranslations(usrInput);
-let FetchedSynonyms = await getWordReferenceSynonyms(usrInput);
-let fetchedReversoTranslation = await getTranslationFromReverso(usrInput);
+if (isEnglish(usrInput)) {
+    // starting spinner
+    const stopSpinner = startSpinner(usrInput);
 
-stopSpinner();
+    // DATA FETCH
+    let fetchedTranslations = await getWordReferenceTranslations(usrInput);
+    let fetchedReversoTranslation = await getTranslationFromReverso(usrInput);
 
-// logSearchResults(
-//     usrInput,
-//     fetchedDefinitions,
-//     fetchedTranslations,
-//     FetchedSynonyms,
-//     fetchedReversoTranslation
-// );
+    stopSpinner();
 
-console.log('\n+++++++++++++++++++\n');
-// console.log(fetchedDefinitions);
-// console.log('\n+++++++++++++++++++\n');
+    const note_fields = {
+        english: '',
+        ipa: '',
+        pronunciation: '',
+        audio: '',
+        nuance: '',
+        context: '',
+        meaning: '',
+        translations: '',
+        visual: '',
+        extra: '',
+        type_from: '',
+        type_to: '',
+        example_en: '',
+        example_fr: '',
+        source_link: '',
+        source_thumbnail: '',
+    };
 
-await chooseTranslationType(fetchedTranslations);
-// console.log('\n+++++++++++++++++++\n');
-// console.log(FetchedSynonyms);
-// console.log('\n+++++++++++++++++++\n');
-// console.log(fetchedReversoTranslation);
+    if (fetchedTranslations.length > 0) {
+        const translationType = await chooseTranslationType(
+            fetchedTranslations
+        );
+        fetchedTranslations = fetchedTranslations.filter(
+            (e) => e.fromType === translationType
+        );
+        searchResultLogTranslations(fetchedTranslations);
+        let { from, fromType, toType, to, example } = await chooseTranslation(
+            fetchedTranslations
+        );
+        console.log(example);
+
+        note_fields.english = from;
+        note_fields.translations = to;
+        note_fields.type_from = fromType;
+        note_fields.type_to = toType;
+        note_fields.example_en = example.from;
+        note_fields.example_fr = example.to;
+    }
+    const reversoTranslation = await chooseReversoTranslation(
+        fetchedReversoTranslation
+    );
+
+    note_fields.translations += `, ${reversoTranslation}`;
+    console.log(reversoTranslation);
+    await addAnkiEngCard(note_fields);
+} else {
+    await ankiJap(usrInput);
+}
