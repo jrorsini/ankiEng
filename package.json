@@ -2,7 +2,7 @@
     "name": "ankieng",
     "version": "1.0.0",
     "description": "## Todo List - handle 404 error - handle the case of 'acorn' - handle the case of tabs for 'boar'",
-    "main": "new-app.js",
+    "main": "app.js",
     "dependencies": {
         "ansi-escapes": "^4.3.2",
         "ansi-regex": "^5.0.1",
@@ -94,7 +94,7 @@
         "wordreference-api": "^1.1.0"
     },
     "scripts": {
-        "start": "node new-app.js",
+        "start": "node app.js",
         "test": "mocha"
     },
     "author": "",

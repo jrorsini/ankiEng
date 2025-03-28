@@ -1,9 +1,28 @@
 // import { addWordCard } from './anki.js';
-import { isKanji, toHiragana, toKatakana } from 'wanakana';
-import { tokenizer } from './tokenizer.js';
+import { isKanji, toHiragana, toRomaji } from 'wanakana';
+import { tokenizer } from './utils/tokenizer.js';
 import Reverso from 'reverso-api';
+import { chooseJapaneseReversoTranslation } from './prompt.js';
+import { addWordCard } from './ankijab-card-handler.js';
 
 const reverso = new Reverso();
+
+const note_fields = {
+    word: '',
+    reading: '',
+    reading_romaji: '',
+    translation: '',
+    traduction: '',
+    // definitions: '',
+    // audio: '',
+    // sample_jp: '',
+    // sample_tr: '',
+    // rude: '',
+    // img: '',
+    // memo_reading: '',
+    // source_link: '',
+    // source_thumbnail: '',
+};
 
 export async function generate_word_cards(input) {
     // list tokenized parts of the input and gives me reading and all that.
@@ -16,35 +35,29 @@ export async function generate_word_cards(input) {
         word_card = basicForm;
     }
 
-    // word_card = word_card.map((k) => ({
-    //     word: k.basic_form,
-    //     reading: toHiragana(k.reading),
-    // }));
-    // .filter((w) => isKanji(w.word));
+    note_fields.word = word_card.basic_form;
+    note_fields.reading = toHiragana(word_card.reading);
+    note_fields.reading_romaji = toRomaji(word_card.reading);
 
-    // for (let i = 0; i < word_card.length; i++) {
-    await reverso.getTranslation(
-        word_card.basic_form,
-        'japanese',
-        'french',
-        async (err, res) => {
-            if (err) throw new Error(err.message);
-            console.log(res);
+    // await reverso.getTranslation(
+    //     word_card.basic_form,
+    //     'japanese',
+    //     'french',
+    //     async (err, res) => {
+    //         if (err) throw new Error(err.message);
+    //         note_fields.traduction = [...new Set(res.translations)];
+    //     }
+    // );
 
-            // word_card[i] = {
-            //     ...word_card[i],
-            //     translations: res.translations,
-            //     voice: res.voice,
-            //     examples: res.context.examples,
-            //     rude: res.context.rude ? '1' : '0',
-            // };
-        }
-    );
-    // }
+    // console.log(note_fields);
 
-    console.log(word_card);
+    // let choosenJapaneseTranslations = await chooseJapaneseReversoTranslation(
+    //     note_fields.traduction
+    // );
 
-    return word_card;
+    // note_fields.traduction = choosenJapaneseTranslations;
+
+    return note_fields;
 }
 
 // add kanji cards to anki
@@ -56,4 +69,5 @@ export async function ankiJap(usrInput) {
 
     // word cards to go on Anki.
     let word_cards = await generate_word_cards(usrInput);
+    await addWordCard(word_cards);
 }

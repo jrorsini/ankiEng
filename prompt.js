@@ -45,6 +45,21 @@ export async function chooseReversoTranslation(fetchedReversoTranslation) {
     return answers.reversoTranslation.join(', ');
 }
 
+export async function chooseJapaneseReversoTranslation(
+    fetchedReversoTranslation
+) {
+    const answers = await inquirer.prompt([
+        {
+            type: 'checkbox',
+            name: 'reversoTranslation',
+            message: `Which ${chalk.underline.bold.yellow('definitions')} ?`,
+            choices: fetchedReversoTranslation,
+        },
+    ]);
+
+    return answers.reversoTranslation.join(', ');
+}
+
 export async function chooseTranslation(fetchedTranslations) {
     const list_translations = fetchedTranslations.map((e) => `${e.to}`);
 

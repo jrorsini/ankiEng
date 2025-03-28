@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
 const moduleURL = new URL(import.meta.url);
-const modulePath = dirname(fileURLToPath(moduleURL));
+const modulePath = dirname(fileURLToPath(moduleURL)).slice(0, -6);
 
 export function getTokenizer() {
     return new Promise((resolve, reject) => {

@@ -1,37 +1,18 @@
 import axios from 'axios';
-import { tokenizer } from './tokenizer.js';
-import { selectExample, selectTranslation } from './prompt.js';
 
 // https://foosoft.net/projects/anki-connect/index.html#deck-actions
 
 // Define the AnkiConnect API URL
 const ankiUrl = 'http://127.0.0.1:8765';
 
-let WdKanjiDeck = 'lang - 🇯🇵 ankiJap Word';
-
-const note_fields = {
-    word: '',
-    romaji: '',
-    reading: '',
-    traduction: '',
-    translation: '',
-    definitions: '',
-    audio: '',
-    sample_jp: '',
-    sample_tr: '',
-    rude: '',
-    img: '',
-    memo_reading: '',
-    source_link: '',
-    source_thumbnail: '',
-};
+let deckName = '1 - JAPANESE';
 
 // adding function for word cards
-export async function addWordCard(card) {
+export async function addWordCard(note_fields) {
     let note = {
-        deckName: 'lang - 🇯🇵 ankiJap Word',
-        modelName: 'ANKIJAP_NOTE_WORD',
-        fields: card,
+        deckName,
+        modelName: 'CUSTOM_NOTE_ANKIJAP_NEW',
+        fields: note_fields,
         options: { allowDuplicate: false },
     };
 
@@ -41,6 +22,17 @@ export async function addWordCard(card) {
         params: { note },
     });
 
-    res.data.error == null &&
-        console.log(`${card.word} card added successfully!`);
+    try {
+        const res = await axios.post(ankiUrl, {
+            action: 'addNote',
+            version: 6,
+            params: {
+                note,
+            },
+        });
+        console.log(`${note_fields.word} card added successfully!`);
+        return;
+    } catch (err) {
+        console.log(err);
+    }
 }
