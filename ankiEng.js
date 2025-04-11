@@ -1,0 +1,18 @@
+const note_fields = {
+    english: '',
+    ipa: '',
+    pronunciation: '',
+    audio: '',
+    nuance: '',
+    context: '',
+    meaning: '',
+    translations: '',
+    visual: '',
+    extra: '',
+    type_from: '',
+    type_to: '',
+    example_en: '',
+    example_fr: '',
+    source_link: '',
+    source_thumbnail: '',
+};

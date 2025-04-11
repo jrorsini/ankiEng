@@ -5,6 +5,8 @@ import { getTranslationFromReverso } from './src/reverso.js';
 
 import { addAnkiEngCard } from './ankieng-card-handler.js';
 
+import { exec } from 'child_process';
+
 import {
     chooseTranslationType,
     chooseTranslation,
@@ -35,7 +37,7 @@ if (isEnglish(usrInput)) {
 
     // DATA FETCH
     let fetchedTranslations = await getWordReferenceTranslations(usrInput);
-    let fetchedReversoTranslation = await getTranslationFromReverso(usrInput);
+    // let fetchedReversoTranslation = await getTranslationFromReverso(usrInput);
 
     stopSpinner();
 
@@ -78,13 +80,14 @@ if (isEnglish(usrInput)) {
         note_fields.example_en = example.from;
         note_fields.example_fr = example.to;
     }
-    const reversoTranslation = await chooseReversoTranslation(
-        fetchedReversoTranslation
-    );
+    // const reversoTranslation = await chooseReversoTranslation(
+    //     fetchedReversoTranslation
+    // );
 
-    note_fields.translations += `, ${reversoTranslation}`;
-    console.log(reversoTranslation);
+    // note_fields.translations += `, ${reversoTranslation}`;
+    // console.log(reversoTranslation);
     await addAnkiEngCard(note_fields);
 } else {
     await ankiJap(usrInput);
+    exec('osascript -e \'tell application "iTerm" to close first window\'');
 }

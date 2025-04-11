@@ -89,6 +89,7 @@
         "inquirer": "^9.2.0",
         "kuromoji": "^0.1.2",
         "natural": "^6.5.0",
+        "puppeteer": "^24.4.0",
         "unofficial-jisho-api": "^2.3.4",
         "wanakana": "^5.3.1",
         "wordreference-api": "^1.1.0"
