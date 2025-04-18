@@ -37,11 +37,11 @@ export async function get_Dictionnaire_Japonais(userInput) {
 
         $('ul.resultsList > li > a').each((i, e) => {
             const $el = $(e);
-            console.log(`${$el.children().eq(1).text().trim().split(' ')[0]}`);
-            console.log(`${$el.children().eq(1).text().trim().split(' ')[2]}`);
 
             content.push(
-                `${$el.children().eq(1).text().trim().split(' ')[1]} - ${$el
+                `${$el.children().eq(1).text().trim().split(' ')[0]} - ${
+                    $el.children().eq(1).text().trim().split(' ')[2]
+                } - ${$el.children().eq(1).text().trim().split(' ')[1]} - ${$el
                     .children()
                     .eq(2)
                     .text()
