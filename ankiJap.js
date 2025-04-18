@@ -4,7 +4,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import Reverso from 'reverso-api';
-import { chooseJapaneseReversoTranslation } from './prompt.js';
+import { chooseJapaneseTranslation } from './prompt.js';
 import { addWordCard } from './ankijab-card-handler.js';
 
 const reverso = new Reverso();
@@ -13,8 +13,8 @@ const note_fields = {
     word: '',
     reading: '',
     reading_romaji: '',
-    translation: '',
     traduction: '',
+    // translation: '',
     // definitions: '',
     // audio: '',
     // sample_jp: '',
@@ -33,13 +33,13 @@ export async function get_Dictionnaire_Japonais(userInput) {
         );
 
         const $ = cheerio.load(data);
-
         let content = [];
-
-        let def = {};
 
         $('ul.resultsList > li > a').each((i, e) => {
             const $el = $(e);
+            console.log(`${$el.children().eq(1).text().trim().split(' ')[0]}`);
+            console.log(`${$el.children().eq(1).text().trim().split(' ')[2]}`);
+
             content.push(
                 `${$el.children().eq(1).text().trim().split(' ')[1]} - ${$el
                     .children()
@@ -80,9 +80,13 @@ export async function ankiJap(usrInput) {
 
     // word cards to go on Anki.
     let word_cards = await generate_word_cards(usrInput);
+    console.log(word_cards);
 
-    let translations = await get_Dictionnaire_Japonais(usrInput);
-    console.log(translations);
+    let translations = await get_Dictionnaire_Japonais(word_cards.word);
+    let JapaneseTranslationObject = await chooseJapaneseTranslation(
+        translations
+    );
+    word_cards.traduction = JapaneseTranslationObject;
 
-    // await addWordCard(word_cards);
+    await addWordCard(word_cards);
 }
