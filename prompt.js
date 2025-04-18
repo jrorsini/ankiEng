@@ -14,6 +14,12 @@ function properPiping(stc) {
 }
 
 export async function chooseJapaneseTranslation(fetchedTranslations) {
+    let res = {
+        kanji: '',
+        hiragana: '',
+        romaji: '',
+        translation: '',
+    };
     const answers = await inquirer.prompt([
         {
             type: 'list',
@@ -23,7 +29,12 @@ export async function chooseJapaneseTranslation(fetchedTranslations) {
         },
     ]);
 
-    return answers.translation.split(' - ')[1];
+    res.kanji = answers.translation.split(' - ')[0];
+    res.hiragana = answers.translation.split(' - ')[2];
+    res.romaji = answers.translation.split(' - ')[3];
+    res.translation = answers.translation.split(' - ')[1];
+
+    return res;
 }
 
 export async function chooseTranslationType(fetchedTranslations) {

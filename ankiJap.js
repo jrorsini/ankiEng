@@ -14,16 +14,6 @@ const note_fields = {
     reading: '',
     reading_romaji: '',
     traduction: '',
-    // translation: '',
-    // definitions: '',
-    // audio: '',
-    // sample_jp: '',
-    // sample_tr: '',
-    // rude: '',
-    // img: '',
-    // memo_reading: '',
-    // source_link: '',
-    // source_thumbnail: '',
 };
 
 export async function get_Dictionnaire_Japonais(userInput) {
@@ -39,13 +29,13 @@ export async function get_Dictionnaire_Japonais(userInput) {
             const $el = $(e);
 
             content.push(
-                `${$el.children().eq(1).text().trim().split(' ')[0]} - ${
-                    $el.children().eq(1).text().trim().split(' ')[2]
-                } - ${$el.children().eq(1).text().trim().split(' ')[1]} - ${$el
+                `${$el.children().eq(1).text().trim().split(' ')[1]} - ${$el
                     .children()
                     .eq(2)
                     .text()
-                    .trim()}`
+                    .trim()} - ${
+                    $el.children().eq(1).text().trim().split(' ')[0]
+                } - ${$el.children().eq(1).text().trim().split(' ')[2]} `
             );
         });
 
@@ -79,14 +69,16 @@ export async function ankiJap(usrInput) {
     console.clear();
 
     // word cards to go on Anki.
-    let word_cards = await generate_word_cards(usrInput);
-    console.log(word_cards);
+    let word_card_2_add = await generate_word_cards(usrInput);
 
-    let translations = await get_Dictionnaire_Japonais(word_cards.word);
-    let JapaneseTranslationObject = await chooseJapaneseTranslation(
-        translations
-    );
-    word_cards.traduction = JapaneseTranslationObject;
+    let translations = await get_Dictionnaire_Japonais(usrInput);
+    let { romaji, translation, hiragana, kanji } =
+        await chooseJapaneseTranslation(translations);
 
-    await addWordCard(word_cards);
+    if (kanji) word_card_2_add.word = kanji;
+    if (hiragana) word_card_2_add.reading = hiragana;
+    if (translation) word_card_2_add.traduction = translation;
+    if (romaji) word_card_2_add.reading_romaji = romaji;
+
+    await addWordCard(word_card_2_add);
 }
