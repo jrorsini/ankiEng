@@ -13,6 +13,19 @@ function properPiping(stc) {
     );
 }
 
+export async function chooseJapaneseTranslation(fetchedTranslations) {
+    const answers = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'translation',
+            message: `Which ${chalk.underline.bold.yellow('translation')}?`,
+            choices: fetchedTranslations,
+        },
+    ]);
+
+    return answers.translation.split(' - ')[1];
+}
+
 export async function chooseTranslationType(fetchedTranslations) {
     const list_translation_types = [
         ...new Set(fetchedTranslations.map((e) => e.fromType)),
