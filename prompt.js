@@ -29,10 +29,12 @@ export async function chooseJapaneseTranslation(fetchedTranslations) {
         },
     ]);
 
-    res.kanji = answers.translation.split(' - ')[0];
-    res.hiragana = answers.translation.split(' - ')[2];
-    res.romaji = answers.translation.split(' - ')[3];
-    res.translation = answers.translation.split(' - ')[1];
+    if (answers.translation) {
+        res.kanji = answers.translation.split(' - ')[0];
+        res.hiragana = answers.translation.split(' - ')[2];
+        res.romaji = answers.translation.split(' - ')[3];
+        res.translation = answers.translation.split(' - ')[1];
+    }
 
     return res;
 }
