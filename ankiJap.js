@@ -1,13 +1,18 @@
-// import { addWordCard } from './anki.js';
-import { isKanji, toHiragana, toRomaji } from 'wanakana';
+import { toHiragana, toRomaji } from 'wanakana';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
-import Reverso from 'reverso-api';
 import { chooseJapaneseTranslation } from './prompt.js';
 import { addWordCard } from './ankijab-card-handler.js';
+import {
+    generate_yt_dlp_cmd,
+    generate_ffmpeg_cmd,
+} from './utils/generate_yt_dlp_cmd.js';
+import { getYouglishEmbededVideoLinkAndTranscript } from './src/ankiJap_get-youglish-embeded-video-link-and-transcript.js';
+import { exec } from 'child_process';
+import util from 'util';
 
-const reverso = new Reverso();
+const execPromise = util.promisify(exec);
 
 const note_fields = {
     word: '',
@@ -64,6 +69,20 @@ export async function generate_word_cards(input) {
     return note_fields;
 }
 
+async function runCommands(cmd1, cmd2) {
+    try {
+        console.log('➡️ Running yt-dlp...');
+        await execPromise(cmd1);
+
+        console.log('🎬 yt-dlp done. Now running ffmpeg...');
+        await execPromise(cmd2);
+
+        console.log('✅ All commands finished.');
+    } catch (err) {
+        console.error('❌ Error:', err.stderr || err.message);
+    }
+}
+
 export async function ankiJap(usrInput) {
     // clear log
     console.clear();
@@ -72,13 +91,40 @@ export async function ankiJap(usrInput) {
     let word_card_2_add = await generate_word_cards(usrInput);
 
     let translations = await get_Dictionnaire_Japonais(usrInput);
-    let { romaji, translation, hiragana, kanji } =
-        await chooseJapaneseTranslation(translations);
+    // console.log(translations);
+    if (translations.length > 0) {
+        let { romaji, translation, hiragana, kanji } =
+            await chooseJapaneseTranslation(translations);
 
-    if (kanji) word_card_2_add.word = kanji;
-    if (hiragana) word_card_2_add.reading = hiragana;
-    if (translation) word_card_2_add.traduction = translation;
-    if (romaji) word_card_2_add.reading_romaji = romaji;
+        if (kanji) word_card_2_add.word = kanji;
+        if (hiragana) word_card_2_add.reading = hiragana;
+        if (translation) word_card_2_add.traduction = translation;
+        if (romaji) word_card_2_add.reading_romaji = romaji;
+    }
 
-    await addWordCard(word_card_2_add);
+    // await getYouglishEmbededVideoLinkAndTranscript(word_card_2_add.word);
+
+    /*
+    let cmd1 = await generate_yt_dlp_cmd(
+        '両国',
+        'https://youtu.be/CxouIJKVpaw?t=29'
+    );
+    let cmd2 = await generate_ffmpeg_cmd(
+        '両国',
+        'https://youtu.be/CxouIJKVpaw?t=29'
+    );
+
+    runCommands(cmd1, cmd2);
+    */
+
+    // get youtube video link from youglish japanese link
+    // get video transcript
+    // trim the number of seconds in the video url.
+    // create yt-dlp url generating function.
+    // https://youglish.com/pronounce/両国/japanese
+
+    // yt-dlp -x --audio-format mp3 -o "mon_mot.%(ext)s" --postprocessor-args "-ss 00:00:35 -to 00:00:42" "https://www.youtube.com/watch?v=CxouIJKVpaw"
+    // yt-dlp -x --audio-format mp3 -o "mon_mot.%(ext)s" --postprocessor-args "-ss 00:00:39 -to 00:00:45 -af afade=t=in:ss=0:d=0.5,afade=t=out:st=3.5:d=0.5" "https://www.youtube.com/watch?v=CxouIJKVpaw"
+
+    // await addWordCard(word_card_2_add);
 }
