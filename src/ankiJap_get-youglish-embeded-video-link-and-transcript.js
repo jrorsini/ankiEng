@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 import * as cheerio from 'cheerio';
 
-export async function scrapePageContent(word) {
+async function scrapePageContent(word) {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     // console.time(`Page content ${chalk.green(`scrapped`)}`);
@@ -15,7 +15,7 @@ export async function scrapePageContent(word) {
     return pageContent;
 }
 
-export function extractTranscriptAndVideoURL(pageContent) {
+function extractTranscriptAndVideoURL(pageContent) {
     const $ = cheerio.load(pageContent);
     const transcript = $('#r_caption').text();
     const video_url = $('iframe').attr('src');
@@ -25,5 +25,5 @@ export function extractTranscriptAndVideoURL(pageContent) {
 
 export async function getYouglishEmbededVideoLinkAndTranscript(word) {
     const pageContent = await scrapePageContent(word);
-    const vocab = extractTranscriptAndVideoURL(pageContent);
+    return extractTranscriptAndVideoURL(pageContent);
 }

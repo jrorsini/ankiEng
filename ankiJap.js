@@ -4,6 +4,7 @@ import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import { chooseJapaneseTranslation } from './prompt.js';
 import { addWordCard } from './ankijab-card-handler.js';
+import { convertYouTubeEmbedToShort } from './utils/embed-video-link-handler.js';
 import {
     generate_yt_dlp_cmd,
     generate_ffmpeg_cmd,
@@ -102,29 +103,16 @@ export async function ankiJap(usrInput) {
         if (romaji) word_card_2_add.reading_romaji = romaji;
     }
 
-    // await getYouglishEmbededVideoLinkAndTranscript(word_card_2_add.word);
+    const { transcript, video_url } =
+        await getYouglishEmbededVideoLinkAndTranscript(word_card_2_add.word);
 
-    /*
-    let cmd1 = await generate_yt_dlp_cmd(
-        '両国',
-        'https://youtu.be/CxouIJKVpaw?t=29'
-    );
-    let cmd2 = await generate_ffmpeg_cmd(
-        '両国',
-        'https://youtu.be/CxouIJKVpaw?t=29'
-    );
+    word_card_2_add.source_link = convertYouTubeEmbedToShort(video_url);
+    word_card_2_add.source_transcript = transcript;
+    word_card_2_add.source_audio = `[sound:${word_card_2_add.word}_audio.mp3]`;
 
-    runCommands(cmd1, cmd2);
-    */
+    let cmd1 = await generate_yt_dlp_cmd(word_card_2_add.word, video_url);
+    let cmd2 = await generate_ffmpeg_cmd(word_card_2_add.word, video_url);
 
-    // get youtube video link from youglish japanese link
-    // get video transcript
-    // trim the number of seconds in the video url.
-    // create yt-dlp url generating function.
-    // https://youglish.com/pronounce/両国/japanese
-
-    // yt-dlp -x --audio-format mp3 -o "mon_mot.%(ext)s" --postprocessor-args "-ss 00:00:35 -to 00:00:42" "https://www.youtube.com/watch?v=CxouIJKVpaw"
-    // yt-dlp -x --audio-format mp3 -o "mon_mot.%(ext)s" --postprocessor-args "-ss 00:00:39 -to 00:00:45 -af afade=t=in:ss=0:d=0.5,afade=t=out:st=3.5:d=0.5" "https://www.youtube.com/watch?v=CxouIJKVpaw"
-
-    // await addWordCard(word_card_2_add);
+    await runCommands(cmd1, cmd2);
+    await addWordCard(word_card_2_add);
 }
