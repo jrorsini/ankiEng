@@ -108,7 +108,7 @@ export async function ankiJap(usrInput) {
 
     word_card_2_add.source_link = convertYouTubeEmbedToShort(video_url);
     word_card_2_add.source_transcript = transcript;
-    word_card_2_add.source_audio = `[sound:${word_card_2_add.word}_audio.mp3]`;
+    word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_audio.mp3]`;
 
     let cmd1 = await generate_yt_dlp_cmd(word_card_2_add.word, video_url);
     let cmd2 = await generate_ffmpeg_cmd(word_card_2_add.word, video_url);

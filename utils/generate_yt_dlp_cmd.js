@@ -17,8 +17,8 @@ export function generate_ffmpeg_cmd(word, youtube_link) {
     );
 
     const start = secondsToHHMMSS(number_of_seconds - 2);
-    const end = secondsToHHMMSS(number_of_seconds + 6);
-    const outputName = `${word}_audio.mp3`;
+    const end = secondsToHHMMSS(number_of_seconds + 10);
+    const outputName = `youglish_${word}_audio.mp3`;
 
     return `cd ~/Library/Application\ Support/Anki2/User\ 1/collection.media/; ffmpeg -i temp_${outputName} -ss ${start} -to ${end} ${outputName} && rm temp_${outputName}`;
 }
