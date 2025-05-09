@@ -6,49 +6,10 @@ export function convertYouTubeEmbedToShort(url) {
     const startTime = urlObj.searchParams.get('start'); // "34"
 
     let shortUrl = `https://youtu.be/${videoId}`;
+
+    console.log(shortUrl);
+    console.log(videoId);
     if (startTime) shortUrl += `?t=${startTime}s`;
 
-    return shortUrl;
-}
-
-export function getYoutubeStartTimeSeconds(url) {
-    const parsedUrl = new URL(url);
-    const timeParam = parsedUrl.searchParams.get('t');
-
-    if (!timeParam) return 0;
-
-    if (/^\d+$/.test(timeParam)) {
-        // Just seconds, like ?t=90
-        return parseInt(timeParam, 10);
-    }
-
-    // Handle format like 1h2m30s
-    const regex = /(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/;
-    const match = timeParam.match(regex);
-
-    if (!match) return 0;
-
-    const hours = parseInt(match[1] || '0', 10);
-    const minutes = parseInt(match[2] || '0', 10);
-    const seconds = parseInt(match[3] || '0', 10);
-
-    return hours * 3600 + minutes * 60 + seconds;
-}
-
-export function secondsToHHMMSS(seconds) {
-    const h = Math.floor(seconds / 3600)
-        .toString()
-        .padStart(2, '0');
-    const m = Math.floor((seconds % 3600) / 60)
-        .toString()
-        .padStart(2, '0');
-    const s = Math.floor(seconds % 60)
-        .toString()
-        .padStart(2, '0');
-    return `${h}:${m}:${s}`;
-}
-
-function getBaseYouTubeUrl(url) {
-    const baseUrl = url.split('?')[0];
-    return baseUrl;
+    return { videoId, shortUrl };
 }

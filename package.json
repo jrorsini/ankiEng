@@ -78,7 +78,8 @@
         "util-deprecate": "^1.0.2",
         "wcwidth": "^1.0.1",
         "wrap-ansi": "^7.0.0",
-        "xhr2": "^0.2.1"
+        "xhr2": "^0.2.1",
+        "youtube-mp3-downloader": "^0.7.11"
     },
     "type": "module",
     "devDependencies": {

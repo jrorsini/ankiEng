@@ -5,15 +5,9 @@ import { tokenizer } from './utils/tokenizer.js';
 import { chooseJapaneseTranslation } from './prompt.js';
 import { addWordCard } from './ankijab-card-handler.js';
 import { convertYouTubeEmbedToShort } from './utils/embed-video-link-handler.js';
-import {
-    generate_yt_dlp_cmd,
-    generate_ffmpeg_cmd,
-} from './utils/generate_yt_dlp_cmd.js';
 import { getYouglishEmbededVideoLinkAndTranscript } from './src/ankiJap_get-youglish-embeded-video-link-and-transcript.js';
 import { exec } from 'child_process';
-import util from 'util';
-
-const execPromise = util.promisify(exec);
+import { videoAudioDL } from './utils/video-audio-dl.js';
 
 const note_fields = {
     word: '',
@@ -70,21 +64,13 @@ export async function generate_word_cards(input) {
     return note_fields;
 }
 
-async function runCommands(cmd1, cmd2) {
-    try {
-        console.log('➡️ Running yt-dlp...');
-        await execPromise(cmd1);
-
-        console.log('🎬 yt-dlp done. Now running ffmpeg...');
-        await execPromise(cmd2);
-
-        console.log('✅ All commands finished.');
-    } catch (err) {
-        console.error('❌ Error:', err.stderr || err.message);
-    }
-}
-
 export async function ankiJap(usrInput) {
+    // kanji en video youtube (supprimer manuellement le youglish puis passer le lien de la vidéo youtube)
+    // kanji en texte (youglish par défaut)
+
+    // enregistrement dans les deux cas vers le alias.
+    // remplissage automatique des champs.
+
     // clear log
     console.clear();
 
@@ -105,14 +91,13 @@ export async function ankiJap(usrInput) {
 
     const { transcript, video_url } =
         await getYouglishEmbededVideoLinkAndTranscript(word_card_2_add.word);
-
-    word_card_2_add.source_link = convertYouTubeEmbedToShort(video_url);
+    const { videoId, shortUrl } = convertYouTubeEmbedToShort(video_url);
+    word_card_2_add.source_link = shortUrl;
+    word_card_2_add.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
     word_card_2_add.source_transcript = transcript;
     word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_audio.mp3]`;
 
-    let cmd1 = await generate_yt_dlp_cmd(word_card_2_add.word, video_url);
-    let cmd2 = await generate_ffmpeg_cmd(word_card_2_add.word, video_url);
-
-    await runCommands(cmd1, cmd2);
+    // cmds de téléchargement vidéo et conversion en fichier audio. (enregistré au bureau)
     await addWordCard(word_card_2_add);
+    await videoAudioDL(shortUrl);
 }

@@ -92,5 +92,5 @@ if (isEnglish(usrInput)) {
     await addAnkiEngCard(note_fields);
 } else {
     await ankiJap(usrInput);
-    exec('osascript -e \'tell application "iTerm" to close first window\'');
+    // exec('osascript -e \'tell application "iTerm" to close first window\'');
 }

@@ -33,6 +33,6 @@ export async function addWordCard(note_fields) {
         console.log(`${note_fields.word} card added successfully!`);
         return;
     } catch (err) {
-        console.log(err);
+        console.log(err.code);
     }
 }
