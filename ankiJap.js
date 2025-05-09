@@ -99,7 +99,7 @@ export async function ankiJap(usrInput) {
     word_card_2_add.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
     word_card_2_add.source_transcript = transcript;
     word_card_2_add.audio = `[sound:audio_${word_card_2_add.word}.mp3]`;
-    word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_audio.mp3]`;
+    word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_${videoId}_audio.mp3]`;
 
     // insertion de la carte.
     await addWordCard(word_card_2_add);
