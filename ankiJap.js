@@ -8,6 +8,7 @@ import { convertYouTubeEmbedToShort } from './utils/embed-video-link-handler.js'
 import { getYouglishEmbededVideoLinkAndTranscript } from './src/ankiJap_get-youglish-embeded-video-link-and-transcript.js';
 import { exec } from 'child_process';
 import { videoAudioDL } from './utils/video-audio-dl.js';
+import { saveWordAudio } from './utils/save-word-audio.js';
 
 const note_fields = {
     word: '',
@@ -91,13 +92,19 @@ export async function ankiJap(usrInput) {
 
     const { transcript, video_url } =
         await getYouglishEmbededVideoLinkAndTranscript(word_card_2_add.word);
+
     const { videoId, shortUrl } = convertYouTubeEmbedToShort(video_url);
+
     word_card_2_add.source_link = shortUrl;
     word_card_2_add.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
     word_card_2_add.source_transcript = transcript;
+    word_card_2_add.audio = `[sound:audio_${word_card_2_add.word}.mp3]`;
     word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_audio.mp3]`;
 
-    // cmds de téléchargement vidéo et conversion en fichier audio. (enregistré au bureau)
+    // insertion de la carte.
     await addWordCard(word_card_2_add);
-    await videoAudioDL(shortUrl);
+
+    // génération des fichiers audio.
+    await saveWordAudio(word_card_2_add.word);
+    await videoAudioDL(word_card_2_add.word, shortUrl);
 }

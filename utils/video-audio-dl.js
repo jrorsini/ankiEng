@@ -53,21 +53,23 @@ function secondsToHHMMSS(seconds) {
 
 const execPromise = util.promisify(exec);
 
-function generate_yt_dlp_cmd(videoId) {
-    return `yt-dlp -x --audio-format mp3 -o "/Users/jean-rogerorsini/Desktop/temp_y_${videoId}_audio.mp3" "https://www.youtube.com/watch?v=${videoId}"`;
+const path2SaveFile = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
+
+function generate_yt_dlp_cmd(word, videoId) {
+    return `yt-dlp -x --audio-format mp3 -o "${path2SaveFile}/temp_youglish_${word}_${videoId}_audio.mp3" "https://www.youtube.com/watch?v=${videoId}"`;
 }
 
-function generate_ffmpeg_cmd(number_of_seconds, videoId) {
+function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
     const start = secondsToHHMMSS(
         number_of_seconds <= 5 ? 0 : number_of_seconds - 5
     );
     const end = secondsToHHMMSS(number_of_seconds + 15);
-    const outputName = `y_${videoId}_audio.mp3`;
+    const outputName = `youglish_${word}_${videoId}_audio.mp3`;
     console.log(`seconds :`, number_of_seconds);
     console.log(`start :`, start);
     console.log(`end :`, end);
 
-    return `ffmpeg -i /Users/jean-rogerorsini/Desktop/temp_${outputName} -ss ${start} -to ${end} /Users/jean-rogerorsini/Desktop/${outputName};`;
+    return `ffmpeg -i ${path2SaveFile}/temp_${outputName} -ss ${start} -to ${end} ${path2SaveFile}/${outputName}; rm -rf ${path2SaveFile}/temp_${outputName}`;
 }
 
 async function runCommands(cmd1, cmd2) {
@@ -84,15 +86,15 @@ async function runCommands(cmd1, cmd2) {
     }
 }
 
-export async function videoAudioDL(videoLink) {
+export async function videoAudioDL(word, videoLink) {
     const { videoId, startTime } = getVideoIdAndStartTime(videoLink);
 
     console.log(`Lien :`, videoLink);
     console.log(`Video ID :`, videoId);
     console.log(`Start Time :`, startTime);
 
-    const cmd1 = generate_yt_dlp_cmd(videoId);
-    const cmd2 = generate_ffmpeg_cmd(startTime, videoId);
+    const cmd1 = generate_yt_dlp_cmd(word, videoId);
+    const cmd2 = generate_ffmpeg_cmd(word, startTime, videoId);
 
     await runCommands(cmd1, cmd2);
 }
