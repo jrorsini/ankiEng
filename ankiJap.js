@@ -105,6 +105,6 @@ export async function ankiJap(usrInput) {
     await addWordCard(word_card_2_add);
 
     // génération des fichiers audio.
-    await saveWordAudio(word_card_2_add.word);
+    await saveWordAudio('jp', word_card_2_add.word);
     await videoAudioDL(word_card_2_add.word, shortUrl);
 }

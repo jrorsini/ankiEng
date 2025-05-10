@@ -1,7 +1,7 @@
 import gTTS from 'gtts';
 
-export async function saveWordAudio(text) {
-    const gtts = new gTTS(text, 'ja');
+export async function saveWordAudio(lang, text) {
+    const gtts = new gTTS(text, lang); // lang : 'ja', 'en'
 
     const path2dir = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
 
