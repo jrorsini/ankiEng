@@ -61,9 +61,9 @@ function generate_yt_dlp_cmd(word, videoId) {
 
 function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
     const start = secondsToHHMMSS(
-        number_of_seconds <= 5 ? 0 : number_of_seconds - 5
+        number_of_seconds <= 5 ? 0 : number_of_seconds - 2
     );
-    const end = secondsToHHMMSS(number_of_seconds + 15);
+    const end = secondsToHHMMSS(number_of_seconds + 10);
     const outputName = `youglish_${word}_${videoId}_audio.mp3`;
     console.log(`seconds :`, number_of_seconds);
     console.log(`start :`, start);

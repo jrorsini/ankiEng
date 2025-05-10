@@ -11,7 +11,7 @@ let deckName = '1 - JAPANESE';
 export async function addWordCard(note_fields) {
     let note = {
         deckName,
-        modelName: 'CUSTOM_NOTE_ANKIJAP_NEW',
+        modelName: 'CUSTOM_NOTE_ANKIJAP',
         fields: note_fields,
         options: { allowDuplicate: false },
     };
