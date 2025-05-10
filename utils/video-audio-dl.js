@@ -69,7 +69,7 @@ function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
     console.log(`start :`, start);
     console.log(`end :`, end);
 
-    return `ffmpeg -i ${path2SaveFile}/temp_${outputName} -ss ${start} -to ${end} ${path2SaveFile}/${outputName}; rm -rf ${path2SaveFile}/temp_${outputName}`;
+    return `ffmpeg -i "${path2SaveFile}/temp_${outputName}" -ss ${start} -to ${end} "${path2SaveFile}/${outputName}";`;
 }
 
 async function runCommands(cmd1, cmd2) {
