@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import { chooseJapaneseTranslation } from './prompt.js';
-import { addWordCard } from './ankijab-card-handler.js';
+import { addWordCard } from './add-word-anki-card.js';
 import { convertYouTubeEmbedToShort } from './utils/embed-video-link-handler.js';
 import { getYouglishEmbededVideoLinkAndTranscript } from './src/ankiJap_get-youglish-embeded-video-link-and-transcript.js';
 import { videoAudioDL } from './utils/video-audio-dl.js';
@@ -104,7 +104,7 @@ export async function ankiJap(usrInput, youtubeLink) {
     word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_${videoId}_audio.mp3]`;
 
     // insertion de la carte.
-    await addWordCard(word_card_2_add);
+    await addWordCard(word_card_2_add, '1 - JAPANESE', 'CUSTOM_NOTE_ANKIJAP');
 
     // génération des fichiers audio.
     await saveWordAudio('ja', word_card_2_add.word, word_card_2_add.reading);

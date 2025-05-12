@@ -1,6 +1,7 @@
 // API's handlers.
 import { getWordReferenceTranslations } from './src/ankiEng_get-wordreference-data.js';
 import { addAnkiEngCard } from './ankieng-card-handler.js';
+import { addWordCard } from './add-word-anki-card.js';
 import { chooseTranslationType, chooseTranslation } from './prompt.js';
 import { searchResultLogTranslations } from './src/search-results-logs.js';
 import { startSpinner } from './utils/cli-loader.js';
@@ -54,5 +55,9 @@ export async function ankiEng(usrInput) {
         note_fields.example_fr = example.to;
     }
 
-    await addAnkiEngCard(note_fields);
+    await addWordCard(
+        note_fields,
+        '1 - ENGLISH',
+        'CUSTOM_NOTE_ENGLISH_VOCAB_LVL_1'
+    );
 }
