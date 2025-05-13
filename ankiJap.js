@@ -4,7 +4,10 @@ import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import { chooseJapaneseTranslation } from './prompt.js';
 import { addWordCard } from './add-word-anki-card.js';
-import { convertYouTubeEmbedToShort } from './utils/embed-video-link-handler.js';
+import {
+    convertYouTubeEmbedToShort,
+    getVideoIdAndStartTime,
+} from './utils/embed-video-link-handler.js';
 import { getYouglishEmbededVideoLinkAndTranscript } from './src/ankiJap_get-youglish-embeded-video-link-and-transcript.js';
 import { videoAudioDL } from './utils/video-audio-dl.js';
 import { saveWordAudio } from './utils/save-word-audio.js';
@@ -65,12 +68,6 @@ export async function generate_word_cards(input) {
 }
 
 export async function ankiJap(usrInput, youtubeLink) {
-    // kanji en video youtube (supprimer manuellement le youglish puis passer le lien de la vidéo youtube)
-    // kanji en texte (youglish par défaut)
-
-    // enregistrement dans les deux cas vers le alias.
-    // remplissage automatique des champs.
-
     // word cards to go on Anki.
     let word_card_2_add = await generate_word_cards(usrInput);
 
@@ -88,28 +85,33 @@ export async function ankiJap(usrInput, youtubeLink) {
         if (romaji) word_card_2_add.reading_romaji = romaji;
     }
 
-    console.log('hello2');
-
     const { transcript, video_url } =
         await getYouglishEmbededVideoLinkAndTranscript(word_card_2_add.word);
 
-    const { videoId, shortUrl } = convertYouTubeEmbedToShort(
-        !youtubeLink ? video_url : youtubeLink
-    );
+    let vidId, vidUrl;
 
-    word_card_2_add.source_link = shortUrl;
-    word_card_2_add.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
+    if (!youtubeLink) {
+        const { videoId, shortUrl } = convertYouTubeEmbedToShort(
+            !youtubeLink ? video_url : youtubeLink
+        );
+        vidId = videoId;
+        vidUrl = shortUrl;
+    } else {
+        const { videoId, startTime } = getVideoIdAndStartTime(youtubeLink);
+        vidId = videoId;
+        vidUrl = youtubeLink;
+    }
+
+    word_card_2_add.source_link = vidUrl;
+    word_card_2_add.source_thumbnail = `<img src="https://img.youtube.com/vi/${vidId}/0.jpg"/>`;
     word_card_2_add.source_transcript = !youtubeLink ? transcript : '';
     word_card_2_add.audio = `[sound:audio_${word_card_2_add.reading}_${word_card_2_add.word}.mp3]`;
-    word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_${videoId}_audio.mp3]`;
+    word_card_2_add.source_audio = `[sound:youglish_${word_card_2_add.word}_${vidId}_audio.mp3]`;
 
     // insertion de la carte.
     await addWordCard(word_card_2_add, '1 - JAPANESE', 'CUSTOM_NOTE_ANKIJAP');
 
     // génération des fichiers audio.
     await saveWordAudio('ja', word_card_2_add.word, word_card_2_add.reading);
-    await videoAudioDL(
-        word_card_2_add.word,
-        !youtubeLink ? shortUrl : youtubeLink
-    );
+    await videoAudioDL(word_card_2_add.word, vidUrl);
 }

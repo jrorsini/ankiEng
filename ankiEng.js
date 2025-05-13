@@ -1,10 +1,10 @@
 // API's handlers.
 import { getWordReferenceTranslations } from './src/ankiEng_get-wordreference-data.js';
-import { addAnkiEngCard } from './ankieng-card-handler.js';
 import { addWordCard } from './add-word-anki-card.js';
 import { chooseTranslationType, chooseTranslation } from './prompt.js';
 import { searchResultLogTranslations } from './src/search-results-logs.js';
 import { startSpinner } from './utils/cli-loader.js';
+import { saveWordAudio } from './utils/save-word-audio.js';
 
 export async function ankiEng(usrInput) {
     const stopSpinner = startSpinner(usrInput);
@@ -47,13 +47,20 @@ export async function ankiEng(usrInput) {
         );
         console.log(example);
 
+        const audio_english = from
+            .replace(/[\s]/gi, '-')
+            .replace(/\[\[|\/\]/gi, '');
+
         note_fields.english = from;
         note_fields.translations = to;
         note_fields.type_from = fromType;
         note_fields.type_to = toType;
         note_fields.example_en = example.from;
         note_fields.example_fr = example.to;
+        note_fields.audio = `[sound:audio_${audio_english}_${audio_english}.mp3]`;
     }
+
+    await saveWordAudio('en', note_fields.english, note_fields.english);
 
     await addWordCard(
         note_fields,

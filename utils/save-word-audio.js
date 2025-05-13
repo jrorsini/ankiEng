@@ -11,7 +11,13 @@ export async function saveWordAudio(lang, word, reading) {
             if (err) {
                 console.error(err);
             } else {
-                console.log(`Audio saved as audio_${reading}_${word}.mp3`);
+                console.log(
+                    `Audio saved as ${
+                        'jp'
+                            ? `audio_${reading}_${word}.mp3`
+                            : `audio_${word}.mp3`
+                    }`
+                );
             }
         }
     );
