@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import util from 'util';
 
-function getVideoIdAndStartTime(url) {
+export function getVideoIdAndStartTime(url) {
     const parsedUrl = new URL(
         url.charAt(url.length - 1) === 's' ? url.slice(0, -1) : url
     );

@@ -9,30 +9,11 @@ import { saveWordAudio } from './utils/save-word-audio.js';
 export async function ankiEng(usrInput) {
     const stopSpinner = startSpinner(usrInput);
 
-    // DATA FETCH
     let fetchedTranslations = await getWordReferenceTranslations(usrInput);
-    // let fetchedReversoTranslation = await getTranslationFromReverso(usrInput);
 
     stopSpinner();
 
-    const note_fields = {
-        english: '',
-        ipa: '',
-        pronunciation: '',
-        audio: '',
-        nuance: '',
-        context: '',
-        meaning: '',
-        translations: '',
-        visual: '',
-        extra: '',
-        type_from: '',
-        type_to: '',
-        example_en: '',
-        example_fr: '',
-        source_link: '',
-        source_thumbnail: '',
-    };
+    const ankiCard = {};
 
     if (fetchedTranslations.length > 0) {
         const translationType = await chooseTranslationType(
@@ -51,20 +32,16 @@ export async function ankiEng(usrInput) {
             .replace(/[\s]/gi, '-')
             .replace(/\[\[|\/\]/gi, '');
 
-        note_fields.english = from;
-        note_fields.translations = to;
-        note_fields.type_from = fromType;
-        note_fields.type_to = toType;
-        note_fields.example_en = example.from;
-        note_fields.example_fr = example.to;
-        note_fields.audio = `[sound:audio_${audio_english}_${audio_english}.mp3]`;
+        ankiCard.word = from;
+        ankiCard.traduction = to;
+        ankiCard.type_from = fromType;
+        ankiCard.type_to = toType;
+        ankiCard.example_en = example.from;
+        ankiCard.example_fr = example.to;
+        ankiCard.audio = `[sound:audio_${audio_english}_${audio_english}.mp3]`;
     }
 
-    await saveWordAudio('en', note_fields.english, note_fields.english);
+    await saveWordAudio('en', ankiCard.english, ankiCard.english);
 
-    await addWordCard(
-        note_fields,
-        '1 - ENGLISH',
-        'CUSTOM_NOTE_ENGLISH_VOCAB_LVL_1'
-    );
+    return ankiCard;
 }

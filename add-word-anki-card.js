@@ -7,7 +7,7 @@ import chalk from 'chalk';
 const ankiUrl = 'http://127.0.0.1:8765';
 
 // adding function for word cards
-export async function addWordCard(note_fields, deckName, NoteType) {
+export default async function addWordCard(note_fields, deckName, NoteType) {
     let note = {
         deckName,
         modelName: NoteType,
