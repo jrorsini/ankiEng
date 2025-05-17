@@ -3,7 +3,7 @@ import { ankiEng } from './ankiEng.js';
 import { ankiJap } from './ankiJap.js';
 import inquirer from 'inquirer';
 import addWordCard from './add-word-anki-card.js';
-
+import saveWordAudio from './utils/save-word-audio.js';
 function isInputEnglish(text) {
     // Checks if the string contains any Roman characters (A-Z, a-z)
     return /[A-Za-z]/.test(text);
@@ -31,14 +31,27 @@ async function askForYoutubeLink(usrInput) {
     }
     return youtubeLink;
 }
-const youtubeLink = await askForYoutubeLink(usrInput);
 
 // exec('osascript -e \'tell application "iTerm" to close first window\'');
 
 let { ankiCard } = isInputEnglish(usrInput)
-    ? await ankiEng(usrInput, youtubeLink)
-    : await ankiJap(usrInput, youtubeLink);
+    ? await ankiEng(usrInput)
+    : await ankiJap(usrInput);
+
+const youtubeLink = await askForYoutubeLink(usrInput);
+if (youtubeLink) {
+    const { videoId } = getVideoIdAndStartTime(youtubeLink);
+
+    ankiCard.source_link = youtubeLink;
+    ankiCard.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
+    // ankiCard.source_transcript = !youtubeLink ? transcript : '';
+    ankiCard.source_audio = `[sound:youglish_${ankiCard.word}_${videoId}_audio.mp3]`;
+}
 
 isInputEnglish(usrInput)
-    ? await wordCard(ankiCard, '1 - ENGLISH', 'CUSTOM_NOTE_ENGLISH')
-    : await wordCard(ankiCard, '1 - JAPANESE', 'CUSTOM_NOTE_ANKIJAP');
+    ? await addWordCard(ankiCard, '1 - ENGLISH', 'CUSTOM_NOTE_ENGLISH')
+    : await addWordCard(ankiCard, '1 - JAPANESE', 'CUSTOM_NOTE_ANKIJAP');
+
+isInputEnglish(usrInput)
+    ? await saveWordAudio('en', ankiCard.word, ankiCard.word)
+    : await saveWordAudio('ja', ankiCard.word, ankiCard.reading);

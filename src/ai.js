@@ -21,6 +21,60 @@ export async function wordAndSynonymNuanceDiff(word, wordType, synonym) {
     return completion.choices[0].message.content;
 }
 
+export async function getKanjiMnmemotechnique(kanji) {
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {
+                role: 'system',
+                content: `
+                    Donne-moi un moyen mnémotechnique simple et visuel pour retenir le kanji [${kanji}], en décomposant ses composants si possible. 
+                    Donne une explication claire, une petite histoire ou image mentale pour l’associer à son sens, et une phrase mnémotechnique facile à retenir.
+                `,
+            },
+        ],
+        model: 'gpt-3.5-turbo',
+    });
+
+    return completion.choices[0].message.content;
+}
+
+export async function getKanjiMnmemotechnique(kanji) {
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {
+                role: 'system',
+                content: `
+                    Donne-moi un moyen mnémotechnique simple et visuel pour retenir le kanji [${kanji}], en décomposant ses composants si possible. 
+                    Donne une explication claire, une petite histoire ou image mentale pour l’associer à son sens, et une phrase mnémotechnique facile à retenir.
+                `,
+            },
+        ],
+        model: 'gpt-3.5-turbo',
+    });
+
+    return completion.choices[0].message.content;
+}
+
+export async function getJapaneseWordComposition(word) {
+    // ref: https://chatgpt.com/c/6825b540-f71c-8000-830d-3723215cffef
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {
+                role: 'system',
+                content: `
+                Donne-moi une explication concise de la composition du mot ${word} selon le format suivant :
+                    ✅ [kanji 1] = [sens simple en français]   
+                    ✅ [kanji 2] = [sens simple en français]
+                    🔁 [${word}] = [interprétation intuitive du mot, en une phrase courte en français]
+                Ne donne rien d’autre.`,
+            },
+        ],
+        model: 'gpt-3.5-turbo',
+    });
+
+    return completion.choices[0].message.content;
+}
+
 /*
 
 https://mail.google.com/mail/u/0/#search/matt/FMfcgzQbfBzPWJFTffBdjtdfgWDFwvzj

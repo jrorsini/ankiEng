@@ -41,7 +41,5 @@ export async function ankiEng(usrInput) {
         ankiCard.audio = `[sound:audio_${audio_english}_${audio_english}.mp3]`;
     }
 
-    await saveWordAudio('en', ankiCard.english, ankiCard.english);
-
     return ankiCard;
 }

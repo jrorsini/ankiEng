@@ -3,14 +3,12 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import { chooseJapaneseTranslation } from './prompt.js';
-import { addWordCard } from './add-word-anki-card.js';
 import { convertYouTubeEmbedToShort } from './utils/embed-video-link-handler.js';
 import { getYouglishEmbededVideoLinkAndTranscript } from './src/ankiJap_get-youglish-embeded-video-link-and-transcript.js';
 import {
     videoAudioDL,
     getVideoIdAndStartTime,
 } from './utils/video-audio-dl.js';
-import { saveWordAudio } from './utils/save-word-audio.js';
 
 const note_fields = {};
 
@@ -66,8 +64,12 @@ export async function ankiJap(usrInput, youtubeLink) {
     // word cards to go on Anki.
     let ankiCard = await generate_word_cards(usrInput);
 
+    const stopSpinner = startSpinner(usrInput);
+
     let translations = await get_Dictionnaire_Japonais(usrInput);
-    // console.log(translations);
+
+    stopSpinner();
+
     if (translations.length > 0) {
         // clear log
         console.clear();
@@ -78,6 +80,7 @@ export async function ankiJap(usrInput, youtubeLink) {
         if (hiragana) ankiCard.reading = hiragana;
         if (translation) ankiCard.traduction = translation;
         if (romaji) ankiCard.reading_romaji = romaji;
+        ankiCard.audio = `[sound:audio_${ankiCard.reading}_${ankiCard.word}.mp3]`;
     }
 
     const { transcript, video_url } =
@@ -100,14 +103,10 @@ export async function ankiJap(usrInput, youtubeLink) {
     ankiCard.source_link = vidUrl;
     ankiCard.source_thumbnail = `<img src="https://img.youtube.com/vi/${vidId}/0.jpg"/>`;
     ankiCard.source_transcript = !youtubeLink ? transcript : '';
-    ankiCard.audio = `[sound:audio_${ankiCard.reading}_${ankiCard.word}.mp3]`;
     ankiCard.source_audio = `[sound:youglish_${ankiCard.word}_${vidId}_audio.mp3]`;
 
     return ankiCard;
-    // insertion de la carte.
-    await addWordCard(ankiCard, '1 - JAPANESE', 'CUSTOM_NOTE_ANKIJAP');
 
     // génération des fichiers audio.
-    await saveWordAudio('ja', ankiCard.word, ankiCard.reading);
     await videoAudioDL(ankiCard.word, vidUrl);
 }
