@@ -56,7 +56,7 @@ const execPromise = util.promisify(exec);
 const path2SaveFile = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
 
 function generate_yt_dlp_cmd(word, videoId) {
-    return `yt-dlp -x --audio-format mp3 -o "${path2SaveFile}/temp_youglish_${word}_${videoId}_audio.mp3" "https://www.youtube.com/watch?v=${videoId}"`;
+    return `yt-dlp -x --audio-format mp3 -o "${path2SaveFile}/temp_youglish_${word}_${videoId}_audio.mp3" --cookies-from-browser chrome "https://www.youtube.com/watch?v=${videoId}"`;
 }
 
 function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {

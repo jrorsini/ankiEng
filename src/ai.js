@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
-import chalk from 'chalk';
+// import chalk from 'chalk';
+import axios from 'axios';
 
 const openai = new OpenAI();
 
@@ -38,24 +39,7 @@ export async function getKanjiMnmemotechnique(kanji) {
     return completion.choices[0].message.content;
 }
 
-export async function getKanjiMnmemotechnique(kanji) {
-    const completion = await openai.chat.completions.create({
-        messages: [
-            {
-                role: 'system',
-                content: `
-                    Donne-moi un moyen mnémotechnique simple et visuel pour retenir le kanji [${kanji}], en décomposant ses composants si possible. 
-                    Donne une explication claire, une petite histoire ou image mentale pour l’associer à son sens, et une phrase mnémotechnique facile à retenir.
-                `,
-            },
-        ],
-        model: 'gpt-3.5-turbo',
-    });
-
-    return completion.choices[0].message.content;
-}
-
-export async function getJapaneseWordComposition(word) {
+export async function getJapaneseWordCompositionOld(word) {
     // ref: https://chatgpt.com/c/6825b540-f71c-8000-830d-3723215cffef
     const completion = await openai.chat.completions.create({
         messages: [
@@ -66,10 +50,11 @@ export async function getJapaneseWordComposition(word) {
                     ✅ [kanji 1] = [sens simple en français]   
                     ✅ [kanji 2] = [sens simple en français]
                     🔁 [${word}] = [interprétation intuitive du mot, en une phrase courte en français]
+                    🎥 Astuce mnémotechnique : 
                 Ne donne rien d’autre.`,
             },
         ],
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4.1',
     });
 
     return completion.choices[0].message.content;

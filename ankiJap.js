@@ -3,12 +3,8 @@ import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import { chooseJapaneseTranslation } from './prompt.js';
-import { convertYouTubeEmbedToShort } from './utils/embed-video-link-handler.js';
-import { getYouglishEmbededVideoLinkAndTranscript } from './src/ankiJap_get-youglish-embeded-video-link-and-transcript.js';
-import {
-    videoAudioDL,
-    getVideoIdAndStartTime,
-} from './utils/video-audio-dl.js';
+import { startSpinner } from './utils/cli-loader.js';
+import { getJapaneseWordComposition } from './src/ai.js';
 
 const note_fields = {};
 
@@ -83,30 +79,12 @@ export async function ankiJap(usrInput, youtubeLink) {
         ankiCard.audio = `[sound:audio_${ankiCard.reading}_${ankiCard.word}.mp3]`;
     }
 
-    const { transcript, video_url } =
-        await getYouglishEmbededVideoLinkAndTranscript(ankiCard.word);
-
-    let vidId, vidUrl;
-
-    if (!youtubeLink) {
-        const { videoId, shortUrl } = convertYouTubeEmbedToShort(
-            !youtubeLink ? video_url : youtubeLink
-        );
-        vidId = videoId;
-        vidUrl = shortUrl;
-    } else {
-        const { videoId } = getVideoIdAndStartTime(youtubeLink);
-        vidId = videoId;
-        vidUrl = youtubeLink;
-    }
-
-    ankiCard.source_link = vidUrl;
-    ankiCard.source_thumbnail = `<img src="https://img.youtube.com/vi/${vidId}/0.jpg"/>`;
-    ankiCard.source_transcript = !youtubeLink ? transcript : '';
-    ankiCard.source_audio = `[sound:youglish_${ankiCard.word}_${vidId}_audio.mp3]`;
+    ankiCard.composition = `Peux-tu me donner une explication de la composition du mot ${ankiCard.word} selon le format suivant :
+                    ✅ [kanji 1] = [sens simple en français]   
+                    ✅ [kanji 2] = [sens simple en français]
+                    🔁 [${ankiCard.word}] = [interprétation intuitive du mot, en une phrase courte en français]
+                    🎥 Astuce mnémotechnique : 
+                Ne donne rien d’autre.`;
 
     return ankiCard;
-
-    // génération des fichiers audio.
-    await videoAudioDL(ankiCard.word, vidUrl);
 }
