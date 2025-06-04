@@ -4,7 +4,6 @@ import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import { chooseJapaneseTranslation } from './prompt.js';
 import { startSpinner } from './utils/cli-loader.js';
-import { getJapaneseWordComposition } from './src/ai.js';
 
 const note_fields = {};
 
@@ -58,7 +57,7 @@ export async function generate_word_cards(input) {
 
 export async function ankiJap(usrInput, youtubeLink) {
     // word cards to go on Anki.
-    let ankiCard = await generate_word_cards(usrInput);
+    let ankiCard = {};
 
     const stopSpinner = startSpinner(usrInput);
 
@@ -77,6 +76,10 @@ export async function ankiJap(usrInput, youtubeLink) {
         if (translation) ankiCard.traduction = translation;
         if (romaji) ankiCard.reading_romaji = romaji;
         ankiCard.audio = `[sound:audio_${ankiCard.reading}_${ankiCard.word}.mp3]`;
+    } else {
+        ankiCard.word = usrInput;
+        ankiCard.reading = 'reading';
+        ankiCard.audio = `[sound:audio_reading_${ankiCard.word}.mp3]`;
     }
 
     ankiCard.composition = `Peux-tu me donner une explication de la composition du mot ${ankiCard.word} selon le format suivant :

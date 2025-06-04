@@ -6,16 +6,53 @@ import addWordCard from './add-word-anki-card.js';
 import saveWordAudio from './utils/save-word-audio.js';
 import { getVideoIdAndStartTime } from './utils/video-audio-dl.js';
 import { videoAudioDL } from './utils/video-audio-dl.js';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 function isInputEnglish(text) {
     // Checks if the string contains any Roman characters (A-Z, a-z)
     return /[A-Za-z]/.test(text);
 }
+
+// scrape https://ejje.weblio.jp/content/選択して examples.
 
 // clear log.
 console.clear();
 
 // retrieve user input from terminal
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim(); // .replaceAll(/[^a-z\-\s]/gi, '');
+
+async function get_weblio_japanese_definition(word) {
+    try {
+        const { data } = await axios.get(
+            `https://www.weblio.jp/content/${word}`
+        );
+
+        const $ = cheerio.load(data);
+        let content = [];
+        $('h2.midashigo')
+            .next()
+            .children()
+            .each((i, e) => {
+                const $el = $(e);
+
+                if (
+                    $el.text() &&
+                    $el.text()[0].match(/[１２３４５６７８９０]/gi)
+                ) {
+                    content.push($el.text().slice(2));
+                }
+            });
+
+        console.log(content);
+
+        return content;
+    } catch (error) {
+        console.error('Error fetching data : ', error);
+        return '';
+    }
+}
+
+// await get_weblio_japanese_definition(usrInput);
 
 async function askForYoutubeLink(usrInput) {
     const { youtubeLink } = await inquirer.prompt([
@@ -46,7 +83,6 @@ if (youtubeLink) {
 
     ankiCard.source_link = youtubeLink;
     ankiCard.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
-    // ankiCard.source_transcript = !youtubeLink ? transcript : '';
     ankiCard.source_audio = `[sound:youglish_${ankiCard.word}_${videoId}_audio.mp3]`;
 
     await videoAudioDL(ankiCard.word, youtubeLink);
