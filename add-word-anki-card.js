@@ -1,5 +1,6 @@
 import axios from 'axios';
 import chalk from 'chalk';
+import isInputEnglish from './utils/isInputEnglish.js';
 
 // https://foosoft.net/projects/anki-connect/index.html#deck-actions
 
@@ -7,10 +8,12 @@ import chalk from 'chalk';
 const ankiUrl = 'http://127.0.0.1:8765';
 
 // adding function for word cards
-export default async function addWordCard(note_fields, deckName, NoteType) {
+export default async function addWordCard(note_fields) {
+    let lang = isInputEnglish(note_fields.word) ? 'ENGLISH' : 'JAPANESE';
+
     let note = {
-        deckName,
-        modelName: NoteType,
+        deckName: `1 - ${lang}`,
+        modelName: `CUSTOM_NOTE_${lang}`,
         fields: note_fields,
         options: { allowDuplicate: false },
     };

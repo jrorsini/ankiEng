@@ -29,6 +29,7 @@
         "domelementtype": "^2.3.0",
         "domhandler": "^5.0.3",
         "domutils": "^3.0.1",
+        "dotenv": "^16.5.0",
         "emoji-regex": "^8.0.0",
         "entities": "^4.5.0",
         "escape-string-regexp": "^1.0.5",

@@ -1,8 +1,9 @@
 import OpenAI from 'openai';
 // import chalk from 'chalk';
+import 'dotenv/config';
 import axios from 'axios';
 
-const openai = new OpenAI();
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function wordAndSynonymNuanceDiff(word, wordType, synonym) {
     const completion = await openai.chat.completions.create({
@@ -19,6 +20,36 @@ export async function wordAndSynonymNuanceDiff(word, wordType, synonym) {
         model: 'gpt-3.5-turbo',
     });
 
+    return completion.choices[0].message.content;
+}
+
+export async function getJapaneseWordSampleSentence(word) {
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {
+                role: 'system',
+                content: `Donne-moi une phrase exemple (assez simple/accessible) utilisant le mot "${word}" selon le format suivant en encadrant avec les balises <b></b> juste le mot en question dans la phrase exemple et sa traduction dans l'exemple en français (et juste cela s'il te plaît) : [phrase exemple en japonais]<br/>[phrase exemple traduite en français]`,
+            },
+        ],
+        model: 'gpt-3.5-turbo',
+
+        // {jp: [phrase exemple en japonais], fr: [phrase exemple traduite en français]}
+    });
+    return completion.choices[0].message.content;
+}
+
+export async function getJapaneseSourceTranscriptTranslation(transcript) {
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {
+                role: 'system',
+                content: `Donne-moi la traduction en Français de la phrase suivante "${transcript}" et rend le sous format : [transcript original]<br/>[transcript Traduit]`,
+            },
+        ],
+        model: 'gpt-3.5-turbo',
+
+        // {jp: [phrase exemple en japonais], fr: [phrase exemple traduite en français]}
+    });
     return completion.choices[0].message.content;
 }
 
