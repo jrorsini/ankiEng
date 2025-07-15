@@ -32,11 +32,12 @@ async function inquirerForYoutubeLink(usrInput) {
         },
     ]);
 
-    if (youtubeLink.trim() !== '') {
-        console.log(`✅ Lien YouTube reçu: ${youtubeLink}`);
-    } else {
-        console.log('👍 No YouTube link provided.');
-    }
+    console.log(
+        youtubeLink.trim() !== ''
+            ? `✅ Lien YouTube reçu: ${youtubeLink}`
+            : '👍 Aucun lien YouTube reçu.'
+    );
+
     return youtubeLink;
 }
 
@@ -49,11 +50,12 @@ async function inquirerSourceTranscript() {
         },
     ]);
 
-    if (source_transcript.trim() !== '') {
-        console.log(`✅ transcript received: ${source_transcript}`);
-    } else {
-        console.log('👍 No transcript provided.');
-    }
+    console.log(
+        source_transcript.trim() !== ''
+            ? `✅ Transcript reçu: ${source_transcript}`
+            : '👍 Aucun Transcript reçu.'
+    );
+
     return source_transcript;
 }
 
