@@ -21,23 +21,18 @@ import saveSentenceAudio from './utils/save-sentence-audio.js';
 console.clear();
 
 // retrieve user input from terminal
-const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim(); // .replaceAll(/[^a-z\-\s]/gi, '');
+const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
 
 async function inquirerForYoutubeLink(usrInput) {
     const { youtubeLink } = await inquirer.prompt([
         {
             type: 'input',
             name: 'youtubeLink',
-            message: `Lien YouTube pour "${usrInput}":`,
+            message: `Lien YouTube :`,
         },
     ]);
 
-    console.log(
-        youtubeLink.trim() !== ''
-            ? `✅ Lien YouTube reçu: ${youtubeLink}`
-            : '👍 Aucun lien YouTube reçu.'
-    );
-
+    console.log(youtubeLink.trim() !== '' ? `✅ Lien YouTube reçu` : '👍');
     return youtubeLink;
 }
 
@@ -50,12 +45,7 @@ async function inquirerSourceTranscript() {
         },
     ]);
 
-    console.log(
-        source_transcript.trim() !== ''
-            ? `✅ Transcript reçu: ${source_transcript}`
-            : '👍 Aucun Transcript reçu.'
-    );
-
+    console.log(source_transcript.trim() !== '' ? `✅ transcript reçu` : '👍');
     return source_transcript;
 }
 
