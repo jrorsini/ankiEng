@@ -12,25 +12,31 @@ import {
 } from './src/ai.js';
 import isInputEnglish from './utils/isInputEnglish.js';
 import saveSentenceAudio from './utils/save-sentence-audio.js';
+import { startSpinner } from './utils/cli-loader.js';
 
 console.clear(); // clear log.
 
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim(); // retrieve user input from terminal
 
-async function inquirerGetsYoutubeLink(usrInput) {
+if (!usrInput) {
+    console.log('You must to enter a word as a parameter');
+    process.exit(0);
+}
+
+async function inquireGetsYoutubeLink(usrInput) {
     const { youtubeLink } = await inquirer.prompt([
         {
             type: 'input',
             name: 'youtubeLink',
-            message: `Lien YouTube :`,
+            message: `Youtube link :`,
         },
     ]);
 
-    console.log(youtubeLink.trim() !== '' ? `✅ Lien YouTube reçu` : '👍');
+    console.log(youtubeLink.trim() !== '' ? `✅ link received` : '👍');
     return youtubeLink;
 }
 
-async function inquirerSourceTranscript() {
+async function inquireSourceTranscript() {
     const { source_transcript } = await inquirer.prompt([
         {
             type: 'input',
@@ -39,7 +45,9 @@ async function inquirerSourceTranscript() {
         },
     ]);
 
-    console.log(source_transcript.trim() !== '' ? `✅ transcript reçu` : '👍');
+    console.log(
+        source_transcript.trim() !== '' ? `✅ transcript received` : '👍'
+    );
     return source_transcript;
 }
 
@@ -49,7 +57,7 @@ let ankiCard = isInputEnglish(usrInput)
     ? await ankiEng(usrInput)
     : await ankiJap(usrInput);
 
-const youtubeLink = await inquirerGetsYoutubeLink(usrInput);
+const youtubeLink = await inquireGetsYoutubeLink(usrInput);
 
 if (youtubeLink) {
     const { videoId } = getVideoIdAndStartTime(youtubeLink);
@@ -58,19 +66,26 @@ if (youtubeLink) {
     ankiCard.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
     ankiCard.source_audio = `[sound:youglish_${ankiCard.word}_${videoId}_audio.mp3]`;
 
-    const source_transcript = await inquirerSourceTranscript();
+    const source_transcript = await inquireSourceTranscript();
     if (source_transcript !== '') {
         ankiCard.source_transcript =
             await getJapaneseSourceTranscriptTranslation(source_transcript);
     }
 
+    const stopSpinner = startSpinner(usrInput);
     await videoAudioDL(ankiCard.word, youtubeLink);
+    stopSpinner();
 } else {
     ankiCard.source_audio = `[sound:audio_${ankiCard.word}_sample_sentence.mp3]`;
     ankiCard.source_transcript = await getJapaneseWordSampleSentence(
         ankiCard.word
     );
 }
+/*
+    TODOs :
+        - inquire for tags based off the language
+        - automatically add the tag rather than doing it manually.
+*/
 
 await addWordCard(ankiCard);
 

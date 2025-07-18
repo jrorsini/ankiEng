@@ -2,24 +2,25 @@ import { toHiragana, toRomaji } from 'wanakana';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
-import { chooseJapaneseTranslation } from './prompt.js';
+import { inquireJapaneseTranslation } from './prompts.js';
 import { startSpinner } from './utils/cli-loader.js';
 
 const note_fields = {};
 
-export async function get_Dictionnaire_Japonais(userInput) {
+// the translations are fetched at the dictionnaire-japonais.com website.
+export async function fetchTranslationsArr(userInput) {
     try {
         const { data } = await axios.get(
             `https://www.dictionnaire-japonais.com/search.php?w=${userInput}&t=1`
         );
 
         const $ = cheerio.load(data);
-        let content = [];
+        let translationsArr = [];
 
         $('ul.resultsList > li > a').each((i, e) => {
             const $el = $(e);
 
-            content.push(
+            translationsArr.push(
                 `${$el.children().eq(1).text().trim().split(' ')[1]} - ${$el
                     .children()
                     .eq(2)
@@ -30,10 +31,10 @@ export async function get_Dictionnaire_Japonais(userInput) {
             );
         });
 
-        return content;
+        return translationsArr;
     } catch (error) {
         console.error('Error fetching data : ', error);
-        return '';
+        return [];
     }
 }
 
@@ -60,16 +61,14 @@ export async function ankiJap(usrInput, youtubeLink) {
     let ankiCard = {};
 
     const stopSpinner = startSpinner(usrInput);
-
-    let translations = await get_Dictionnaire_Japonais(usrInput);
-
+    let translationsArr = await fetchTranslationsArr(usrInput);
     stopSpinner();
 
-    if (translations.length > 0) {
+    if (translationsArr.length > 0) {
         // clear log
         console.clear();
         let { romaji, translation, hiragana, kanji } =
-            await chooseJapaneseTranslation(translations);
+            await inquireJapaneseTranslation(translationsArr);
 
         if (kanji) ankiCard.word = kanji;
         if (hiragana) ankiCard.reading = hiragana;

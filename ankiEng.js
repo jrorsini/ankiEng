@@ -1,6 +1,6 @@
 // API's handlers.
 import { getWordReferenceTranslations } from './src/ankiEng_get-wordreference-data.js';
-import { inquireTranslationType, inquireTranslation } from './prompt.js';
+import { inquireTranslationType, inquireTranslation } from './prompts.js';
 import { searchResultLogTranslations } from './src/search-results-logs.js';
 import { startSpinner } from './utils/cli-loader.js';
 
