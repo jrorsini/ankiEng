@@ -6,8 +6,6 @@ import addWordCard from './add-word-anki-card.js';
 import saveWordAudio from './utils/save-word-audio.js';
 import { getVideoIdAndStartTime } from './utils/video-audio-dl.js';
 import { videoAudioDL } from './utils/video-audio-dl.js';
-import axios from 'axios';
-import * as cheerio from 'cheerio';
 import {
     getJapaneseWordSampleSentence,
     getJapaneseSourceTranscriptTranslation,
@@ -15,15 +13,11 @@ import {
 import isInputEnglish from './utils/isInputEnglish.js';
 import saveSentenceAudio from './utils/save-sentence-audio.js';
 
-// scrape https://ejje.weblio.jp/content/選択して examples.
+console.clear(); // clear log.
 
-// clear log.
-console.clear();
+const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim(); // retrieve user input from terminal
 
-// retrieve user input from terminal
-const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim();
-
-async function inquirerForYoutubeLink(usrInput) {
+async function inquirerGetsYoutubeLink(usrInput) {
     const { youtubeLink } = await inquirer.prompt([
         {
             type: 'input',
@@ -55,7 +49,7 @@ let ankiCard = isInputEnglish(usrInput)
     ? await ankiEng(usrInput)
     : await ankiJap(usrInput);
 
-const youtubeLink = await inquirerForYoutubeLink(usrInput);
+const youtubeLink = await inquirerGetsYoutubeLink(usrInput);
 
 if (youtubeLink) {
     const { videoId } = getVideoIdAndStartTime(youtubeLink);

@@ -13,6 +13,13 @@ function properPiping(stc) {
     );
 }
 
+// return an array of distinct translation types such as nouns, verbs, etc...
+function createTranslationTypesArray(translations) {
+    return [...new Set(fetchedTranslations.map((e) => e.fromType))].filter(
+        (e) => e !== ''
+    );
+}
+
 export async function chooseJapaneseTranslation(fetchedTranslations) {
     let res = {
         kanji: '',
@@ -39,10 +46,8 @@ export async function chooseJapaneseTranslation(fetchedTranslations) {
     return res;
 }
 
-export async function chooseTranslationType(fetchedTranslations) {
-    const list_translation_types = [
-        ...new Set(fetchedTranslations.map((e) => e.fromType)),
-    ].filter((e) => e !== '');
+export async function chooseTranslationType(translations) {
+    const translationTypesArr = createTranslationTypesArray(translations);
 
     const answers = await inquirer.prompt([
         {
@@ -51,7 +56,7 @@ export async function chooseTranslationType(fetchedTranslations) {
             message: `Which ${chalk.underline.bold.yellow(
                 'translation type'
             )}?`,
-            choices: list_translation_types,
+            choices: translationTypesArr,
         },
     ]);
 
@@ -86,7 +91,7 @@ export async function chooseJapaneseReversoTranslation(
     return answers.reversoTranslation.join(', ');
 }
 
-export async function chooseTranslation(fetchedTranslations) {
+export async function inquireTranslation(fetchedTranslations) {
     const list_translations = fetchedTranslations.map((e) => `${e.to}`);
 
     const answers = await inquirer.prompt([
@@ -101,22 +106,6 @@ export async function chooseTranslation(fetchedTranslations) {
     ]);
 
     return fetchedTranslations.filter((e) => e.to === answers.translation)[0];
-
-    // delete this.fromTypes;
-
-    // // set selected translation
-    // this['translations'] = this.translations.filter((e) =>
-    //     filterByTranslationType(e, answers.type)
-    // );
-
-    // // set selected definition
-    // if (this.definitions) {
-    //     this['definitions'] = this.definitions.filter((e) =>
-    //         filterByDefinitionType(e, answers.type)
-    //     );
-    // }
-
-    // return this;
 }
 
 export async function chooseTranslationOld() {

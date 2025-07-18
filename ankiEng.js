@@ -1,6 +1,6 @@
 // API's handlers.
 import { getWordReferenceTranslations } from './src/ankiEng_get-wordreference-data.js';
-import { chooseTranslationType, chooseTranslation } from './prompt.js';
+import { inquireTranslationType, inquireTranslation } from './prompt.js';
 import { searchResultLogTranslations } from './src/search-results-logs.js';
 import { startSpinner } from './utils/cli-loader.js';
 
@@ -14,7 +14,7 @@ export async function ankiEng(usrInput) {
     const ankiCard = {};
 
     if (fetchedTranslations.length > 0) {
-        const translationType = await chooseTranslationType(
+        const translationType = await inquireTranslationType(
             fetchedTranslations
         );
         fetchedTranslations = fetchedTranslations.filter(
