@@ -86,7 +86,7 @@ async function runCommands(cmd1, cmd2) {
     }
 }
 
-export async function videoAudioDL(word, videoLink) {
+export async function downloadVideoAudio(word, videoLink) {
     const { videoId, startTime } = getVideoIdAndStartTime(videoLink);
 
     console.log(`Lien :`, videoLink);

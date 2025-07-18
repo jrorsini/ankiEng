@@ -58,28 +58,20 @@ export async function generate_word_cards(input) {
 
 export async function ankiJap(usrInput, youtubeLink) {
     // word cards to go on Anki.
-    let ankiCard = {};
+    let ankiCard = { word: usrInput };
 
     const stopSpinner = startSpinner(usrInput);
-    let translationsArr = await fetchTranslationsArr(usrInput);
+    // translation Array
+    let trArr = await fetchTranslationsArr(usrInput);
     stopSpinner();
 
-    if (translationsArr.length > 0) {
-        // clear log
-        console.clear();
-        let { romaji, translation, hiragana, kanji } =
-            await inquireJapaneseTranslation(translationsArr);
-
-        if (kanji) ankiCard.word = kanji;
-        if (hiragana) ankiCard.reading = hiragana;
-        if (translation) ankiCard.traduction = translation;
-        if (romaji) ankiCard.reading_romaji = romaji;
-        ankiCard.audio = `[sound:audio_${ankiCard.reading}_${ankiCard.word}.mp3]`;
-    } else {
-        ankiCard.word = usrInput;
-        ankiCard.reading = 'reading';
-        ankiCard.audio = `[sound:audio_reading_${ankiCard.word}.mp3]`;
+    if (trArr.length > 0) {
+        console.clear(); // clear log
+        let translationObject = await inquireJapaneseTranslation(trArr);
+        Object.assign(ankiCard, translationObject);
     }
+
+    ankiCard.audio = `[sound:audio_${ankiCard.word}.mp3]`;
 
     ankiCard.composition = `Peux-tu me donner une explication de la composition du mot ${ankiCard.word} selon le format suivant :
                     ✅ [kanji 1] = [sens simple en français]   

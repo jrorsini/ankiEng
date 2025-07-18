@@ -7,15 +7,16 @@ import {
 
 // return an array of distinct translation types such as nouns, verbs, etc...
 function createTranslationTypesArray(translations) {
-    return [...new Set(fetchedTranslations.map((e) => e.fromType))].filter(
+    return [...new Set(translations.map((e) => e.fromType))].filter(
         (e) => e !== ''
     );
 }
 
+// translation format : 食生活 - habitudes alimentaires - しょくせいかつ - shokuseikatsu
 export async function inquireJapaneseTranslation(fetchedTranslations) {
-    let res = {
+    let translationObject = {
         kanji: '',
-        hiragana: '',
+        reading: '',
         romaji: '',
         translation: '',
     };
@@ -29,13 +30,13 @@ export async function inquireJapaneseTranslation(fetchedTranslations) {
     ]);
 
     if (answers.translation) {
-        res.kanji = answers.translation.split(' - ')[0];
-        res.hiragana = answers.translation.split(' - ')[2];
-        res.romaji = answers.translation.split(' - ')[3];
-        res.translation = answers.translation.split(' - ')[1];
+        translationObject.kanji = answers.translation.split(' - ')[0];
+        translationObject.reading = answers.translation.split(' - ')[2];
+        translationObject.romaji = answers.translation.split(' - ')[3];
+        translationObject.translation = answers.translation.split(' - ')[1];
     }
 
-    return res;
+    return translationObject;
 }
 
 export async function inquireTranslationType(translations) {
@@ -44,7 +45,7 @@ export async function inquireTranslationType(translations) {
     const answers = await inquirer.prompt([
         {
             type: 'list',
-            name: 'translation',
+            name: 'translationType',
             message: `Which ${chalk.underline.bold.yellow(
                 'translation type'
             )}?`,
@@ -52,7 +53,7 @@ export async function inquireTranslationType(translations) {
         },
     ]);
 
-    return answers.translation;
+    return answers.translationType;
 }
 
 export async function chooseReversoTranslation(fetchedReversoTranslation) {

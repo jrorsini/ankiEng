@@ -21,7 +21,7 @@ export async function ankiEng(usrInput) {
             (e) => e.fromType === translationType
         );
         searchResultLogTranslations(fetchedTranslations);
-        let { from, fromType, toType, to, example } = await chooseTranslation(
+        let { from, fromType, toType, to, example } = await inquireTranslation(
             fetchedTranslations
         );
 

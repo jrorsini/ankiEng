@@ -5,7 +5,7 @@ import inquirer from 'inquirer';
 import addWordCard from './add-word-anki-card.js';
 import saveWordAudio from './utils/save-word-audio.js';
 import { getVideoIdAndStartTime } from './utils/video-audio-dl.js';
-import { videoAudioDL } from './utils/video-audio-dl.js';
+import { downloadVideoAudio } from './utils/video-audio-dl.js';
 import {
     getJapaneseWordSampleSentence,
     getJapaneseSourceTranscriptTranslation,
@@ -23,7 +23,7 @@ if (!usrInput) {
     process.exit(0);
 }
 
-async function inquireGetsYoutubeLink(usrInput) {
+async function inquireGetsYoutubeLink() {
     const { youtubeLink } = await inquirer.prompt([
         {
             type: 'input',
@@ -32,7 +32,11 @@ async function inquireGetsYoutubeLink(usrInput) {
         },
     ]);
 
-    console.log(youtubeLink.trim() !== '' ? `✅ link received` : '👍');
+    console.log(
+        youtubeLink.trim() !== ''
+            ? `✅ link received`
+            : 'You must paste a youtube link'
+    );
     return youtubeLink;
 }
 
@@ -57,37 +61,28 @@ let ankiCard = isInputEnglish(usrInput)
     ? await ankiEng(usrInput)
     : await ankiJap(usrInput);
 
-const youtubeLink = await inquireGetsYoutubeLink(usrInput);
+let youtube_link = '';
+while (!youtube_link) youtube_link = await inquireGetsYoutubeLink();
 
-if (youtubeLink) {
-    const { videoId } = getVideoIdAndStartTime(youtubeLink);
+let source_transcript = '';
+while (!source_transcript) source_transcript = await inquireSourceTranscript();
 
-    ankiCard.source_link = youtubeLink;
-    ankiCard.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
-    ankiCard.source_audio = `[sound:youglish_${ankiCard.word}_${videoId}_audio.mp3]`;
+const { videoId } = getVideoIdAndStartTime(youtubeLink);
 
-    const source_transcript = await inquireSourceTranscript();
-    if (source_transcript !== '') {
-        ankiCard.source_transcript =
-            await getJapaneseSourceTranscriptTranslation(source_transcript);
-    }
+ankiCard.source_link = youtubeLink;
+ankiCard.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
+ankiCard.source_audio = `[sound:youglish_${ankiCard.word}_${videoId}_audio.mp3]`;
 
-    const stopSpinner = startSpinner(usrInput);
-    await videoAudioDL(ankiCard.word, youtubeLink);
-    stopSpinner();
-} else {
-    ankiCard.source_audio = `[sound:audio_${ankiCard.word}_sample_sentence.mp3]`;
-    ankiCard.source_transcript = await getJapaneseWordSampleSentence(
-        ankiCard.word
+if (source_transcript !== '') {
+    ankiCard.source_transcript = await getJapaneseSourceTranscriptTranslation(
+        source_transcript
     );
 }
-/*
-    TODOs :
-        - inquire for tags based off the language
-        - automatically add the tag rather than doing it manually.
-*/
 
-await addWordCard(ankiCard);
+await downloadVideoAudio(ankiCard.word, youtubeLink);
+
+ankiCard.source_audio = `[sound:audio_${ankiCard.word}_sample_sentence.mp3]`;
+ankiCard.source_transcript = await getJapaneseWordSampleSentence(ankiCard.word);
 
 isInputEnglish(usrInput)
     ? await saveWordAudio('en', ankiCard.word, ankiCard.word)
@@ -96,3 +91,10 @@ isInputEnglish(usrInput)
 if (!isInputEnglish(usrInput) && !youtubeLink) {
     await saveSentenceAudio(ankiCard.word, ankiCard.source_transcript);
 }
+/*
+    TODOs :
+        - inquire for tags based off the language
+        - automatically add the tag rather than doing it manually.
+*/
+
+await addWordCard(ankiCard);
