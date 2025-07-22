@@ -38,6 +38,26 @@ export async function getJapaneseWordSampleSentence(word) {
     return completion.choices[0].message.content;
 }
 
+export async function getJapaneseWordComposition(word) {
+    const completion = await openai.chat.completions.create({
+        messages: [
+            {
+                role: 'system',
+                content: `
+                Donne-moi une explication concise de la composition du mot ${word} selon le format suivant :
+                    ✅ [kanji 1] = [sens simple en français]   
+                    ✅ [kanji 2] = [sens simple en français]
+                    🔁 [${word}] = [interprétation intuitive du mot, en une phrase courte en français]
+                    🎥 Astuce mnémotechnique : 
+                Ne donne rien d’autre.`,
+            },
+        ],
+        model: 'gpt-3.5-turbo',
+    });
+
+    return completion.choices[0].message.content;
+}
+
 export async function getJapaneseSourceTranscriptTranslation(transcript) {
     const completion = await openai.chat.completions.create({
         messages: [
@@ -47,8 +67,6 @@ export async function getJapaneseSourceTranscriptTranslation(transcript) {
             },
         ],
         model: 'gpt-3.5-turbo',
-
-        // {jp: [phrase exemple en japonais], fr: [phrase exemple traduite en français]}
     });
     return completion.choices[0].message.content;
 }

@@ -17,20 +17,19 @@ export default async function saveWordAudio(lang, word, reading) {
 
     const path2dir = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
 
-    const audioFileName = `${
-        lang === 'en'
-            ? `audio_${formatWordForAudio(word)}.mp3`
-            : `audio_${reading}_${word}.mp3`
-    }`;
+    // const audioFileName = `${
+    //     lang === 'en'
+    //         ? `audio_${formatWordForAudio(word)}.mp3`
+    //         : `audio_${reading}_${word}.mp3`
+    // }`;
+
+    const audioFileName = `audio_${formatWordForAudio(word)}.mp3`;
+
     gtts.save(`${path2dir}/${audioFileName}`, function (err, result) {
         if (err) {
             console.error(err);
         } else {
-            console.log(
-                `Audio saved as ${
-                    'jp' ? `audio_${reading}_${word}.mp3` : `audio_${word}.mp3`
-                }`
-            );
+            console.log(`Audio saved as audio_${word}.mp3`);
         }
     });
 }

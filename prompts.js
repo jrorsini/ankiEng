@@ -12,6 +12,61 @@ function createTranslationTypesArray(translations) {
     );
 }
 
+export async function inquireTag() {
+    // choisir le tag associé.
+    // si c'est un episode dbz ou conan il est automatiquement associé.
+    jpTagsArr = ['news', 'podcast', 'none', 'dbz', 'detective_conan'];
+    const { tag } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'tag',
+            message: `Quels tag ?`,
+            choices: jpTagsArr,
+        },
+    ]);
+    let secondaryTag = '';
+
+    if (tag === 'news') {
+        return [tag, 'tbs_news_dig'];
+    }
+
+    return tag;
+    // let detectiveConanLinkEpisodeMap = { '': '69' };
+    // let DbzLinkEpisodeMap = { '': '69' };
+}
+
+export async function inquireSourceLink() {
+    const { sourceLink } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'sourceLink',
+            message: `Youtube link :`,
+        },
+    ]);
+
+    console.log(
+        sourceLink.trim() !== ''
+            ? `✅ link received`
+            : 'You must paste a youtube link'
+    );
+    return sourceLink;
+}
+
+export async function inquireSourceTranscript() {
+    const { source_transcript } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'source_transcript',
+            message: `Transcript :`,
+        },
+    ]);
+
+    console.log(
+        source_transcript.trim() !== '' ? `✅ transcript received` : '👍'
+    );
+    return source_transcript;
+}
+
 // translation format : 食生活 - habitudes alimentaires - しょくせいかつ - shokuseikatsu
 export async function inquireJapaneseTranslation(fetchedTranslations) {
     let translationObject = {

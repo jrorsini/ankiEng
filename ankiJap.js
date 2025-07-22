@@ -4,6 +4,7 @@ import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
 import { inquireJapaneseTranslation } from './prompts.js';
 import { startSpinner } from './utils/cli-loader.js';
+import { getJapaneseWordComposition } from './src/ai.js';
 
 const note_fields = {};
 
@@ -71,14 +72,14 @@ export async function ankiJap(usrInput, youtubeLink) {
         Object.assign(ankiCard, translationObject);
     }
 
-    ankiCard.audio = `[sound:audio_${ankiCard.word}.mp3]`;
+    ankiCard.composition = await getJapaneseWordComposition(ankiCard.word);
 
-    ankiCard.composition = `Peux-tu me donner une explication de la composition du mot ${ankiCard.word} selon le format suivant :
-                    ✅ [kanji 1] = [sens simple en français]   
-                    ✅ [kanji 2] = [sens simple en français]
-                    🔁 [${ankiCard.word}] = [interprétation intuitive du mot, en une phrase courte en français]
-                    🎥 Astuce mnémotechnique : 
-                Ne donne rien d’autre.`;
+    // ankiCard.composition = `Peux-tu me donner une explication de la composition du mot ${ankiCard.word} selon le format suivant :
+    //                 ✅ [kanji 1] = [sens simple en français]
+    //                 ✅ [kanji 2] = [sens simple en français]
+    //                 🔁 [${ankiCard.word}] = [interprétation intuitive du mot, en une phrase courte en français]
+    //                 🎥 Astuce mnémotechnique :
+    //             Ne donne rien d’autre.`;
 
     return ankiCard;
 }
