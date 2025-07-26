@@ -56,7 +56,7 @@ const execPromise = util.promisify(exec);
 const path2SaveFile = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
 
 function generate_yt_dlp_cmd(word, videoId) {
-    return `yt-dlp -x --audio-format mp3 -o "${path2SaveFile}/temp_youglish_${word}_${videoId}_audio.mp3" --cookies-from-browser chrome "https://www.youtube.com/watch?v=${videoId}"`;
+    return `yt-dlp -x --audio-format mp3 -o "${path2SaveFile}/temp_source_audio_${word}_${videoId}_audio.mp3" --cookies-from-browser chrome "https://www.youtube.com/watch?v=${videoId}"`;
 }
 
 function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
@@ -64,12 +64,12 @@ function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
         number_of_seconds <= 5 ? 0 : number_of_seconds - 2
     );
     const end = secondsToHHMMSS(number_of_seconds + 8);
-    const outputName = `youglish_${word}_${videoId}_audio.mp3`;
+    const outputName = `source_audio_${word}_${videoId}_audio.mp3`;
     console.log(`seconds :`, number_of_seconds);
     console.log(`start :`, start);
     console.log(`end :`, end);
 
-    return `ffmpeg -i "${path2SaveFile}/temp_${outputName}" -ss ${start} -to ${end} "${path2SaveFile}/${outputName}";`;
+    return `ffmpeg -i "${path2SaveFile}/temp_${outputName}" -ss ${start} -to ${end} "${path2SaveFile}/nonTreated_${outputName}";`;
 }
 
 async function runCommands(cmd1, cmd2) {

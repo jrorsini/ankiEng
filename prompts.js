@@ -15,7 +15,8 @@ function createTranslationTypesArray(translations) {
 export async function inquireTag() {
     // choisir le tag associé.
     // si c'est un episode dbz ou conan il est automatiquement associé.
-    jpTagsArr = ['news', 'podcast', 'none', 'dbz', 'detective_conan'];
+    const jpTagsArr = ['news', 'podcast', 'none', 'dbz', 'detective_conan'];
+    let tags = [];
     const { tag } = await inquirer.prompt([
         {
             type: 'list',
@@ -25,12 +26,13 @@ export async function inquireTag() {
         },
     ]);
     let secondaryTag = '';
+    tags.push(tag);
 
     if (tag === 'news') {
-        return [tag, 'tbs_news_dig'];
+        tags.push('tbs_news_dig');
     }
 
-    return tag;
+    return tags;
     // let detectiveConanLinkEpisodeMap = { '': '69' };
     // let DbzLinkEpisodeMap = { '': '69' };
 }
