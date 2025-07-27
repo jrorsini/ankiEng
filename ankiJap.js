@@ -57,9 +57,9 @@ export async function generate_word_cards(input) {
     return note_fields;
 }
 
-export async function ankiJap(usrInput, youtubeLink) {
+export async function ankiJap(usrInput) {
     // word cards to go on Anki.
-    let ankiCard = { word: usrInput };
+    let ankiCard = {};
 
     const stopSpinner = startSpinner(usrInput);
     // translation Array

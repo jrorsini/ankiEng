@@ -10,12 +10,8 @@ import {
     inquireSourceTranscript,
     inquireTag,
 } from './prompts.js';
-import {
-    getJapaneseWordSampleSentence,
-    getJapaneseSourceTranscriptTranslation,
-} from './src/ai.js';
+import { getJapaneseSourceTranscriptTranslation } from './src/ai.js';
 import isInputEnglish from './utils/isInputEnglish.js';
-import saveSentenceAudio from './utils/save-sentence-audio.js';
 import { startSpinner } from './utils/cli-loader.js';
 
 console.clear(); // clear log.
@@ -48,9 +44,8 @@ saveWordAudio(isInputEnglish(usrInput) ? 'en' : 'ja', note_fields.word);
 
 note_fields.source_link = source_link;
 note_fields.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
-note_fields.source_audio = `[sound:source_audio_${note_fields.word}_${videoId}_audio.mp3]`;
+note_fields.source_audio = `[sound:source_audio_${note_fields.word}_${videoId}_audio.m4a]`;
 note_fields.audio = `[sound:audio_${note_fields.word}.mp3]`;
-note_fields.source_audio = `[sound:audio_${note_fields.word}_source_transcript.mp3]`;
 
 let note_tags = await inquireTag();
 

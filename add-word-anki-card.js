@@ -15,7 +15,7 @@ export default async function addWordCard(note_fields, note_tags) {
         modelName: `CUSTOM_NOTE_${lang}`,
         fields: note_fields,
         tags: note_tags,
-        options: { allowDuplicate: false },
+        options: { allowDuplicate: true },
     };
 
     try {

@@ -89,7 +89,7 @@ export async function inquireJapaneseTranslation(fetchedTranslations) {
     if (answers.translation) {
         translationObject.kanji = answers.translation.split(' - ')[0];
         translationObject.reading = answers.translation.split(' - ')[2];
-        translationObject.romaji = answers.translation.split(' - ')[3];
+        translationObject.reading_romaji = answers.translation.split(' - ')[3];
         translationObject.translation = answers.translation.split(' - ')[1];
     }
 
