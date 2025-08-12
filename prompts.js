@@ -15,26 +15,51 @@ function createTranslationTypesArray(translations) {
 export async function inquireTag() {
     // choisir le tag associé.
     // si c'est un episode dbz ou conan il est automatiquement associé.
-    const jpTagsArr = ['news', 'podcast', 'none', 'dbz', 'detective_conan'];
     let tags = [];
     const { tag } = await inquirer.prompt([
         {
             type: 'list',
             name: 'tag',
             message: `Quels tag ?`,
-            choices: jpTagsArr,
+            choices: ['news', 'podcast', 'youtube', 'dbz', 'detective_conan'],
         },
     ]);
-    let secondaryTag = '';
+    let secondaryTag;
     tags.push(tag);
 
     if (tag === 'news') {
-        tags.push('tbs_news_dig');
+        secondaryTag = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'tag',
+                message: `Quel News ?`,
+                choices: [
+                    'tbs_news_dig',
+                    'ANNnewsCH',
+                    'InsideEdition',
+                    'RealTimeWithBillMaher',
+                    'ABC7',
+                    'SBSnews6',
+                    'MSNBC',
+                ],
+            },
+        ]);
+        tags.push(secondaryTag.tag);
     }
+    if (tag === 'podcast') {
+        secondaryTag = await inquirer.prompt([
+            {
+                type: 'list',
+                name: 'tag',
+                message: `Quel podcast ?`,
+                choices: ['YUYUの日本語Podcast', 'TheBiteSizeJapanesePodcast'],
+            },
+        ]);
+        tags.push(secondaryTag.tag);
+    }
+    console.log(tags);
 
     return tags;
-    // let detectiveConanLinkEpisodeMap = { '': '69' };
-    // let DbzLinkEpisodeMap = { '': '69' };
 }
 
 export async function inquireSourceLink() {
@@ -87,10 +112,10 @@ export async function inquireJapaneseTranslation(fetchedTranslations) {
     ]);
 
     if (answers.translation) {
-        translationObject.kanji = answers.translation.split(' - ')[0];
+        translationObject.word = answers.translation.split(' - ')[0];
         translationObject.reading = answers.translation.split(' - ')[2];
         translationObject.reading_romaji = answers.translation.split(' - ')[3];
-        translationObject.translation = answers.translation.split(' - ')[1];
+        translationObject.traduction = answers.translation.split(' - ')[1];
     }
 
     return translationObject;

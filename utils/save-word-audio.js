@@ -8,22 +8,15 @@ function formatWordForAudio(w) {
         .replace(/\[sb\]/gi, 'somebody');
 }
 
-export default async function saveWordAudio(lang, word, reading) {
+export default async function saveWordAudio(lang, w, reading) {
     // lang : ja, en
-    const gtts = new gTTS(
-        lang === 'en' ? `${formatWordForAudio(word)}.` : `${word}.`,
-        lang
-    );
+    let word = lang === 'en' ? formatWordForAudio(w) : w;
+
+    const gtts = new gTTS(`${word}.`, lang);
 
     const path2dir = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
 
-    // const audioFileName = `${
-    //     lang === 'en'
-    //         ? `audio_${formatWordForAudio(word)}.mp3`
-    //         : `audio_${reading}_${word}.mp3`
-    // }`;
-
-    const audioFileName = `audio_${formatWordForAudio(word)}.mp3`;
+    const audioFileName = `audio_${word}.mp3`;
 
     gtts.save(`${path2dir}/${audioFileName}`, function (err, result) {
         if (err) {

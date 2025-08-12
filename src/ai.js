@@ -63,7 +63,7 @@ export async function getJapaneseSourceTranscriptTranslation(transcript) {
         messages: [
             {
                 role: 'system',
-                content: `Donne-moi la traduction en Français de la phrase suivante "${transcript}" et rend le sous format : [transcript original]<br/>[transcript Traduit]`,
+                content: `Donne-moi la traduction en Français de la phrase suivante "${transcript}" ET JUSTE la traduction`,
             },
         ],
         model: 'gpt-3.5-turbo',

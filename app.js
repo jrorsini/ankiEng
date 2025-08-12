@@ -27,13 +27,16 @@ let note_fields = isInputEnglish(usrInput)
     ? await ankiEng(usrInput)
     : await ankiJap(usrInput);
 
+let note_tags = await inquireTag();
+
 let source_link = '';
 while (!source_link) source_link = await inquireSourceLink();
 
 let source_transcript = '';
 while (!source_transcript) source_transcript = await inquireSourceTranscript();
 
-note_fields.source_transcript = await getJapaneseSourceTranscriptTranslation(
+note_fields.source_transcript = source_transcript;
+note_fields.source_transcript_tr = await getJapaneseSourceTranscriptTranslation(
     source_transcript
 );
 
@@ -44,9 +47,7 @@ saveWordAudio(isInputEnglish(usrInput) ? 'en' : 'ja', note_fields.word);
 
 note_fields.source_link = source_link;
 note_fields.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
-note_fields.source_audio = `[sound:source_audio_${note_fields.word}_${videoId}_audio.m4a]`;
+note_fields.source_audio = `[sound:source_audio_${note_fields.word}_${videoId}_audio.mov]`;
 note_fields.audio = `[sound:audio_${note_fields.word}.mp3]`;
-
-let note_tags = await inquireTag();
 
 await addWordCard(note_fields, note_tags);

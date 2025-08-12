@@ -24,6 +24,7 @@ export default async function addWordCard(note_fields, note_tags) {
             version: 6,
             params: { note },
         });
+
         console.log(
             chalk.green.bold(`${note_fields.word} card added successfully!`)
         );

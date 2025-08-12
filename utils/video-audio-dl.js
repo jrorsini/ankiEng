@@ -93,8 +93,10 @@ export async function downloadVideoAudio(word, videoLink) {
     console.log(`Video ID :`, videoId);
     console.log(`Start Time :`, startTime);
 
-    const cmd1 = generate_yt_dlp_cmd(word, videoId);
-    const cmd2 = generate_ffmpeg_cmd(word, startTime, videoId);
+    let formattedWord = word.replace(/\[/gi, '').replace(/\]/gi, '');
+
+    const cmd1 = generate_yt_dlp_cmd(formattedWord, videoId);
+    const cmd2 = generate_ffmpeg_cmd(formattedWord, startTime, videoId);
 
     await runCommands(cmd1, cmd2);
 }

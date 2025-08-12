@@ -8,6 +8,24 @@ import { getJapaneseWordComposition } from './src/ai.js';
 
 const note_fields = {};
 
+export async function generate_word_cards(input) {
+    // list tokenized parts of the input and gives me reading and all that.
+    let word_card = tokenizer.tokenize(input).slice(0, 1)[0];
+
+    if (word_card.basic_form !== word_card.surface_form) {
+        const basicForm = tokenizer
+            .tokenize(word_card.basic_form)
+            .slice(0, 1)[0];
+        word_card = basicForm;
+    }
+
+    note_fields.word = word_card.basic_form;
+    note_fields.reading = toHiragana(word_card.reading);
+    note_fields.reading_romaji = toRomaji(word_card.reading);
+
+    return note_fields;
+}
+
 // the translations are fetched at the dictionnaire-japonais.com website.
 export async function fetchTranslationsArr(userInput) {
     try {
@@ -37,24 +55,6 @@ export async function fetchTranslationsArr(userInput) {
         console.error('Error fetching data : ', error);
         return [];
     }
-}
-
-export async function generate_word_cards(input) {
-    // list tokenized parts of the input and gives me reading and all that.
-    let word_card = tokenizer.tokenize(input).slice(0, 1)[0];
-
-    if (word_card.basic_form !== word_card.surface_form) {
-        const basicForm = tokenizer
-            .tokenize(word_card.basic_form)
-            .slice(0, 1)[0];
-        word_card = basicForm;
-    }
-
-    note_fields.word = word_card.basic_form;
-    note_fields.reading = toHiragana(word_card.reading);
-    note_fields.reading_romaji = toRomaji(word_card.reading);
-
-    return note_fields;
 }
 
 export async function ankiJap(usrInput) {

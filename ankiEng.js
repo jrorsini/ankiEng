@@ -34,9 +34,9 @@ export async function ankiEng(usrInput) {
         ankiCard.traduction = to;
         ankiCard.type_from = fromType;
         ankiCard.type_to = toType;
-        ankiCard.example_en = example.from;
-        ankiCard.example_fr = example.to;
-        ankiCard.audio = `[sound:audio_${audio_english}.mp3]`;
+        ankiCard.audio = `[sound:audio_${audio_english
+            .replace(/\[/gi, '')
+            .replace(/\]/gi, '')}.mp3]`;
     } else {
         ankiCard.word = usrInput;
         ankiCard.audio = `[sound:audio_${usrInput}.mp3]`;
