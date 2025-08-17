@@ -34,13 +34,14 @@ export async function inquireTag() {
                 name: 'tag',
                 message: `Quel News ?`,
                 choices: [
-                    'tbs_news_dig',
                     'ANNnewsCH',
                     'InsideEdition',
                     'RealTimeWithBillMaher',
                     'ABC7',
+                    'ABC News',
                     'SBSnews6',
                     'MSNBC',
+                    'tbs_news_dig',
                 ],
             },
         ]);
