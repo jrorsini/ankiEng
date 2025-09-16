@@ -15,3 +15,21 @@ export function convertYouTubeEmbedToShort(url) {
 
     return { videoId, shortUrl };
 }
+
+// Fetched applescript youtube link converting handler from link like this : https://www.youtube.com/watch?v=Zd7rS7s6sts&list=PL5bLw9Uguvv1VRVl3gHBt-FcM__k3UY9L&index=5&t=95
+// to this : https://youtu.be/Zd7rS7s6sts?t=95
+export function convertYoutubeURL(longUrl) {
+    const url = new URL(longUrl);
+
+    // Extract video ID
+    const videoId = url.searchParams.get('v');
+
+    // Extract timestamp if present
+    const timestamp = url.searchParams.get('t');
+
+    // Build short URL
+    let shortUrl = `https://youtu.be/${videoId}`;
+    shortUrl += timestamp ? `?t=${timestamp}` : ``;
+
+    return shortUrl;
+}

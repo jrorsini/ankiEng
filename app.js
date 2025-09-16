@@ -10,14 +10,25 @@ import {
     inquireSourceTranscript,
     inquireTag,
 } from './prompts.js';
+import { convertYoutubeURL } from './utils/embed-video-link-handler.js';
 import { getJapaneseSourceTranscriptTranslation } from './src/ai.js';
 import isInputEnglish from './utils/isInputEnglish.js';
 import { startSpinner } from './utils/cli-loader.js';
 
 console.clear(); // clear log.
 
-const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim(); // retrieve user input from terminal
-// must create a handler for cli input.
+let usrInput = process.argv[2].toLowerCase().trim();
+let source_link = '';
+let channel = '';
+
+if (process.argv.length > 3) {
+    [source_link, channel] = [
+        convertYoutubeURL(process.argv[3]),
+        process.argv[4],
+    ];
+}
+
+console.log(source_link);
 
 if (!usrInput) {
     console.log('You must to enter a word to search');
@@ -28,9 +39,8 @@ let note_fields = isInputEnglish(usrInput)
     ? await ankiEng(usrInput)
     : await ankiJap(usrInput);
 
-let note_tags = await inquireTag();
+let note_tags = !channel ? await inquireTag() : [channel];
 
-let source_link = '';
 while (!source_link) source_link = await inquireSourceLink();
 
 let source_transcript = '';
