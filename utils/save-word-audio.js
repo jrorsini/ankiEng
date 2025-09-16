@@ -3,9 +3,9 @@ import gTTS from 'gtts';
 function formatWordForAudio(w) {
     return w
         .split(',')[0]
-        .replace(/\[sth\/sb\]/gi, 'something or somebody')
-        .replace(/\[sth\]/gi, 'something')
-        .replace(/\[sb\]/gi, 'somebody');
+        .replace(/\[sth\/sb\]/gi, 'sth or sb')
+        .replace(/\[sth\]/gi, 'sth')
+        .replace(/\[sb\]/gi, 'sb');
 }
 
 export default async function saveWordAudio(lang, w, reading) {

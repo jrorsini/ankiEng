@@ -64,12 +64,12 @@ function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
         number_of_seconds <= 5 ? 0 : number_of_seconds - 2
     );
     const end = secondsToHHMMSS(number_of_seconds + 8);
-    const outputName = `source_audio_${word}_${videoId}_audio.mp3`;
+    const outputName = `source_audio_${word}_${videoId}_audio`;
     console.log(`seconds :`, number_of_seconds);
     console.log(`start :`, start);
     console.log(`end :`, end);
 
-    return `ffmpeg -i "${path2SaveFile}/temp_${outputName}" -ss ${start} -to ${end} "${path2SaveFile}/nonTreated-${outputName}";`;
+    return `ffmpeg -i "${path2SaveFile}/temp_${outputName}.mp3" -ss ${start} -to ${end} "${path2SaveFile}/nonTreated-${outputName}.mov";`;
 }
 
 async function runCommands(cmd1, cmd2) {
@@ -93,7 +93,10 @@ export async function downloadVideoAudio(word, videoLink) {
     console.log(`Video ID :`, videoId);
     console.log(`Start Time :`, startTime);
 
-    let formattedWord = word.replace(/\[/gi, '').replace(/\]/gi, '');
+    let formattedWord = word
+        .replace(/\[sth\/sb\]/gi, 'sth or sb')
+        .replace(/\[sth\]/gi, 'sth')
+        .replace(/\[sb\]/gi, 'sb');
 
     const cmd1 = generate_yt_dlp_cmd(formattedWord, videoId);
     const cmd2 = generate_ffmpeg_cmd(formattedWord, startTime, videoId);

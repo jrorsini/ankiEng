@@ -17,6 +17,7 @@ import { startSpinner } from './utils/cli-loader.js';
 console.clear(); // clear log.
 
 const usrInput = process.argv.slice(2).join(' ').toLowerCase().trim(); // retrieve user input from terminal
+// must create a handler for cli input.
 
 if (!usrInput) {
     console.log('You must to enter a word to search');

@@ -13,7 +13,7 @@ export default async function saveSentenceAudio(word, sentence) {
 
     const path2dir = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
 
-    const audioFileName = `audio_${word}_source_transcript.mp3`;
+    const audioFileName = `audio_${word}_source_transcript.mov`;
 
     gtts.save(`${path2dir}/${audioFileName}`, function (err, result) {
         console.log(err ? err : `Audio saved as ${audioFileName}`);

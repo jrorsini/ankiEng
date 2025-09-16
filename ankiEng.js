@@ -26,9 +26,9 @@ export async function ankiEng(usrInput) {
         );
 
         const audio_english = from
-            .replace(/\[sth\/sb\]/gi, 'something or somebody')
-            .replace(/\[sth\]/gi, 'something')
-            .replace(/\[sb\]/gi, 'somebody');
+            .replace(/\[sth\/sb\]/gi, 'sth or sb')
+            .replace(/\[sth\]/gi, 'sth')
+            .replace(/\[sb\]/gi, 'sb');
 
         ankiCard.word = from;
         ankiCard.traduction = to;

@@ -53,7 +53,11 @@ export async function inquireTag() {
                 type: 'list',
                 name: 'tag',
                 message: `Quel podcast ?`,
-                choices: ['YUYUの日本語Podcast', 'TheBiteSizeJapanesePodcast'],
+                choices: [
+                    'YUYUの日本語Podcast',
+                    'TheBiteSizeJapanesePodcast',
+                    'JapanesePod101',
+                ],
             },
         ]);
         tags.push(secondaryTag.tag);
