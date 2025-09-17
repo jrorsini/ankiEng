@@ -12,6 +12,18 @@ function createTranslationTypesArray(translations) {
     );
 }
 
+export async function inquireWord() {
+    const { word } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'word',
+            message: 'enter your search :',
+        },
+    ]);
+
+    return word;
+}
+
 export async function inquireTag() {
     // choisir le tag associé.
     // si c'est un episode dbz ou conan il est automatiquement associé.

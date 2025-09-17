@@ -9,6 +9,7 @@ import {
     inquireSourceLink,
     inquireSourceTranscript,
     inquireTag,
+    inquireWord,
 } from './prompts.js';
 import { convertYoutubeURL } from './utils/embed-video-link-handler.js';
 import { getJapaneseSourceTranscriptTranslation } from './src/ai.js';
@@ -17,23 +18,30 @@ import { startSpinner } from './utils/cli-loader.js';
 
 console.clear(); // clear log.
 
-let usrInput = process.argv[2].toLowerCase().trim();
+let usrInput = '';
 let source_link = '';
 let channel = '';
 
-if (process.argv.length > 3) {
+/*
+    new chatGPT prompt to implement : 
+        I need you to pick a generic term related to "drive" (noun) (volonté, instinct en français) 
+        and tell me what's the nuance between the two so that I can know when to use it. 
+        in a few words please.
+*/
+
+let cli_args = process.argv.slice(2);
+
+if (cli_args.length >= 2 && cli_args[0].includes('youtube.com')) {
     [source_link, channel] = [
-        convertYoutubeURL(process.argv[3]),
-        process.argv[4],
+        convertYoutubeURL(cli_args[0]),
+        cli_args[1].replaceAll(' ', '_'),
     ];
+    if (cli_args.length >= 3) {
+        usrInput = cli_args.slice(2).join(' ').toLowerCase().trim();
+    }
 }
 
-console.log(source_link);
-
-if (!usrInput) {
-    console.log('You must to enter a word to search');
-    process.exit(0);
-}
+if (!usrInput) usrInput = await inquireWord();
 
 let note_fields = isInputEnglish(usrInput)
     ? await ankiEng(usrInput)
