@@ -29,6 +29,8 @@ let channel = '';
         in a few words please.
 */
 
+// also with ankiJap, I must list the words with a reading similar to the search.
+
 let cli_args = process.argv.slice(2);
 
 if (cli_args.length >= 2 && cli_args[0].includes('youtube.com')) {
@@ -39,6 +41,8 @@ if (cli_args.length >= 2 && cli_args[0].includes('youtube.com')) {
     if (cli_args.length >= 3) {
         usrInput = cli_args.slice(2).join(' ').toLowerCase().trim();
     }
+} else {
+    usrInput = cli_args.join(' ').toLowerCase().trim();
 }
 
 if (!usrInput) usrInput = await inquireWord();
