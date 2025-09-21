@@ -1,7 +1,7 @@
 import { exec } from 'child_process';
 import util from 'util';
 
-export function getVideoIdAndStartTime(url) {
+export function getVideoIdAndStartTimeFromYoutubeURL(url) {
     const parsedUrl = new URL(
         url.charAt(url.length - 1) === 's' ? url.slice(0, -1) : url
     );
@@ -61,7 +61,7 @@ function generate_yt_dlp_cmd(word, videoId) {
 
 function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
     const start = secondsToHHMMSS(
-        number_of_seconds <= 5 ? 0 : number_of_seconds - 2
+        number_of_seconds <= 5 ? 0 : number_of_seconds - 4
     );
     const end = secondsToHHMMSS(number_of_seconds + 8);
     const outputName = `source_audio_${word}_${videoId}_audio`;
@@ -87,7 +87,8 @@ async function runCommands(cmd1, cmd2) {
 }
 
 export async function downloadVideoAudio(word, videoLink) {
-    const { videoId, startTime } = getVideoIdAndStartTime(videoLink);
+    const { videoId, startTime } =
+        getVideoIdAndStartTimeFromYoutubeURL(videoLink);
 
     console.log(`Lien :`, videoLink);
     console.log(`Video ID :`, videoId);

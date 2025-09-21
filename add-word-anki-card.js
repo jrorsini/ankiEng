@@ -1,6 +1,6 @@
 import axios from 'axios';
 import chalk from 'chalk';
-import isInputEnglish from './utils/isInputEnglish.js';
+import isRomanChar from './utils/isRomanChar.js';
 
 // https://foosoft.net/projects/anki-connect/index.html#deck-actions
 
@@ -8,10 +8,16 @@ import isInputEnglish from './utils/isInputEnglish.js';
 const ankiUrl = 'http://127.0.0.1:8765';
 
 export default async function addWordCard(note_fields, note_tags) {
-    let lang = isInputEnglish(note_fields.word) ? 'ENGLISH' : 'JAPANESE';
+    let lang = isRomanChar(note_fields.word) ? 'ENGLISH' : 'JAPANESE';
+
+    const tagToDeck = {
+        'Learn_Japanese_with_JapanesePod101.com':
+            'Learn_Japanese_with_JapanesePod101.com',
+        TheBiteSizeJapanesePodcast: 'TheBiteSizeJapanesePodcast',
+    };
 
     let note = {
-        deckName: `1 - ${lang}`,
+        deckName: tagToDeck[note_tags[0]] ?? `1 - ${lang}`,
         modelName: `CUSTOM_NOTE_${lang}`,
         fields: note_fields,
         tags: note_tags,
