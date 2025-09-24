@@ -1,4 +1,4 @@
-import { toHiragana, toRomaji } from 'wanakana';
+import { toHiragana, toRomaji, isKanji } from 'wanakana';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 import { tokenizer } from './utils/tokenizer.js';
@@ -68,10 +68,10 @@ export async function anki(action, params = {}) {
     return json.result;
 }
 
-export async function displaySimilarWordsInDeck(searchedWord, deckName) {
+export async function displaySimilarWordsInDeck(kanji, deckName) {
     // 1) Get candidate notes (restricted to the deck)
     const noteIds = await anki('findNotes', {
-        query: `deck:${deckName} word:唾`,
+        query: `deck:${deckName} word:${kanji}`,
     });
 
     // 2) Pull fields
@@ -80,15 +80,34 @@ export async function displaySimilarWordsInDeck(searchedWord, deckName) {
     return notes;
 }
 
+function extractKanjis(word) {
+    let kanjis = [];
+    for (let ch of word) {
+        if (isKanji(ch)) {
+            kanjis.push(ch);
+        }
+    }
+    return kanjis;
+}
+
 export async function ankiJap(usrInput, channel_name) {
     // word cards to go on Anki.
     let ankiCard = {};
 
-    const stopSpinner = startSpinner(usrInput);
-
-    let test = await displaySimilarWordsInDeck(usrInput, channel_name);
+    let kanjiList = extractKanjis(usrInput);
+    if (kanjiList.length > 0) {
+        kanjiList.map(async (k) => {
+            let results = await displaySimilarWordsInDeck(k, channel_name);
+            results.map((e) => {
+                console.log(
+                    `${e.fields.word.value} (${e.fields.reading.value}) - ${e.fields.traduction.value}`
+                );
+            });
+        });
+    }
 
     // translation Array
+    const stopSpinner = startSpinner(usrInput);
     let trArr = await fetchTranslationsArr(usrInput);
     stopSpinner();
 
