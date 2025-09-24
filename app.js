@@ -35,7 +35,10 @@ let channel_name = '';
  *
  * →
  *      When being on youglish, I want the applescript to identify it's on youglish and retrieve timecode, videolink AND the transcript.
- *
+ * →
+ *      (japanese words only) word is inputed, need to display which words in kanji collection if they have one of the kanjis.
+ * →
+ *      in case the insideedtion : https://youtu.be/W7M9-i5NwTY?t=14 I want the apple script to register the cc for transcript so I won't have to do it manually.
  */
 
 // also with ankiJap, I must list the words with a reading similar to the search.
@@ -59,7 +62,7 @@ if (!usrInput) usrInput = await inquireWord();
 
 let note_fields = isRomanChar(usrInput)
     ? await ankiEng(usrInput)
-    : await ankiJap(usrInput);
+    : await ankiJap(usrInput, channel_name);
 
 let note_tags = !channel_name ? await inquireTag() : [channel_name];
 

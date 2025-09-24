@@ -7,6 +7,7 @@ import { startSpinner } from './utils/cli-loader.js';
 import { getJapaneseWordComposition } from './src/ai.js';
 
 const note_fields = {};
+const ankiUrl = 'http://127.0.0.1:8765';
 
 export async function generate_word_cards(input) {
     // list tokenized parts of the input and gives me reading and all that.
@@ -57,17 +58,42 @@ export async function fetchTranslationsArr(userInput) {
     }
 }
 
-export async function ankiJap(usrInput) {
+export async function anki(action, params = {}) {
+    const res = await fetch(ankiUrl, {
+        method: 'POST',
+        body: JSON.stringify({ action, version: 6, params }),
+    });
+    const json = await res.json();
+    if (json.error) throw new Error(json.error);
+    return json.result;
+}
+
+export async function displaySimilarWordsInDeck(searchedWord, deckName) {
+    // 1) Get candidate notes (restricted to the deck)
+    const noteIds = await anki('findNotes', {
+        query: `deck:${deckName} word:唾`,
+    });
+
+    // 2) Pull fields
+    const notes = await anki('notesInfo', { notes: noteIds });
+
+    return notes;
+}
+
+export async function ankiJap(usrInput, channel_name) {
     // word cards to go on Anki.
     let ankiCard = {};
 
     const stopSpinner = startSpinner(usrInput);
+
+    let test = await displaySimilarWordsInDeck(usrInput, channel_name);
+
     // translation Array
     let trArr = await fetchTranslationsArr(usrInput);
     stopSpinner();
 
     if (trArr.length > 0) {
-        console.clear(); // clear log
+        // console.clear(); // clear log
         let translationObject = await inquireJapaneseTranslation(trArr);
         Object.assign(ankiCard, translationObject);
     }
