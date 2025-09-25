@@ -5,6 +5,7 @@ import { tokenizer } from './utils/tokenizer.js';
 import { inquireJapaneseTranslation } from './prompts.js';
 import { startSpinner } from './utils/cli-loader.js';
 import { getJapaneseWordComposition } from './src/ai.js';
+import chalk from 'chalk';
 
 const note_fields = {};
 const ankiUrl = 'http://127.0.0.1:8765';
@@ -71,7 +72,7 @@ export async function anki(action, params = {}) {
 export async function displaySimilarWordsInDeck(kanji, deckName) {
     // 1) Get candidate notes (restricted to the deck)
     const noteIds = await anki('findNotes', {
-        query: `deck:${deckName} word:${kanji}`,
+        query: `deck:${deckName} word:*${kanji}*`, //${kanji}
     });
 
     // 2) Pull fields
@@ -100,7 +101,12 @@ export async function ankiJap(usrInput, channel_name) {
             let results = await displaySimilarWordsInDeck(k, channel_name);
             results.map((e) => {
                 console.log(
-                    `${e.fields.word.value} (${e.fields.reading.value}) - ${e.fields.traduction.value}`
+                    `\n(${chalk.bold(
+                        e.fields.reading.value
+                    )}) - ${e.fields.word.value.replace(
+                        k,
+                        chalk.underline.bold.greenBright(k)
+                    )} - ${chalk.bold.blueBright(e.fields.traduction.value)}`
                 );
             });
         });
