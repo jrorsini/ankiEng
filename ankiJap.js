@@ -69,7 +69,7 @@ export async function anki(action, params = {}) {
     return json.result;
 }
 
-export async function displaySimilarWordsInDeck(kanji, deckName) {
+async function fetchDeckWordsContainingKanji(kanji, deckName) {
     // 1) Get candidate notes (restricted to the deck)
     const noteIds = await anki('findNotes', {
         query: `deck:${deckName} word:*${kanji}*`, //${kanji}
@@ -78,7 +78,15 @@ export async function displaySimilarWordsInDeck(kanji, deckName) {
     // 2) Pull fields
     const notes = await anki('notesInfo', { notes: noteIds });
 
-    return notes;
+    return notes.map((e) => {
+        const word = e.fields.word.value.replace(
+            kanji,
+            chalk.underline.bold.greenBright(kanji)
+        );
+        const reading = chalk.bold(e.fields.reading.value);
+        const traduction = chalk.bold.blueBright(e.fields.traduction.value);
+        return { word, reading, traduction };
+    });
 }
 
 function extractKanjis(word) {
@@ -92,30 +100,40 @@ function extractKanjis(word) {
 }
 
 export async function ankiJap(usrInput, channel_name) {
-    // word cards to go on Anki.
-    let ankiCard = {};
-
     let kanjiList = extractKanjis(usrInput);
+    let deckWordsByKanji = {};
+
     if (kanjiList.length > 0) {
-        kanjiList.map(async (k) => {
-            let results = await displaySimilarWordsInDeck(k, channel_name);
-            results.map((e) => {
-                console.log(
-                    `\n(${chalk.bold(
-                        e.fields.reading.value
-                    )}) - ${e.fields.word.value.replace(
-                        k,
-                        chalk.underline.bold.greenBright(k)
-                    )} - ${chalk.bold.blueBright(e.fields.traduction.value)}`
-                );
+        const results = await Promise.all(
+            kanjiList.map((kanji) =>
+                fetchDeckWordsContainingKanji(kanji, channel_name).then(
+                    (res) => [kanji, res]
+                )
+            )
+        );
+
+        for (const [kanji, deckWordsContainingKanji] of results) {
+            deckWordsByKanji[kanji] = deckWordsContainingKanji;
+        }
+
+        for (const kanji in deckWordsByKanji) {
+            deckWordsByKanji[kanji].map((e) => {
+                console.log(`(${e.reading}) - ${e.word} - ${e.traduction}`);
             });
-        });
+
+            // deckWordsByKanji[kanji].map((e) => {
+            //     console.log(`\n(${e.reading}) - ${e.word} - ${e.traduction}`);
+            // });
+        }
     }
 
     // translation Array
     const stopSpinner = startSpinner(usrInput);
     let trArr = await fetchTranslationsArr(usrInput);
     stopSpinner();
+
+    // word cards to go on Anki.
+    let ankiCard = {};
 
     if (trArr.length > 0) {
         // console.clear(); // clear log
