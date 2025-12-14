@@ -13,7 +13,10 @@ export default async function addWordCard(note_fields, note_tags) {
     const tagToDeck = {
         'Learn_Japanese_with_JapanesePod101.com':
             'Learn_Japanese_with_JapanesePod101.com',
-        TheBiteSizeJapanesePodcast: 'TheBiteSizeJapanesePodcast',
+        Bite_Size_Japanese: 'BiteSizeJapanese',
+        MAIの日本語Podcast: 'MAIの日本語Podcast',
+        'Learn_Japanese_with_JapanesePod101.com':
+            'Learn_Japanese_with_JapanesePod101.com',
     };
 
     let note = {
