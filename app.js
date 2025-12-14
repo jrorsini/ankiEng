@@ -48,18 +48,23 @@ let cli_args = process.argv.slice(2);
 // Number of the arguments from CLI
 let cli_args_len = cli_args.length;
 
-if (cli_args_len >= 2 && cli_args[0].includes('youtube.com')) {
+// if first argument is a youtube link, then extract channel name and set usrInput accordingly.
+let hasYoutubeLink = cli_args_len >= 2 && cli_args[0].includes('youtube.com');
+
+// if youtube link is present, set source_link and channel_name from CLI args.
+if (hasYoutubeLink) {
     [source_link, channel_name] = [
         convertYoutubeURL(cli_args[0]),
         cli_args[1].replaceAll(' ', '_'),
     ];
-    if (cli_args_len >= 3) {
-        usrInput = cli_args.slice(2).join(' ').toLowerCase().trim();
-    }
-} else {
-    // in case there's no youtube video link.
-    usrInput = cli_args.join(' ').toLowerCase().trim();
 }
+
+// set usrInput from CLI or prompt the user for input. based off youtube link presence.
+usrInput = cli_args
+    .slice(hasYoutubeLink ? 2 : 0)
+    .join(' ')
+    .toLowerCase()
+    .trim();
 
 if (!usrInput) usrInput = await inquireWord();
 
