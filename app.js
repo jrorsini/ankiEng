@@ -32,7 +32,6 @@ let channel_name = '';
 /**
  *
  * DODO List
- *
  * →
  *      When being on youglish, I want the applescript to identify it's on youglish and retrieve timecode, videolink AND the transcript.
  * →
@@ -43,14 +42,18 @@ let channel_name = '';
 
 // also with ankiJap, I must list the words with a reading similar to the search.
 
+// list of arguments from CLI
 let cli_args = process.argv.slice(2);
 
-if (cli_args.length >= 2 && cli_args[0].includes('youtube.com')) {
+// Number of the arguments from CLI
+let cli_args_len = cli_args.length;
+
+if (cli_args_len >= 2 && cli_args[0].includes('youtube.com')) {
     [source_link, channel_name] = [
         convertYoutubeURL(cli_args[0]),
         cli_args[1].replaceAll(' ', '_'),
     ];
-    if (cli_args.length >= 3) {
+    if (cli_args_len >= 3) {
         usrInput = cli_args.slice(2).join(' ').toLowerCase().trim();
     }
 } else {
