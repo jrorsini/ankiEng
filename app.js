@@ -19,8 +19,8 @@ import { startSpinner } from './utils/cli-loader.js';
 console.clear(); // clear log.
 
 let usrInput = '';
-let source_link = '';
 let channel_name = '';
+let source_link = '';
 
 /*
     new chatGPT prompt to implement : 
@@ -66,32 +66,44 @@ usrInput = cli_args
     .toLowerCase()
     .trim();
 
+// inquire for word if not provided in CLI args.
 if (!usrInput) usrInput = await inquireWord();
 
-let note_fields = isRomanChar(usrInput)
+let englishLanguage = isRomanChar(usrInput);
+
+// generate note fields based off input language.
+let note_fields = englishLanguage
     ? await ankiEng(usrInput)
     : await ankiJap(usrInput, channel_name);
 
-let note_tags = !channel_name ? await inquireTag() : [channel_name];
+// inquire for tag if no channel_name provided.
+let note_tags = !channel_name ? '' : [channel_name];
 
-while (!source_link) source_link = await inquireSourceLink();
+/**
+ * +++ drop down menu to choose wether or not a source link and transcript should be added +++
+ */
 
 let source_transcript = '';
+// inquire for source transcript if not provided in CLI args.
 while (!source_transcript) source_transcript = await inquireSourceTranscript();
-
 note_fields.source_transcript = source_transcript;
+
+// get translation of source transcript.
 note_fields.source_transcript_tr = await getJapaneseSourceTranscriptTranslation(
     source_transcript
 );
 
-const { videoId } = getVideoIdAndStartTimeFromYoutubeURL(source_link);
+if (hasYoutubeLink) {
+    console.log(`depuis la condition : ${source_link}`);
 
-downloadVideoAudio(note_fields.word, source_link);
-saveWordAudio(isRomanChar(usrInput) ? 'en' : 'ja', note_fields.word);
+    const { videoId } = getVideoIdAndStartTimeFromYoutubeURL(source_link);
+    // external operations to download video audio for source link and audio for word.
+    note_fields.source_link = source_link;
+    downloadVideoAudio(note_fields.word, note_fields.source_link);
 
-note_fields.source_link = source_link;
-note_fields.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
-note_fields.source_audio = `[sound:source_audio_${note_fields.word}_${videoId}_audio.mov]`;
-note_fields.audio = `[sound:audio_${note_fields.word}.mp3]`;
+    note_fields.source_thumbnail = `<img src="https://img.youtube.com/vi/${videoId}/0.jpg"/>`;
+    note_fields.source_audio = `[sound:source_audio_${note_fields.word}_${videoId}_audio.mov]`;
+}
 
+saveWordAudio(englishLanguage ? 'en' : 'ja', note_fields.word);
 await addWordCard(note_fields, note_tags);
