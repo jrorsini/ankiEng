@@ -1,11 +1,4 @@
-import axios from 'axios';
-import chalk from 'chalk';
 import isRomanChar from './utils/isRomanChar.js';
-
-// https://foosoft.net/projects/anki-connect/index.html#deck-actions
-
-// Define the AnkiConnect API URL
-const ankiUrl = 'http://127.0.0.1:8765';
 
 export default async function addWordCard(fields, tags) {
     let lang = isRomanChar(fields.word) ? 'ENGLISH' : 'JAPANESE';
