@@ -2,6 +2,8 @@ import { exec } from 'child_process';
 import util from 'util';
 
 export function getVideoIdAndStartTimeFromYoutubeURL(url) {
+    console.log(`l'url en question ${url}`);
+
     const parsedUrl = new URL(
         url.charAt(url.length - 1) === 's' ? url.slice(0, -1) : url
     );
@@ -26,8 +28,8 @@ function formatYoutubeVideoLink(url) {
 
     if (url.length > 35) {
         const urlObj = new URL(url);
-        const videoId = urlObj.pathname.split('/')[2]; // "CxouIJKVpaw"
-        const startTime = urlObj.searchParams.get('start'); // "34"
+        const videoId = urlObj.pathname.split('/')[2]; // i.e. "CxouIJKVpaw"
+        const startTime = urlObj.searchParams.get('start'); // i.e. "34"
 
         let shortUrl = `https://youtu.be/${videoId}`;
         if (startTime) shortUrl += `?t=${startTime}`;
@@ -38,6 +40,7 @@ function formatYoutubeVideoLink(url) {
     }
 }
 
+// convert seconds to HH:MM:SS
 function secondsToHHMMSS(seconds) {
     const h = Math.floor(seconds / 3600)
         .toString()
@@ -55,21 +58,27 @@ const execPromise = util.promisify(exec);
 
 const path2SaveFile = `/Users/jean-rogerorsini/Library/Application Support/Anki2/User 1/collection.media`;
 
-function generate_yt_dlp_cmd(word, videoId) {
-    return `yt-dlp -x --audio-format mp3 -o "${path2SaveFile}/temp_source_audio_${word}_${videoId}_audio.mp3" --cookies-from-browser chrome "https://www.youtube.com/watch?v=${videoId}"`;
-}
+// yt-dlp "<VIDEO_URL>" --download-sections "*00:02:15-00:03:10" -o "clip.mp4"
 
-function generate_ffmpeg_cmd(word, number_of_seconds, videoId) {
+function generate_yt_dlp_cmd(word, videoId, number_of_seconds) {
     const start = secondsToHHMMSS(
         number_of_seconds <= 5 ? 0 : number_of_seconds - 4
     );
-    const end = secondsToHHMMSS(number_of_seconds + 8);
-    const outputName = `source_audio_${word}_${videoId}_audio`;
-    console.log(`seconds :`, number_of_seconds);
-    console.log(`start :`, start);
-    console.log(`end :`, end);
+    const end = secondsToHHMMSS(number_of_seconds + 10);
+    const cmd = `yt-dlp \
+                --download-sections "*${start}-${end}" \
+                --cookies-from-browser safari \
+                -x --audio-format mp3 \
+                -o "${path2SaveFile}/temp_source_audio_${word}_${videoId}_audio.mp3" \
+                "https://www.youtube.com/watch?v=${videoId}"
+                `;
+    // const cmd = `yt-dlp -x --audio-format mov -o "${path2SaveFile}/nonTreated-audio_${word}_${videoId}_audio.mp3" --cookies-from-browser safari "https://www.youtube.com/watch?v=${videoId}" --download-sections "*${start}-${end}"`;
+    return cmd;
+}
 
-    return `ffmpeg -i "${path2SaveFile}/temp_${outputName}.mp3" -ss ${start} -to ${end} "${path2SaveFile}/nonTreated-${outputName}.mov";`;
+function generate_ffmpeg_cmd(word, videoId) {
+    const outputName = `source_audio_${word}_${videoId}_audio`;
+    return `ffmpeg -i "${path2SaveFile}/temp_${outputName}.mp3"  "${path2SaveFile}/nonTreated-${outputName}.mov";`;
 }
 
 async function runCommands(cmd1, cmd2) {
@@ -94,13 +103,16 @@ export async function downloadVideoAudio(word, videoLink) {
     console.log(`Video ID :`, videoId);
     console.log(`Start Time :`, startTime);
 
+    console.log(word);
+
     let formattedWord = word
         .replace(/\[sth\/sb\]/gi, 'sth or sb')
         .replace(/\[sth\]/gi, 'sth')
         .replace(/\[sb\]/gi, 'sb');
 
-    const cmd1 = generate_yt_dlp_cmd(formattedWord, videoId);
-    const cmd2 = generate_ffmpeg_cmd(formattedWord, startTime, videoId);
+    const cmd1 = generate_yt_dlp_cmd(formattedWord, videoId, startTime);
+    const cmd2 = generate_ffmpeg_cmd(formattedWord, videoId);
 
+    // await runCommands(cmd1);
     await runCommands(cmd1, cmd2);
 }
