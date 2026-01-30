@@ -20,10 +20,11 @@ export async function generate_word_cards(input) {
             .slice(0, 1)[0];
         word_card = basicForm;
     }
-
+    note_fields.img = '';
     note_fields.word = word_card.basic_form;
     note_fields.reading = toHiragana(word_card.reading);
     note_fields.reading_romaji = toRomaji(word_card.reading);
+    note_fields.audio = `[sound:audio_${note_fields.word}.mp3]`;
 
     return note_fields;
 }
@@ -99,11 +100,13 @@ function extractKanjis(word) {
     return kanjis;
 }
 
-export async function ankiJap(usrInput, channel_name) {
+async function logDeckWordsContainingSameKanji(usrInput, channel_name) {
     let kanjiList = extractKanjis(usrInput);
     let deckWordsByKanji = {};
 
     if (kanjiList.length > 0) {
+        console.log(`WORDS in Deck containing the same Kanji :`);
+
         const results = await Promise.all(
             kanjiList.map((kanji) =>
                 fetchDeckWordsContainingKanji(kanji, channel_name).then(
@@ -120,12 +123,13 @@ export async function ankiJap(usrInput, channel_name) {
             deckWordsByKanji[kanji].map((e) => {
                 console.log(`(${e.reading}) - ${e.word} - ${e.traduction}`);
             });
-
-            // deckWordsByKanji[kanji].map((e) => {
-            //     console.log(`\n(${e.reading}) - ${e.word} - ${e.traduction}`);
-            // });
         }
     }
+    return;
+}
+
+export async function ankiJap(usrInput, channel_name) {
+    await logDeckWordsContainingSameKanji(usrInput, channel_name);
 
     // translation Array
     const stopSpinner = startSpinner(usrInput);
@@ -139,9 +143,12 @@ export async function ankiJap(usrInput, channel_name) {
         // console.clear(); // clear log
         let translationObject = await inquireJapaneseTranslation(trArr);
         Object.assign(ankiCard, translationObject);
+    } else {
+        ankiCard.word = usrInput;
     }
 
     ankiCard.composition = await getJapaneseWordComposition(ankiCard.word);
+    ankiCard.audio = `[sound:audio_${ankiCard.word}.mp3]`;
 
     // ankiCard.composition = `Peux-tu me donner une explication de la composition du mot ${ankiCard.word} selon le format suivant :
     //                 ✅ [kanji 1] = [sens simple en français]
