@@ -1,6 +1,7 @@
 // API's handlers.
 import { ankiEng } from './ankiEng.js';
 import { ankiJap } from './ankiJap.js';
+import buildAnkiCard from './anki-card-builder.js';
 import addWordCard from './add-word-anki-card.js';
 import saveWordAudio from './utils/save-word-audio.js';
 import { getVideoIdAndStartTimeFromYoutubeURL } from './utils/video-audio-dl.js';
@@ -89,9 +90,8 @@ while (!source_transcript) source_transcript = await inquireSourceTranscript();
 note_fields.source_transcript = source_transcript;
 
 // get translation of source transcript.
-note_fields.source_transcript_tr = await getJapaneseSourceTranscriptTranslation(
-    source_transcript
-);
+note_fields.source_transcript_tr =
+    await getJapaneseSourceTranscriptTranslation(source_transcript);
 
 if (hasYoutubeLink) {
     console.log(`depuis la condition : ${source_link}`);
@@ -106,4 +106,5 @@ if (hasYoutubeLink) {
 }
 
 saveWordAudio(englishLanguage ? 'en' : 'ja', note_fields.word);
-await addWordCard(note_fields, note_tags);
+let note = await buildAnkiCard(note_fields, note_tags);
+await addWordCard(note);
