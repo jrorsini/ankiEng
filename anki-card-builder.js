@@ -15,8 +15,6 @@ const tagToDeck = {
 export default async function buildAnkiCard(fields, tags) {
     let lang = isRomanChar(fields.word) ? 'ENGLISH' : 'JAPANESE';
 
-    console.log(tags[0]);
-
     const deckName = tagToDeck[tags[0]] ?? `1 - ${lang}`;
 
     const modelName = `CUSTOM_NOTE_${lang}`;
